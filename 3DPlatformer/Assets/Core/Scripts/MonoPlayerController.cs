@@ -6,6 +6,7 @@ public class MonoPlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
     [SerializeField] private Rigidbody rigidBody;
+    [SerializeField] private MonoJoystick joystick;
 
     private Vector3 _direction;
     
@@ -26,19 +27,8 @@ public class MonoPlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.aKey.isPressed)
-        {
-            _direction.x = -1;
-        }
-        else if (Keyboard.current.dKey.isPressed)
-        {
-            _direction.x = 1;
-        }
-        else
-        {
-            _direction.x = 0;
-        }
-
+        _direction.x = joystick.Direction.x;
+        
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             PerformJump();    
