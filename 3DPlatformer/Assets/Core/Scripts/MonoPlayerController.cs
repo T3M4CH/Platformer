@@ -7,6 +7,7 @@ public class MonoPlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private Animator animator;
     [SerializeField] private Button jumpButton;
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private MonoJoystick joystick;
@@ -14,9 +15,15 @@ public class MonoPlayerController : MonoBehaviour
 
     private Vector3 _direction;
     
+    private static readonly int Jump = Animator.StringToHash("Jump");
+    private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
+
     private void Move()
     {
         rigidBody.MovePosition(rigidBody.position + _direction * (speed * Time.deltaTime));
+        rigidBody.MoveRotation(Quaternion.Euler(0, Math.Sign(_direction.x) * -90, 0));
+        
+        animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
     }
 
     private void PerformJump()
@@ -24,6 +31,7 @@ public class MonoPlayerController : MonoBehaviour
         if (!interactionSystem.IsGround) return;
         
         rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        animator.SetTrigger(Jump);
     }
 
     private void FixedUpdate()

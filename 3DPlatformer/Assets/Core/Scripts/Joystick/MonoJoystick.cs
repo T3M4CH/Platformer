@@ -24,12 +24,12 @@ public class MonoJoystick : MonoBehaviour
 
     private void UpdatePosition()
     {
-        var position = (Vector3)_input.TouchPosition.ReadValue<Vector2>();
+        var position = _input.TouchPosition.ReadValue<Vector2>();
 
-        var joystickRectPosition = joystickRect.position;
-        handlerRect.anchoredPosition = Vector3.ClampMagnitude(position - joystickRectPosition, maxStickOffset);
+        var joystickRectPosition = (Vector2)joystickRect.position;
+        handlerRect.anchoredPosition = Vector2.ClampMagnitude(position - joystickRectPosition, maxStickOffset);
 
-        Direction = (handlerRect.position - joystickRectPosition) / maxStickOffset;
+        Direction = handlerRect.localPosition / maxStickOffset;
     }
 
     private void HideGUI()
