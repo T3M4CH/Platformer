@@ -1,12 +1,16 @@
+using System;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonoPlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private Button jumpButton;
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private MonoJoystick joystick;
+    [SerializeField] private MonoInteractionSystem interactionSystem;
 
     private Vector3 _direction;
     
@@ -17,6 +21,8 @@ public class MonoPlayerController : MonoBehaviour
 
     private void PerformJump()
     {
+        if (!interactionSystem.IsGround) return;
+        
         rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
@@ -33,5 +39,15 @@ public class MonoPlayerController : MonoBehaviour
         {
             PerformJump();    
         }
+    }
+
+    private void Start()
+    {
+        jumpButton.onClick.AddListener(PerformJump);
+    }
+
+    private void OnDestroy()
+    {
+        jumpButton.onClick.RemoveAllListeners();
     }
 }

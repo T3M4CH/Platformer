@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MonoJoystick : MonoBehaviour
 {
@@ -6,12 +8,14 @@ public class MonoJoystick : MonoBehaviour
     [SerializeField] private RectTransform joystickRect;
     [SerializeField] private RectTransform handlerRect;
 
+    private bool _isActive;
     private GameObject _joystick;
     private PlayerInput _playerInput;
     private PlayerInput.PlayerActions _input;
 
     private void ShowGUI()
     {
+        _isActive = true;
         _joystick.SetActive(true);
         
         joystickRect.position = _input.TouchPosition.ReadValue<Vector2>();
@@ -26,11 +30,11 @@ public class MonoJoystick : MonoBehaviour
         handlerRect.anchoredPosition = Vector3.ClampMagnitude(position - joystickRectPosition, maxStickOffset);
 
         Direction = (handlerRect.position - joystickRectPosition) / maxStickOffset;
-        print(Direction);
     }
 
     private void HideGUI()
     {
+        _isActive = false;
         _joystick.SetActive(false);
         
         Direction = Vector2.zero;
@@ -38,12 +42,12 @@ public class MonoJoystick : MonoBehaviour
 
     private void Update()
     {
-        if (_input.Touch.WasPressedThisFrame())
+        if (_input.Touch.WasPressedThisFrame() && !EventSystem.current.IsPointerOverGameObject(-1))
         {
             ShowGUI();
         }
 
-        if (_input.Touch.IsPressed())
+        if (_input.Touch.IsPressed() && _isActive)
         {
             UpdatePosition();    
         }
