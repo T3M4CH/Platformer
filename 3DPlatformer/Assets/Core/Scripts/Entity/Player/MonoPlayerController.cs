@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using Core.Scripts.Healthbars;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Reflex.Attributes;
 using UnityEditor.VersionControl;
 using UnityEngine.InputSystem;
 using UnityEngine;
@@ -25,14 +27,23 @@ public class MonoPlayerController : MonoBehaviour, IDamageable
     [SerializeField] private MonoInteractionSystem interactionSystem;
 
     private bool _isAttacking;
+    private Vector3 _direction;
     private float _lastDirection;
     private float _currentCooldownTime;
-    private Vector3 _direction;
+    private float _maxHealth;
+    private HealthbarManager _healthBarManager;
 
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
     private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
+
+    [Inject]
+    private void Construct(HealthbarManager healthbarManager)
+    {
+        _maxHealth = health;
+        _healthBarManager = healthbarManager;
+    }
 
     public void PerformAttackEvent()
     {
@@ -46,11 +57,19 @@ public class MonoPlayerController : MonoBehaviour, IDamageable
         }
     }
 
+    [ContextMenu("Attack")]
+    private void TestAttack()
+    {
+        TakeDamage(20);
+    }
+
     public void TakeDamage(float damage)
     {
         if (health <= 0 || _currentCooldownTime > 0) return;
 
         health -= damage;
+
+        _healthBarManager.UpdateHp(health, _maxHealth, transform, Vector3.up);
         _currentCooldownTime = damageCooldown;
         meshRenderer.material.DOColor(Color.red, 0.1f).OnKill(() => meshRenderer.material.SetColor(Color1, Color.white));
 
@@ -124,6 +143,7 @@ public class MonoPlayerController : MonoBehaviour, IDamageable
 
     private void OnDestroy()
     {
+        meshRenderer.material.DOKill();
         jumpButton.onClick.RemoveAllListeners();
         attackButton.onClick.RemoveAllListeners();
     }

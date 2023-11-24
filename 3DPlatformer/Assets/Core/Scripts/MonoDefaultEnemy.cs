@@ -1,5 +1,7 @@
 using System;
+using Core.Scripts.Healthbars;
 using DG.Tweening;
+using Reflex.Attributes;
 using UnityEngine;
 
 public class MonoDefaultEnemy : MonoBehaviour, IDamageable
@@ -13,17 +15,27 @@ public class MonoDefaultEnemy : MonoBehaviour, IDamageable
     [SerializeField] private MonoInteractionSystem interactionSystem;
 
     private bool _isDead;
+    private float _maxHealth;
     private Vector3 _savedPosition;
     private Vector3 _direction = Vector3.right;
+    private HealthbarManager _healthBarManager;
 
     private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
     private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
+
+    [Inject]
+    private void Construct(HealthbarManager healthbarManager)
+    {
+        _maxHealth = health;
+        _healthBarManager =  healthbarManager;
+    }
 
     public void TakeDamage(float damage)
     {
         if (health <= 0) return;
 
         health -= damage;
+        _healthBarManager.UpdateHp(health, _maxHealth, transform, Vector3.up);
         renderer.material.DOColor(Color.red, 0.1f).OnKill(() => renderer.material.SetColor(Color1, Color.white));
 
         if (health <= 0)
