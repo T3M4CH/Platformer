@@ -8,7 +8,7 @@ public class MonoInteractionSystem : MonoBehaviour
 
     private Transform _transform;
 
-    private void Update()
+    private GroundStruct GetGroundStruct()
     {
         var position = _transform.position;
         
@@ -22,13 +22,13 @@ public class MonoInteractionSystem : MonoBehaviour
         ray = new Ray(position + _transform.forward, -transform.up);
         var back = Physics.Raycast(ray, rayLenght, groundMask);
         
-        IsGround = new GroundStruct(under, front,back);
+        return new GroundStruct(under, front,back);
     }
 
     private void Start()
     {
         _transform = transform;
     }
-    
-    public GroundStruct IsGround { get; private set; }
+
+    public GroundStruct IsGround => GetGroundStruct();
 }

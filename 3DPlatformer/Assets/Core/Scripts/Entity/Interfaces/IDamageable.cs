@@ -1,4 +1,7 @@
+using UnityEngine;
+
 public interface IDamageable
 {
-    void TakeDamage(float damage);
+    bool TakeDamage(float damage, Vector3? force = null);
+    Transform transform { get; }
 }

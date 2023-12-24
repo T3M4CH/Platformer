@@ -1,84 +1,55 @@
-using System;
+using Core.Scripts.Entity;
 using Core.Scripts.Healthbars;
-using DG.Tweening;
+using Core.Scripts.StatesMachine;
 using Reflex.Attributes;
 using UnityEngine;
 
-public class MonoDefaultEnemy : MonoBehaviour, IDamageable
+public class MonoDefaultEnemy : BaseEntity
 {
-    [SerializeField] private float speed;
-    [SerializeField] private float health;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Rigidbody rigidBody;
-    [SerializeField] private Renderer renderer;
-    [SerializeField] private LayerMask entityLayerMask;
     [SerializeField] private MonoInteractionSystem interactionSystem;
-
-    private bool _isDead;
-    private float _maxHealth;
-    private Vector3 _savedPosition;
-    private Vector3 _direction = Vector3.right;
+    
     private HealthbarManager _healthBarManager;
-
-    private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
-    private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
-
-    [Inject]
-    private void Construct(HealthbarManager healthbarManager)
+    
+    public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        _maxHealth = health;
-        _healthBarManager =  healthbarManager;
+        if(!base.TakeDamage(damage)) return false;
+
+        if (force.HasValue)
+        {
+            StateMachine.SetState<ThrownEntityState>();
+            RigidBody.AddForce(force.Value * 5, ForceMode.Impulse);
+        }
+        
+        return true;
     }
 
-    public void TakeDamage(float damage)
+    private void Update()
     {
-        if (health <= 0) return;
-
-        health -= damage;
-        _healthBarManager.UpdateHp(health, _maxHealth, transform, Vector3.up);
-        renderer.material.DOColor(Color.red, 0.1f).OnKill(() => renderer.material.SetColor(Color1, Color.white));
-
-        if (health <= 0)
-        {
-            _isDead = true;
-            Destroy(gameObject);
-        }
+        StateMachine.Update();
     }
 
     private void FixedUpdate()
     {
-        if (!interactionSystem.IsGround.Under)
-        {
-            rigidBody.position = _savedPosition;
-            _direction *= -1;
-            rigidBody.MoveRotation(Quaternion.LookRotation(_direction));
-        }
-        else
-        {
-            _savedPosition = rigidBody.position;
-        }
-
-        rigidBody.MovePosition(rigidBody.position + _direction * (Time.fixedDeltaTime * speed));
+        StateMachine.FixedUpdate();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        if (entityLayerMask.value.Includes(other.gameObject.layer))
+        if (EntityLayerMask.value.Includes(other.gameObject.layer))
         {
-            var damageable = other.GetComponent<IDamageable>();
-            Debug.LogWarning(other.name + " " + damageable);
+            var damageable = other.gameObject.GetComponent<IDamageable>();
             damageable?.TakeDamage(5);
         }
     }
 
     private void Start()
     {
-        _savedPosition = rigidBody.position;
-        animator.SetFloat(JoystickOffset, 0.5f);
+        StateMachine = new EntityStateMachine();
+        StateMachine.AddState(new PatrolMoveEntityState(StateMachine, this, interactionSystem));
+        StateMachine.AddState(new ThrownEntityState(StateMachine, this));
+        
+        StateMachine.SetState<PatrolMoveEntityState>();
     }
 
-    private void OnDestroy()
-    {
-        renderer.material.DOKill();
-    }
+    public override EntityStateMachine StateMachine { get; protected set; }
 }

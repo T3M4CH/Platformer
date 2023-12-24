@@ -1,150 +1,45 @@
-using System;
-using System.Linq;
-using Core.Scripts.Healthbars;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
-using Reflex.Attributes;
-using UnityEditor.VersionControl;
-using UnityEngine.InputSystem;
+using Core.Scripts.StatesMachine;
+using Core.Scripts.Entity;
 using UnityEngine;
-using UnityEngine.UI;
-using Task = System.Threading.Tasks.Task;
 
-public class MonoPlayerController : MonoBehaviour, IDamageable
+public class MonoPlayerController : BaseEntity
 {
-    [SerializeField] private float speed;
-    [SerializeField] private float health;
     [SerializeField] private float damageCooldown;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Button jumpButton;
-    [SerializeField] private Button attackButton;
-    [SerializeField] private Renderer meshRenderer;
-    [SerializeField] private Rigidbody rigidBody;
-    [SerializeField] private MonoJoystick joystick;
-    [SerializeField] private Transform swordTransform;
-    [SerializeField] private LayerMask entityLayerMask;
-    [SerializeField] private MonoInteractionSystem interactionSystem;
 
-    private bool _isAttacking;
-    private Vector3 _direction;
-    private float _lastDirection;
     private float _currentCooldownTime;
-    private float _maxHealth;
-    private HealthbarManager _healthBarManager;
 
-    private static readonly int Jump = Animator.StringToHash("Jump");
-    private static readonly int Attack = Animator.StringToHash("Attack");
-    private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
-    private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
-
-    [Inject]
-    private void Construct(HealthbarManager healthbarManager)
+    public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        _maxHealth = health;
-        _healthBarManager = healthbarManager;
-    }
+        if (StateMachine.CurrentEntityState is JumpAttackEntityState || _currentCooldownTime > 0) return false;
 
-    public void PerformAttackEvent()
-    {
-        _isAttacking = false;
-
-        var damageable = Physics.OverlapSphere(swordTransform.position, 2f, entityLayerMask).Select(coll => coll.GetComponent<IDamageable>());
-
-        foreach (var item in damageable)
-        {
-            item?.TakeDamage(10);
-        }
-    }
-
-    [ContextMenu("Attack")]
-    private void TestAttack()
-    {
-        TakeDamage(20);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        if (health <= 0 || _currentCooldownTime > 0) return;
-
-        health -= damage;
-
-        _healthBarManager.UpdateHp(health, _maxHealth, transform, Vector3.up);
         _currentCooldownTime = damageCooldown;
-        meshRenderer.material.DOColor(Color.red, 0.1f).OnKill(() => meshRenderer.material.SetColor(Color1, Color.white));
 
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void Move()
-    {
-        if (_isAttacking) return;
-
-        if (Mathf.Abs(_direction.x) > 0)
-        {
-            _lastDirection = _direction.x;
-        }
-
-        rigidBody.MovePosition(rigidBody.position + _direction * (speed * Time.deltaTime));
-        rigidBody.MoveRotation(Quaternion.Euler(0, Math.Sign(_direction.x) * -90, 0));
-
-        animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
-    }
-
-    private void PerformJump()
-    {
-        if (!interactionSystem.IsGround.Under) return;
-
-        rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        animator.SetTrigger(Jump);
-    }
-
-    private void PerformAttack()
-    {
-        if (!interactionSystem.IsGround.Under || _isAttacking) return;
-
-        _isAttacking = true;
-
-        rigidBody.MoveRotation(Quaternion.Euler(0, _lastDirection * -90, 0));
-        animator.SetTrigger(Attack);
+        return base.TakeDamage(damage);
     }
 
     private void FixedUpdate()
     {
-        Move();
+        StateMachine.FixedUpdate();
     }
 
     private void Update()
     {
-        _direction.x = joystick.Direction.x;
-
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            PerformJump();
-        }
-
-        if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            PerformAttack();
-        }
-
         _currentCooldownTime -= Time.deltaTime;
         _currentCooldownTime = Mathf.Max(0, _currentCooldownTime);
+
+        StateMachine.Update();
     }
 
     private void Start()
     {
-        jumpButton.onClick.AddListener(PerformJump);
-        attackButton.onClick.AddListener(PerformAttack);
+        StateMachine = new EntityStateMachine();
+        StateMachine.AddState(new PlayerMoveEntityState(StateMachine, this));
+        StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
+        StateMachine.SetState<PlayerMoveEntityState>();
     }
 
-    private void OnDestroy()
-    {
-        meshRenderer.material.DOKill();
-        jumpButton.onClick.RemoveAllListeners();
-        attackButton.onClick.RemoveAllListeners();
-    }
+    public override EntityStateMachine StateMachine { get; protected set; }
+    [field: SerializeField] public float JumpForce { get; private set; }
+    [field: SerializeField] public MonoJoystick Joystick { get; private set; }
+    [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
 }
