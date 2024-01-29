@@ -13,12 +13,10 @@ namespace Core.Scripts.StatesMachine
             _entityCollision = baseEntity.EntityCollision;
 
             _animatorHelper.OnStand += PerformStand;
-            _animatorHelper.OnStanding += PerformStanding;
             _entityCollision.TriggerEnter += OnTriggerEnter;
         }
 
         private float _initialSize;
-        private CapsuleCollider _capsuleCollider;
         
         private readonly Animator _animator;
         private readonly EntityCollision _entityCollision;
@@ -29,14 +27,6 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-            
-            _capsuleCollider = _entityCollision.Collider as CapsuleCollider;
-
-            if (_capsuleCollider)
-            {
-                _initialSize = _capsuleCollider.height;
-                _capsuleCollider.height = 1f;
-            }
             
             _animator.SetTrigger(Fall);
         }
@@ -54,15 +44,9 @@ namespace Core.Scripts.StatesMachine
             }
         }
 
-        private void PerformStanding()
-        {
-            _capsuleCollider.height = _initialSize;
-        }
-
         public void Dispose()
         {
             _animatorHelper.OnStand -= PerformStand;
-            _animatorHelper.OnStanding -= PerformStanding;
             _entityCollision.TriggerEnter -= OnTriggerEnter;
         }
     }

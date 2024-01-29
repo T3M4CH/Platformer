@@ -48,7 +48,10 @@ namespace Core.Scripts.Healthbars
                     healthBar.transform.localPosition = (transform.position + offset).WorldToScreenPosition(_camera, _rectParent);
                 }
 
-                healthBar.CanvasGroup.alpha = 0;
+                if (healthBar.CanvasGroup)
+                {
+                    healthBar.CanvasGroup.alpha = 0;
+                }
             });
         }
 

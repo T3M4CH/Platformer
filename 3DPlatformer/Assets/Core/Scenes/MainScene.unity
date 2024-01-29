@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35418865, g: 0.8026368, b: 0.9515237, a: 1}
+  m_IndirectSpecularColor: {r: 0.35399234, g: 0.8025932, b: 0.9515256, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -253,8 +253,9 @@ GameObject:
   - component: {fileID: 36552775}
   - component: {fileID: 36552774}
   - component: {fileID: 36552776}
+  - component: {fileID: 36552777}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: ControlsWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -270,7 +271,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 990839492}
   - {fileID: 285748867}
@@ -335,6 +336,23 @@ MonoBehaviour:
   maxStickOffset: 70
   joystickRect: {fileID: 990839492}
   handlerRect: {fileID: 1247894909}
+--- !u!114 &36552777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36552772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d96ba77ba3c45343b653aa0b6fcd3b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BackGround>k__BackingField: {fileID: 0}
+  <Content>k__BackingField: {fileID: 36552773}
+  <JumpButton>k__BackingField: {fileID: 285748868}
+  <AttackButton>k__BackingField: {fileID: 1414842821}
+  <Joystick>k__BackingField: {fileID: 36552776}
 --- !u!1 &167720322
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +365,7 @@ GameObject:
   - component: {fileID: 167720325}
   - component: {fileID: 167720324}
   - component: {fileID: 167720323}
+  - component: {fileID: 167720327}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -437,6 +456,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &167720327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167720322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277b09591c158da4489043106a1dbe52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windows:
+  - {fileID: 36552777}
 --- !u!1 &217148722
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,8 +810,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312914531}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.3052, y: -3.37, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 25.759975, y: -2.7852247, z: -9.159344}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -786,7 +819,7 @@ Transform:
   - {fileID: 731002577}
   - {fileID: 862149579}
   - {fileID: 1364659735}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 422212945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &322709768
 GameObject:
@@ -966,7 +999,6 @@ MonoBehaviour:
     m_Bits: 64
   damageCooldown: 2
   <JumpForce>k__BackingField: 5
-  <Joystick>k__BackingField: {fileID: 36552776}
   <InteractionSystem>k__BackingField: {fileID: 411143307}
 --- !u!114 &411143307
 MonoBehaviour:
@@ -1034,6 +1066,7 @@ Transform:
   - {fileID: 1854056577}
   - {fileID: 1710599248}
   - {fileID: 900589243}
+  - {fileID: 312914532}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &707150694
@@ -1125,8 +1158,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.0044938, y: 1, z: 1}
+  m_Center: {x: 0.002247424, y: 0, z: 0}
 --- !u!4 &731002577
 Transform:
   m_ObjectHideFlags: 0
@@ -1651,8 +1684,8 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
+  m_UpdateMethod: 0
+  m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1
     m_Time: 2
@@ -1720,13 +1753,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
-    'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
-    'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom animation
-    clip 'Sword And Shield Slash'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -2320,6 +2347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 146ec26b12d9c3a4d890cbfe85d1edff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windowManager: {fileID: 167720327}
   healthbarManagerSettings:
     <Canvas>k__BackingField: {fileID: 167720326}
     <HealthBarPrefab>k__BackingField: {fileID: 7680627420297608224, guid: 517c50df9b1a94347963fe0690cdc43e, type: 3}
@@ -2851,8 +2879,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.24, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.59, y: 2.24, z: 2.1197987}
+  m_Center: {x: 0, y: -0.28, z: 0.55989957}
 --- !u!4 &17342723501023107
 Transform:
   m_ObjectHideFlags: 0
@@ -3417,13 +3445,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
-    'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
-    'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tand more ...\n\tFrom animation
-    clip 'Sword And Shield Slash'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -8502,7 +8524,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1532660817}
   - {fileID: 17884778}
-  - {fileID: 312914532}
   - {fileID: 1106627275}
   - {fileID: 167720326}
   - {fileID: 1240338091}

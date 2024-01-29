@@ -2,32 +2,40 @@
 using Core.Scripts.Entity;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Core.Scripts.StatesMachine
 {
     public class PlayerMoveEntityState : EntityState, IDisposable
     {
-        public PlayerMoveEntityState(EntityStateMachine entityStateMachine, MonoPlayerController baseEntity) : base(entityStateMachine, baseEntity)
+        public PlayerMoveEntityState(EntityStateMachine entityStateMachine, MonoPlayerController baseEntity, ControlsWindow controlsWindow) : base(entityStateMachine, baseEntity)
         {
+            _joystick = controlsWindow.Joystick;
+            _jumpButton = controlsWindow.JumpButton;
+            _attackButton = controlsWindow.AttackButton;
+
             _animatorHelper = baseEntity.AnimatorHelper;
             _rigidBody = baseEntity.RigidBody;
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
-            _joystick = baseEntity.Joystick;
             _jumpForce = baseEntity.JumpForce;
             _interactionSystem = baseEntity.InteractionSystem;
             _collision = baseEntity.EntityCollision;
 
             _animatorHelper.OnLand += PerformLand;
             _collision.TriggerEnter += OnTriggerEnter;
+            _collision.TriggerExit += OnTriggerExit;
         }
 
-
+        private bool _isJumping;
         private Vector3 _direction;
-        
+        private IDamageable _target;
+
         private readonly float _speed;
         private readonly float _jumpForce;
+        private readonly Button _jumpButton;
         private readonly Animator _animator;
+        private readonly Button _attackButton;
         private readonly Rigidbody _rigidBody;
         private readonly MonoJoystick _joystick;
         private readonly EntityCollision _collision;
@@ -39,7 +47,13 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-            _collision.gameObject.SetActive(false);
+
+            _target = null;
+            _isJumping = false;
+            _attackButton.interactable = false;
+            _collision.gameObject.SetActive(true);
+            _jumpButton.onClick.AddListener(Jump);
+            _attackButton.onClick.AddListener(Attack);
         }
 
         public override void FixedUpdate()
@@ -58,21 +72,52 @@ namespace Core.Scripts.StatesMachine
             {
                 Jump();
             }
+
+            if (Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                Attack();
+            }
         }
 
         private void OnTriggerEnter(Collider collider)
         {
-            if (collider.gameObject.TryGetComponent(out IDamageable damageable) && !_interactionSystem.IsGround.Under)
+            if (collider.gameObject.TryGetComponent(out IDamageable damageable))
             {
-                StateMachine.SetState<JumpAttackEntityState>().SetTarget(damageable);
+                _target = damageable;
+
+                if (!_interactionSystem.IsGround.Under && _isJumping)
+                {
+                    StateMachine.SetState<JumpAttackEntityState>().SetTarget(damageable);
+                }
+                else
+                {
+                    _attackButton.interactable = true;
+                }
             }
+        }
+
+        private void OnTriggerExit(Collider coll)
+        {
+            if (coll.TryGetComponent(out IDamageable _))
+            {
+                _target = null;
+                _attackButton.interactable = false;
+            }
+        }
+
+        private void Attack()
+        {
+            if (!_interactionSystem.IsGround.Under || _target == null) return;
+
+            StateMachine.SetState<MeleeAttackEntityState>().SetAimTarget(_target);
         }
 
         private void Jump()
         {
             if (!_interactionSystem.IsGround.Under) return;
 
-            _collision.gameObject.SetActive(true);
+            _isJumping = true;
+            _rigidBody.velocity = Vector3.zero;
             _animator.SetTrigger(JumpAnimation);
             _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         }
@@ -87,20 +132,26 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformLand()
         {
-            _collision.gameObject.SetActive(false);
         }
 
         public override void Exit()
         {
             base.Exit();
-            
-            _collision.gameObject.SetActive(true);
+
+            _attackButton.interactable = false;
+            _jumpButton.onClick.RemoveListener(Jump);
+            _attackButton.onClick.RemoveListener(Attack);
+            _collision.gameObject.SetActive(false);
         }
 
         public void Dispose()
         {
+            _jumpButton.onClick.RemoveListener(Jump);
+            _attackButton.onClick.RemoveListener(Attack);
+
             _animatorHelper.OnLand -= PerformLand;
             _collision.TriggerEnter -= OnTriggerEnter;
+            _collision.TriggerExit -= OnTriggerExit;
         }
     }
 }

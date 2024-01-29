@@ -1,5 +1,6 @@
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
+using Reflex.Attributes;
 using UnityEngine;
 
 public class MonoPlayerController : BaseEntity
@@ -7,7 +8,15 @@ public class MonoPlayerController : BaseEntity
     [SerializeField] private float damageCooldown;
 
     private float _currentCooldownTime;
+    private ControlsWindow _controlsWindow;
 
+    [Inject]
+    public void Construct(WindowManager windowManager)
+    {
+        _controlsWindow = windowManager.GetWindow<ControlsWindow>();
+        _controlsWindow.Show();
+    }
+    
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
         if (StateMachine.CurrentEntityState is JumpAttackEntityState || _currentCooldownTime > 0) return false;
@@ -33,13 +42,13 @@ public class MonoPlayerController : BaseEntity
     private void Start()
     {
         StateMachine = new EntityStateMachine();
-        StateMachine.AddState(new PlayerMoveEntityState(StateMachine, this));
+        StateMachine.AddState(new PlayerMoveEntityState(StateMachine, this, _controlsWindow));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
+        StateMachine.AddState(new MeleeAttackEntityState(StateMachine,this));
         StateMachine.SetState<PlayerMoveEntityState>();
     }
 
     public override EntityStateMachine StateMachine { get; protected set; }
     [field: SerializeField] public float JumpForce { get; private set; }
-    [field: SerializeField] public MonoJoystick Joystick { get; private set; }
     [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
 }
