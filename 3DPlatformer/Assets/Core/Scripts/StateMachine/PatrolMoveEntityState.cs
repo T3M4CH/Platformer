@@ -24,8 +24,9 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-            
+
             _rigidBody.velocity = Vector3.zero;
+            _savedPosition = BaseEntity.transform.position;
             _animator.SetFloat(JoystickOffset, 0.5f);
         }
 

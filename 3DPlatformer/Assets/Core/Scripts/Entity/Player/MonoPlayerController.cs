@@ -9,8 +9,7 @@ public class MonoPlayerController : BaseEntity
 
     private float _currentCooldownTime;
     private ControlsWindow _controlsWindow;
-
-    [Inject]
+    
     public void Construct(WindowManager windowManager)
     {
         _controlsWindow = windowManager.GetWindow<ControlsWindow>();
@@ -50,5 +49,6 @@ public class MonoPlayerController : BaseEntity
 
     public override EntityStateMachine StateMachine { get; protected set; }
     [field: SerializeField] public float JumpForce { get; private set; }
+    [field: SerializeField] public Transform LookAtPosition { get; private set; }
     [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
 }

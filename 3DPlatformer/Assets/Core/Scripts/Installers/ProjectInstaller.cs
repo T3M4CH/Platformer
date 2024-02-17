@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ProjectInstaller : MonoBehaviour, IInstaller
 {
-    public void InstallBindings(ContainerDescriptor descriptor)
+    public void InstallBindings(ContainerBuilder descriptor)
     {
-        descriptor.AddInstance("Hello ");
+        descriptor.AddSingleton("Hello ");
     }
 }

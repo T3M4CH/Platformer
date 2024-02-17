@@ -16,8 +16,7 @@ namespace Core.Scripts.Entity
         private HealthbarManager _healthBarManager;
 
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
-
-        [Inject]
+        
         public void Construct(HealthbarManager healthbarManager)
         {
             _health = maxHealth;
