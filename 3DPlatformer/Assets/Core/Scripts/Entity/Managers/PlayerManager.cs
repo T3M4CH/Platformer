@@ -1,14 +1,16 @@
 ﻿using System;
 using Core.Scripts.Cameras;
+using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
 using Core.Scripts.Levels.Interfaces;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace Core.Scripts.Entity.Managers
 {
-    public class PlayerManager : IStartable, IDisposable
+    public class PlayerManager : IPlayerService, IStartable, IDisposable
     {
         private readonly ILevelService _levelService;
         private readonly WindowManager _windowManager;
@@ -44,6 +46,14 @@ namespace Core.Scripts.Entity.Managers
                 position.z -= 10;
                 _virtualCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
             }
+
+            PlayerInstance.OnDead += Restart;
+        }
+
+        private void Restart()
+        {
+            PlayerInstance.OnDead -= Restart;
+            SceneManager.LoadScene(0);
         }
 
         public void Start()

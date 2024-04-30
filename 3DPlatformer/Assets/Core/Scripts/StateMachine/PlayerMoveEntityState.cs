@@ -14,17 +14,11 @@ namespace Core.Scripts.StatesMachine
             _jumpButton = controlsWindow.JumpButton;
             _attackButton = controlsWindow.AttackButton;
 
-            _animatorHelper = baseEntity.AnimatorHelper;
             _rigidBody = baseEntity.RigidBody;
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
-            _jumpForce = baseEntity.JumpForce;
             _interactionSystem = baseEntity.InteractionSystem;
             _collision = baseEntity.EntityCollision;
-
-            _animatorHelper.OnLand += PerformLand;
-            _collision.TriggerEnter += OnTriggerEnter;
-            _collision.TriggerExit += OnTriggerExit;
         }
 
         private bool _isJumping;
@@ -39,9 +33,7 @@ namespace Core.Scripts.StatesMachine
         private readonly Rigidbody _rigidBody;
         private readonly MonoJoystick _joystick;
         private readonly EntityCollision _collision;
-        private readonly MonoAnimatorHelper _animatorHelper;
         private readonly MonoInteractionSystem _interactionSystem;
-        private static readonly int JumpAnimation = Animator.StringToHash("Jump");
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
         public override void Enter()
@@ -49,16 +41,20 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             _target = null;
-            _isJumping = false;
             _attackButton.interactable = false;
-            _collision.gameObject.SetActive(true);
             _jumpButton.onClick.AddListener(Jump);
             _attackButton.onClick.AddListener(Attack);
+
+            _collision.TriggerEnter += OnTriggerEnter;
+            _collision.TriggerExit += OnTriggerExit;
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+
+            _jumpButton.interactable = _interactionSystem.IsGround.Under;
+
             Move();
         }
 
@@ -85,14 +81,7 @@ namespace Core.Scripts.StatesMachine
             {
                 _target = damageable;
 
-                if (!_interactionSystem.IsGround.Under && _isJumping)
-                {
-                    StateMachine.SetState<JumpAttackEntityState>().SetTarget(damageable);
-                }
-                else
-                {
-                    _attackButton.interactable = true;
-                }
+                _attackButton.interactable = true;
             }
         }
 
@@ -114,12 +103,7 @@ namespace Core.Scripts.StatesMachine
 
         private void Jump()
         {
-            if (!_interactionSystem.IsGround.Under) return;
-
-            _isJumping = true;
-            _rigidBody.velocity = Vector3.zero;
-            _animator.SetTrigger(JumpAnimation);
-            _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+            StateMachine.SetState<JumpEntityState>();
         }
 
         private void Move()
@@ -128,10 +112,6 @@ namespace Core.Scripts.StatesMachine
             _rigidBody.MoveRotation(Quaternion.Euler(0, Math.Sign(_direction.x) * -90, 0));
 
             _animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
-        }
-
-        private void PerformLand()
-        {
         }
 
         public override void Exit()
@@ -149,7 +129,6 @@ namespace Core.Scripts.StatesMachine
             _jumpButton.onClick.RemoveListener(Jump);
             _attackButton.onClick.RemoveListener(Attack);
 
-            _animatorHelper.OnLand -= PerformLand;
             _collision.TriggerEnter -= OnTriggerEnter;
             _collision.TriggerExit -= OnTriggerExit;
         }

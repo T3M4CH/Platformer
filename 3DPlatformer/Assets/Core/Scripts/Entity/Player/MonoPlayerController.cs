@@ -42,6 +42,7 @@ public class MonoPlayerController : BaseEntity
     {
         StateMachine = new EntityStateMachine();
         StateMachine.AddState(new PlayerMoveEntityState(StateMachine, this, _controlsWindow));
+        StateMachine.AddState(new JumpEntityState(StateMachine, this, _controlsWindow));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine,this));
         StateMachine.SetState<PlayerMoveEntityState>();

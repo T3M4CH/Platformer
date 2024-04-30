@@ -1,4 +1,5 @@
 using System;
+using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
 using Core.Scripts.Levels.Interfaces;
@@ -7,11 +8,13 @@ using Object = UnityEngine.Object;
 public class EnemyManager : IStartable, IDisposable
 {
     private readonly HealthbarManager _healthbarManager;
+    private readonly IPlayerService _playerService;
     private readonly ILevelService _levelService;
 
-    public EnemyManager(HealthbarManager healthbarManager, ILevelService levelService)
+    public EnemyManager(HealthbarManager healthbarManager, IPlayerService playerService, ILevelService levelService)
     {
         _healthbarManager = healthbarManager;
+        _playerService = playerService;
         _levelService = levelService;
 
         _levelService.OnLevelChanged += PerformSpawn;
@@ -32,6 +35,11 @@ public class EnemyManager : IStartable, IDisposable
             var enemy = Object.Instantiate(enemies[i], levelBase.transform);
             enemy.transform.position = positions[i].position;
             enemy.Construct(_healthbarManager);
+
+            if (enemy is MonoBomberEnemy bomberEnemy)
+            {
+                bomberEnemy.Initialize(_playerService);
+            }
         }
     }
     

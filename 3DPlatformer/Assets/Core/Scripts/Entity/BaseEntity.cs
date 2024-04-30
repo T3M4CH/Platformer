@@ -9,6 +9,8 @@ namespace Core.Scripts.Entity
 {
     public abstract class BaseEntity : MonoBehaviour, IDamageable
     {
+        public event Action OnDead = () => { };
+        
         [SerializeField] private float maxHealth;
         [SerializeField] private Renderer skinRenderer;
 
@@ -33,7 +35,8 @@ namespace Core.Scripts.Entity
 
             if (_health < 0)
             {
-                Destroy(gameObject);
+                OnDead.Invoke();
+                gameObject.SetActive(false);
                 return false;
             }
 

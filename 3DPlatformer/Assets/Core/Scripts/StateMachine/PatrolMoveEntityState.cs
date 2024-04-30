@@ -14,11 +14,11 @@ namespace Core.Scripts.StatesMachine
 
         private Vector3 _savedPosition;
         private Vector3 _direction = Vector3.right;
-        
+
         private readonly Animator _animator;
         private readonly Rigidbody _rigidBody;
         private readonly MonoInteractionSystem _interactionSystem;
-        
+
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
         public override void Enter()
@@ -26,14 +26,19 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             _rigidBody.velocity = Vector3.zero;
-            _savedPosition = BaseEntity.transform.position;
+
+            if (_interactionSystem.IsGround.Under)
+            {
+                _savedPosition = BaseEntity.transform.position;
+            }
+
             _animator.SetFloat(JoystickOffset, 0.5f);
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            
+
             if (!_interactionSystem.IsGround.Under)
             {
                 _rigidBody.position = _savedPosition;
@@ -44,7 +49,7 @@ namespace Core.Scripts.StatesMachine
             {
                 _savedPosition = _rigidBody.position;
             }
-            
+
             _rigidBody.MovePosition(_rigidBody.position + _direction * (Time.fixedDeltaTime * BaseEntity.Speed));
         }
     }

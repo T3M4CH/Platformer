@@ -1,25 +1,32 @@
 using Core.Scripts.Entity;
 using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
-using Reflex.Attributes;
 using UnityEngine;
 
 public class MonoDefaultEnemy : BaseEntity
 {
     [SerializeField] private MonoInteractionSystem interactionSystem;
-    
+
     private HealthbarManager _healthBarManager;
-    
+
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        if(!base.TakeDamage(damage)) return false;
+        if (!base.TakeDamage(damage)) return false;
 
         if (force.HasValue)
         {
-            StateMachine.SetState<ThrownEntityState>();
+            if (StateMachine.CurrentEntityState is ThrownEntityState state)
+            {
+                state.Enter();
+            }
+            else
+            {
+                StateMachine.SetState<ThrownEntityState>();
+            }
+
             RigidBody.AddForce(force.Value * 5, ForceMode.Impulse);
         }
-        
+
         return true;
     }
 
@@ -47,7 +54,7 @@ public class MonoDefaultEnemy : BaseEntity
         StateMachine = new EntityStateMachine();
         StateMachine.AddState(new PatrolMoveEntityState(StateMachine, this, interactionSystem));
         StateMachine.AddState(new ThrownEntityState(StateMachine, this));
-        
+
         StateMachine.SetState<PatrolMoveEntityState>();
     }
 

@@ -25,7 +25,7 @@ public class MonoInteractionSystem : MonoBehaviour
         return new GroundStruct(under, front,back);
     }
 
-    private void Start()
+    private void Awake()
     {
         _transform = transform;
     }

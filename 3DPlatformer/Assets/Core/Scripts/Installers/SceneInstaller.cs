@@ -1,5 +1,6 @@
 using Core.Scripts.Cameras;
 using Core.Scripts.Entity.Managers;
+using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
 using Core.Scripts.Levels.Interfaces;
@@ -12,11 +13,12 @@ public class SceneInstaller : MonoBehaviour, IInstaller
     [SerializeField] private BaseVirtualCamera virtualCamera;
     [SerializeField] private MonoPlayerController playerController;
     [SerializeField] private HealthbarManagerSettings healthbarManagerSettings;
+
     public void InstallBindings(ContainerBuilder descriptor)
     {
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        
+
         descriptor.AddSingleton(healthbarManagerSettings);
         descriptor.AddSingleton(playerController);
         descriptor.AddSingleton(virtualCamera);
@@ -24,8 +26,8 @@ public class SceneInstaller : MonoBehaviour, IInstaller
 
         descriptor.AddSingleton(typeof(HealthbarManager));
         descriptor.AddSingleton(typeof(EnemyManager), typeof(IStartable));
-        descriptor.AddSingleton(typeof(PlayerManager), typeof(IStartable));
         descriptor.AddSingleton(typeof(LevelManager), typeof(ILevelService), typeof(IStartable));
+        descriptor.AddSingleton(typeof(PlayerManager), typeof(IPlayerService), typeof(IStartable));
 
         descriptor.OnContainerBuilt += PerformContainerBuilt;
 

@@ -7,14 +7,16 @@ using Object = UnityEngine.Object;
 
 public class LevelManager : ILevelService, IStartable
 {
+    private readonly WindowManager _windowManager;
     public event Action<MonoLevelBase> OnLevelChanged = _ => {};
 
     private int _currentId;
     private MonoLevelBase _levelInstance;
     private readonly LevelsConfig _levelsConfig;
 
-    public LevelManager()
+    public LevelManager(WindowManager windowManager)
     {
+        _windowManager = windowManager;
         _levelsConfig = Resources.Load<LevelsConfig>("LevelsConfig");
         _currentId = ES3.Load(SaveConstants.CurrentLevel, 0);
     }
@@ -40,7 +42,7 @@ public class LevelManager : ILevelService, IStartable
         }
 
         _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
-        _levelInstance.Initialize(this);
+        _levelInstance.Initialize(this, _windowManager);
         OnLevelChanged.Invoke(_levelInstance);
     }
 

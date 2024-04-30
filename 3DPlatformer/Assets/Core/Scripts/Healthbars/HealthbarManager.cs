@@ -29,6 +29,12 @@ namespace Core.Scripts.Healthbars
 
             healthBar.FillImage.fillAmount = currentHp / maxHealth;
 
+            if (currentHp < 0)
+            {
+                healthBar.gameObject.SetActive(false);
+                return;
+            }
+
             var token = transform.GetCancellationTokenOnDestroy();
 
             UniTask.Void(async () =>

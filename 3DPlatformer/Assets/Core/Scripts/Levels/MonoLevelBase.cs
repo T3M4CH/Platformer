@@ -5,10 +5,12 @@ using UnityEngine;
 public class MonoLevelBase : MonoBehaviour
 {
     protected ILevelService LevelService;
+    protected WindowManager WindowManager;
 
-    public void Initialize(ILevelService levelService)
+    public void Initialize(ILevelService levelService, WindowManager windowManager)
     {
         LevelService = levelService;
+        WindowManager = windowManager;
     }
     
     [field: SerializeField] public BaseEntity[] Enemies { get; private set; }
