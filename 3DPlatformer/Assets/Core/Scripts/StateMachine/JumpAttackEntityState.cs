@@ -9,49 +9,66 @@ namespace Core.Scripts.StatesMachine
         {
             _animator = baseEntity.Animator;
             _transform = baseEntity.transform;
+            _rigidBody = baseEntity.RigidBody;
+            _collision = baseEntity.EntityCollision;
+            _entityLayerMask = baseEntity.EntityLayerMask;
         }
 
         private float _currentTime;
-        private Vector3 _endPosition;
-        private Vector3 _startPosition;
+        private Vector3 _forceImpulse;
         private IDamageable _damageable;
-        
+
         private readonly Animator _animator;
         private readonly Transform _transform;
         private static readonly int JumpAttack = Animator.StringToHash("JumpAttack");
+        private readonly Rigidbody _rigidBody;
+        private readonly EntityCollision _collision;
+        private readonly LayerMask _entityLayerMask;
 
-        public void SetTarget(IDamageable damageable)
+        public void SetTarget(Vector3 startPosition)
         {
-            _damageable = damageable;
-            _animator.SetTrigger(JumpAttack);
-            _endPosition = damageable.transform.position;
+            _forceImpulse = _transform.forward * 3f;
+            _forceImpulse.y = startPosition.y;
+
+            _forceImpulse *= 3f;
+            
+            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
         }
 
         public override void Enter()
         {
             base.Enter();
-            BaseEntity.RigidBody.isKinematic = true;
             _currentTime = 0f;
-            _startPosition = _transform.position;
+            _animator.SetTrigger(JumpAttack);
+            
+            _collision.CollisionEnter += OnCollisionEnter;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (_entityLayerMask.value.Includes(collision.gameObject.layer) && collision.transform.TryGetComponent(out IDamageable damageable))
+            {
+                damageable.TakeDamage(15f, _transform.forward + Vector3.up);
+            }
         }
 
         public override void Update()
         {
             base.Update();
-            _currentTime += Time.deltaTime * 5f;
-            _transform.position = Vector3.Lerp(_startPosition, _endPosition, _currentTime);
+            _currentTime += Time.deltaTime * 2f;
 
             if (_currentTime >= 1)
             {
                 StateMachine.SetState<PlayerMoveEntityState>();
-                _damageable.TakeDamage(5, Vector3.right * Mathf.Sign(_endPosition.x - _startPosition.x) + Vector3.up);
             }
         }
 
         public override void Exit()
         {
             base.Exit();
-            BaseEntity.RigidBody.isKinematic = false;
+            
+            _collision.CollisionEnter -= OnCollisionEnter;
         }
     }
 }

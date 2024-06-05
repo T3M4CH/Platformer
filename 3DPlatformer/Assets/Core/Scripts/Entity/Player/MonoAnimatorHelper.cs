@@ -7,10 +7,16 @@ public class MonoAnimatorHelper : MonoBehaviour
     public event Action OnStand = () => { };
     public event Action OnStanding = () => { };
     public event Action OnAttacked = () => { };
+    public event Action OnAttackExitEvent = () => { };
     
     public void PerformAttackEvent()
     {
         OnAttacked.Invoke();
+    }
+
+    public void AttackExitEvent()
+    {
+        OnAttackExitEvent.Invoke();
     }
 
     public void PerformLandEvent()

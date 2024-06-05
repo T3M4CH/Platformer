@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MonoDefaultEnemy : BaseEntity
 {
+    [SerializeField] private GameObject weapon;
     [SerializeField] private MonoInteractionSystem interactionSystem;
 
     private HealthbarManager _healthBarManager;
@@ -15,16 +16,13 @@ public class MonoDefaultEnemy : BaseEntity
 
         if (force.HasValue)
         {
-            if (StateMachine.CurrentEntityState is ThrownEntityState state)
-            {
-                state.Enter();
-            }
-            else
-            {
-                StateMachine.SetState<ThrownEntityState>();
-            }
+            StateMachine.SetState<ThrownEntityState>();
 
             RigidBody.AddForce(force.Value * 5, ForceMode.Impulse);
+        }
+        else
+        {
+            StateMachine.SetState<DamagedEntityState>();
         }
 
         return true;
@@ -40,19 +38,13 @@ public class MonoDefaultEnemy : BaseEntity
         StateMachine.FixedUpdate();
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        if (EntityLayerMask.value.Includes(other.gameObject.layer))
-        {
-            var damageable = other.gameObject.GetComponent<IDamageable>();
-            damageable?.TakeDamage(5);
-        }
-    }
-
     private void Start()
     {
         StateMachine = new EntityStateMachine();
-        StateMachine.AddState(new PatrolMoveEntityState(StateMachine, this, interactionSystem));
+        var patrolMove = new PatrolMoveEntityState(StateMachine, this, interactionSystem);
+        StateMachine.AddState(patrolMove);
+        StateMachine.AddState(new MeleeAttackEntityState(StateMachine, patrolMove, weapon, this));
+        StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this));
         StateMachine.AddState(new ThrownEntityState(StateMachine, this));
 
         StateMachine.SetState<PatrolMoveEntityState>();

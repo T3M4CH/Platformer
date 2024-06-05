@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class MonoPlayerController : BaseEntity
 {
+    [SerializeField] private GameObject sword;
     [SerializeField] private float damageCooldown;
 
     private float _currentCooldownTime;
     private ControlsWindow _controlsWindow;
-    
+
     public void Construct(WindowManager windowManager)
     {
         _controlsWindow = windowManager.GetWindow<ControlsWindow>();
         _controlsWindow.Show();
     }
-    
+
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
         if (StateMachine.CurrentEntityState is JumpAttackEntityState || _currentCooldownTime > 0) return false;
@@ -41,10 +42,11 @@ public class MonoPlayerController : BaseEntity
     private void Start()
     {
         StateMachine = new EntityStateMachine();
-        StateMachine.AddState(new PlayerMoveEntityState(StateMachine, this, _controlsWindow));
+        var playerMoveState = new PlayerMoveEntityState(StateMachine, this, _controlsWindow);
+        StateMachine.AddState(playerMoveState);
         StateMachine.AddState(new JumpEntityState(StateMachine, this, _controlsWindow));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
-        StateMachine.AddState(new MeleeAttackEntityState(StateMachine,this));
+        StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
         StateMachine.SetState<PlayerMoveEntityState>();
     }
 

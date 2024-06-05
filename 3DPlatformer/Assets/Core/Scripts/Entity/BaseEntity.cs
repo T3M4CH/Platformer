@@ -31,7 +31,7 @@ namespace Core.Scripts.Entity
 
             _health -= damage;
             _healthBarManager.UpdateHp(_health, maxHealth, transform, Vector3.up);
-            skinRenderer.material.DOColor(Color.red, 0.1f).OnKill(() => skinRenderer.material.SetColor(BaseColor, Color.white));
+            skinRenderer.material.DOColor(Color.red, 0.2f).OnKill(() => skinRenderer.material.SetColor(BaseColor, Color.white));
 
             if (_health < 0)
             {
@@ -52,6 +52,7 @@ namespace Core.Scripts.Entity
         
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public Animator Animator { get; private set; }
+        [field: SerializeField] public Transform AttackTransform { get; private set; }
         [field: SerializeField] public Rigidbody RigidBody { get; private set; }
         [field: SerializeField] public EntityCollision EntityCollision { get; private set; }
         [field: SerializeField] public MonoAnimatorHelper AnimatorHelper { get; private set; }

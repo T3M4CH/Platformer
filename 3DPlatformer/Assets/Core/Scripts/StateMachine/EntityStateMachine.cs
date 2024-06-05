@@ -17,14 +17,21 @@ namespace Core.Scripts.StatesMachine
             _states.Add(entityState.GetType(), entityState);
         }
 
+        public void SetState(EntityState entityState)
+        {
+            var type = entityState.GetType();
+            
+            if (_states.TryGetValue(type, out var state))
+            {
+                CurrentEntityState?.Exit();
+                CurrentEntityState = state;
+                CurrentEntityState?.Enter();
+            }
+        }
+
         public T SetState<T>() where T : EntityState
         {
             var type = typeof(T);
-
-            if (CurrentEntityState != null && CurrentEntityState.GetType() == type)
-            {
-                return (T)CurrentEntityState;
-            }
 
             if (_states.TryGetValue(type, out var state))
             {
