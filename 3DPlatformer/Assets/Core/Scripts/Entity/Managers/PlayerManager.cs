@@ -15,14 +15,16 @@ namespace Core.Scripts.Entity.Managers
         private readonly ILevelService _levelService;
         private readonly WindowManager _windowManager;
         private readonly HealthbarManager _healthbarManager;
+        private readonly MonoPortalController _portalController;
         private readonly MonoPlayerController _playerPrefab;
         private readonly BaseVirtualCamera _virtualCamera;
 
-        public PlayerManager(ILevelService levelService, WindowManager windowManager, HealthbarManager healthbarManager, MonoPlayerController playerPrefab, BaseVirtualCamera virtualCamera)
+        public PlayerManager(ILevelService levelService, WindowManager windowManager, HealthbarManager healthbarManager, MonoPortalController portalController, MonoPlayerController playerPrefab, BaseVirtualCamera virtualCamera)
         {
             _levelService = levelService;
             _windowManager = windowManager;
             _healthbarManager = healthbarManager;
+            _portalController = portalController;
             _playerPrefab = playerPrefab;
             _virtualCamera = virtualCamera;
 
@@ -42,10 +44,11 @@ namespace Core.Scripts.Entity.Managers
             else
             {
                 var position = levelBase.PlayerSpawnPoint.position;
-                PlayerInstance.transform.position = position;
                 position.z -= 10;
                 _virtualCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
             }
+            
+            _portalController.TeleportEntity(PlayerInstance, levelBase.PlayerSpawnPoint.position);
 
             PlayerInstance.OnDead += Restart;
         }

@@ -12,6 +12,7 @@ public class SceneInstaller : MonoBehaviour, IInstaller
     [SerializeField] private WindowManager windowManager;
     [SerializeField] private BaseVirtualCamera virtualCamera;
     [SerializeField] private MonoPlayerController playerController;
+    [SerializeField] private MonoPortalController portalController;
     [SerializeField] private HealthbarManagerSettings healthbarManagerSettings;
 
     public void InstallBindings(ContainerBuilder descriptor)
@@ -21,6 +22,7 @@ public class SceneInstaller : MonoBehaviour, IInstaller
 
         descriptor.AddSingleton(healthbarManagerSettings);
         descriptor.AddSingleton(playerController);
+        descriptor.AddSingleton(portalController);
         descriptor.AddSingleton(virtualCamera);
         descriptor.AddSingleton(windowManager);
 

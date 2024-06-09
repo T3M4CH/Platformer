@@ -2,25 +2,28 @@ using Core.Scripts.Levels.Interfaces;
 using System;
 using Core.Scripts.Extensions;
 using Core.Scripts.Levels;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 public class LevelManager : ILevelService, IStartable
 {
     private readonly WindowManager _windowManager;
-    public event Action<MonoLevelBase> OnLevelChanged = _ => {};
+    private readonly MonoPortalController _portalController;
+    public event Action<MonoLevelBase> OnLevelChanged = _ => { };
 
     private int _currentId;
     private MonoLevelBase _levelInstance;
     private readonly LevelsConfig _levelsConfig;
 
-    public LevelManager(WindowManager windowManager)
+    public LevelManager(WindowManager windowManager, MonoPortalController portalController)
     {
         _windowManager = windowManager;
+        _portalController = portalController;
         _levelsConfig = Resources.Load<LevelsConfig>("LevelsConfig");
         _currentId = ES3.Load(SaveConstants.CurrentLevel, 0);
     }
-    
+
     public void CompleteLevel()
     {
         _currentId += 1;
@@ -29,7 +32,7 @@ public class LevelManager : ILevelService, IStartable
         {
             _currentId = 0;
         }
-        
+
         ES3.Save(SaveConstants.CurrentLevel, _currentId);
         ChangeLevel();
     }
@@ -38,12 +41,27 @@ public class LevelManager : ILevelService, IStartable
     {
         if (_levelInstance)
         {
-            Object.Destroy(_levelInstance.gameObject);
+            UniTask.Void(async () =>
+            {
+                _portalController.AppearPortalAtPlayer();
+                
+                await UniTask.Delay(TimeSpan.FromSeconds(2.5f));
+
+                Object.Destroy(_levelInstance.gameObject);
+                
+                _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
+                _levelInstance.Initialize(this, _windowManager);
+                OnLevelChanged.Invoke(_levelInstance);
+            });
+        }
+        else
+        {
+            _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
+            _levelInstance.Initialize(this, _windowManager);
+            OnLevelChanged.Invoke(_levelInstance);
         }
 
-        _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
-        _levelInstance.Initialize(this, _windowManager);
-        OnLevelChanged.Invoke(_levelInstance);
+       
     }
 
     public void Start()

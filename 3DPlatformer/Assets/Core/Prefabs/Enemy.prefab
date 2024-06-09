@@ -83,6 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   skinRenderer: {fileID: 4830601438628348194}
+  dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   <Speed>k__BackingField: 3
   <Animator>k__BackingField: {fileID: 4161428065151735183}
   <AttackTransform>k__BackingField: {fileID: 6756897236639599541}

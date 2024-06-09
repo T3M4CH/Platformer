@@ -38,6 +38,7 @@ namespace Core.Scripts.StatesMachine
 
             _rigidBody.velocity = Vector3.zero;
             _attackButton.interactable = true;
+            _jumpButton.interactable = true;
             _jumpButton.onClick.AddListener(Jump);
             _attackButton.onClick.AddListener(Attack);
         }

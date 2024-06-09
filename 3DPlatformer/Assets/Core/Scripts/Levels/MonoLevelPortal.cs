@@ -7,7 +7,7 @@ public class MonoLevelPortal : MonoLevelBase
 
     private void PerformTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out MonoPlayerController _))
+        if (other.TryGetComponent(out MonoPlayerController player) && player.enabled)
         {
             LevelService.CompleteLevel();
         }
