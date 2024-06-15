@@ -10,10 +10,10 @@ using UnityEngine;
 public class SceneInstaller : MonoBehaviour, IInstaller
 {
     [SerializeField] private WindowManager windowManager;
-    [SerializeField] private BaseVirtualCamera virtualCamera;
     [SerializeField] private MonoPlayerController playerController;
     [SerializeField] private MonoPortalController portalController;
     [SerializeField] private HealthbarManagerSettings healthbarManagerSettings;
+    [SerializeField] private SerializableCameraSettings camerasSettings;
 
     public void InstallBindings(ContainerBuilder descriptor)
     {
@@ -23,12 +23,13 @@ public class SceneInstaller : MonoBehaviour, IInstaller
         descriptor.AddSingleton(healthbarManagerSettings);
         descriptor.AddSingleton(playerController);
         descriptor.AddSingleton(portalController);
-        descriptor.AddSingleton(virtualCamera);
+        descriptor.AddSingleton(camerasSettings);
         descriptor.AddSingleton(windowManager);
 
         descriptor.AddSingleton(typeof(HealthbarManager));
         descriptor.AddSingleton(typeof(EnemyManager), typeof(IStartable));
         descriptor.AddSingleton(typeof(LevelManager), typeof(ILevelService), typeof(IStartable));
+        descriptor.AddSingleton(typeof(CameraService), typeof(ICameraService));
         descriptor.AddSingleton(typeof(PlayerManager), typeof(IPlayerService), typeof(IStartable));
 
         descriptor.OnContainerBuilt += PerformContainerBuilt;

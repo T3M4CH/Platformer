@@ -19,6 +19,7 @@ namespace Core.Scripts.StatesMachine
             _rigidBody = baseEntity.RigidBody;
             _jumpForce = baseEntity.JumpForce;
             _animatorHelper = baseEntity.AnimatorHelper;
+            _interactionSystem = baseEntity.InteractionSystem;
         }
 
         private Vector3 _direction;
@@ -33,6 +34,7 @@ namespace Core.Scripts.StatesMachine
         private readonly MonoJoystick _joystick;
         private readonly EntityCollision _collision;
         private readonly MonoAnimatorHelper _animatorHelper;
+        private readonly MonoInteractionSystem _interactionSystem;
 
         private static readonly int JumpAnimation = Animator.StringToHash("Jump");
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
@@ -92,7 +94,11 @@ namespace Core.Scripts.StatesMachine
         {
             if (StateMachine.CurrentEntityState == this)
             {
+                var isGround = _interactionSystem.IsGround.Under;
+
+                var velocity = isGround ? Vector3.zero : _rigidBody.velocity;
                 StateMachine.SetState<PlayerMoveEntityState>();
+                _rigidBody.velocity = velocity;
             }
         }
 

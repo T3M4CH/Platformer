@@ -10,16 +10,18 @@ public class LevelManager : ILevelService, IStartable
 {
     private readonly WindowManager _windowManager;
     private readonly MonoPortalController _portalController;
+    private readonly ICameraService _cameraService;
     public event Action<MonoLevelBase> OnLevelChanged = _ => { };
 
     private int _currentId;
     private MonoLevelBase _levelInstance;
     private readonly LevelsConfig _levelsConfig;
 
-    public LevelManager(WindowManager windowManager, MonoPortalController portalController)
+    public LevelManager(WindowManager windowManager, MonoPortalController portalController, ICameraService cameraService)
     {
         _windowManager = windowManager;
         _portalController = portalController;
+        _cameraService = cameraService;
         _levelsConfig = Resources.Load<LevelsConfig>("LevelsConfig");
         _currentId = ES3.Load(SaveConstants.CurrentLevel, 0);
     }
@@ -50,18 +52,16 @@ public class LevelManager : ILevelService, IStartable
                 Object.Destroy(_levelInstance.gameObject);
                 
                 _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
-                _levelInstance.Initialize(this, _windowManager);
+                _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
                 OnLevelChanged.Invoke(_levelInstance);
             });
         }
         else
         {
             _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
-            _levelInstance.Initialize(this, _windowManager);
+            _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
             OnLevelChanged.Invoke(_levelInstance);
         }
-
-       
     }
 
     public void Start()

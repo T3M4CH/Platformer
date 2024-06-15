@@ -17,16 +17,18 @@ namespace Core.Scripts.Entity.Managers
         private readonly HealthbarManager _healthbarManager;
         private readonly MonoPortalController _portalController;
         private readonly MonoPlayerController _playerPrefab;
-        private readonly BaseVirtualCamera _virtualCamera;
+        private readonly ICameraService _cameraService;
+        private readonly PlayerVirtualCamera _playerCamera;
 
-        public PlayerManager(ILevelService levelService, WindowManager windowManager, HealthbarManager healthbarManager, MonoPortalController portalController, MonoPlayerController playerPrefab, BaseVirtualCamera virtualCamera)
+        public PlayerManager(ILevelService levelService, WindowManager windowManager, HealthbarManager healthbarManager, MonoPortalController portalController, MonoPlayerController playerPrefab, ICameraService cameraService)
         {
             _levelService = levelService;
             _windowManager = windowManager;
             _healthbarManager = healthbarManager;
             _portalController = portalController;
             _playerPrefab = playerPrefab;
-            _virtualCamera = virtualCamera;
+            _cameraService = cameraService;
+            _playerCamera = _cameraService.ChangeActiveCamera<PlayerVirtualCamera>();
 
             _levelService.OnLevelChanged += PerformSpawn;
         }
@@ -39,13 +41,13 @@ namespace Core.Scripts.Entity.Managers
                 PlayerInstance.Construct(_windowManager);
                 PlayerInstance.Construct(_healthbarManager);
 
-                _virtualCamera.SetFollowAt(PlayerInstance.LookAtPosition).SetLookAt(PlayerInstance.LookAtPosition);
+                _playerCamera.SetFollowAt(PlayerInstance.LookAtPosition).SetLookAt(PlayerInstance.LookAtPosition);
             }
             else
             {
                 var position = levelBase.PlayerSpawnPoint.position;
                 position.z -= 10;
-                _virtualCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
+                _playerCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
             }
             
             _portalController.TeleportEntity(PlayerInstance, levelBase.PlayerSpawnPoint.position);
