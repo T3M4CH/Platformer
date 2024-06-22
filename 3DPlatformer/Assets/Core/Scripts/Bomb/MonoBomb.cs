@@ -56,6 +56,7 @@ public class MonoBomb : MonoBehaviour
 
     private void Explode()
     {
+        bombCollider.enabled = false;
         explosionParticle.SetActive(true);
         explosionParticle.transform.SetParent(null);
 

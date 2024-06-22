@@ -23,7 +23,6 @@ namespace Core.Scripts.StatesMachine
         }
 
         private Vector3 _direction;
-        private Vector3 _jumpStartPosition;
 
         private readonly float _speed;
         private readonly float _jumpForce;
@@ -43,7 +42,6 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
-            _jumpStartPosition = _rigidBody.position;
             _rigidBody.velocity = Vector3.zero;
             _jumpButton.interactable = false;
             _attackButton.interactable = true;
@@ -57,7 +55,7 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformAttack()
         {
-            StateMachine.SetState<JumpAttackEntityState>().SetTarget(_jumpStartPosition);
+            StateMachine.SetState<JumpAttackEntityState>();
         }
 
         public override void Update()

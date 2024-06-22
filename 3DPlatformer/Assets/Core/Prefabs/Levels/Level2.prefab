@@ -1007,7 +1007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3021a309755c4fbbb37eb44961dac399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 5
+  lifeTime: 3
   ratPrefab: {fileID: 624110084208210480, guid: 709ac7e3892167e4b83dfe7b2b0a71e6, type: 3}
   spawnPosition: {fileID: 3215158582658374923}
   woodParts:
@@ -1172,7 +1172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3021a309755c4fbbb37eb44961dac399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 5
+  lifeTime: 3
   ratPrefab: {fileID: 624110084208210480, guid: 709ac7e3892167e4b83dfe7b2b0a71e6, type: 3}
   spawnPosition: {fileID: 1174245509693064002}
   woodParts:

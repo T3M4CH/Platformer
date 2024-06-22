@@ -1,5 +1,7 @@
+using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
+using Core.Scripts.Healthbars;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -11,15 +13,17 @@ public class MonoPlayerController : BaseEntity
     private float _currentCooldownTime;
     private ControlsWindow _controlsWindow;
 
-    public void Construct(WindowManager windowManager)
+    public void Construct(HealthbarManager healthbarManager, IEffectService effectService, WindowManager windowManager)
     {
+        base.Construct(healthbarManager, effectService);
+        
         _controlsWindow = windowManager.GetWindow<ControlsWindow>();
         _controlsWindow.Show();
     }
 
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        if (StateMachine.CurrentEntityState is JumpAttackEntityState || _currentCooldownTime > 0) return false;
+        if (_currentCooldownTime > 0) return false;
 
         _currentCooldownTime = damageCooldown;
 

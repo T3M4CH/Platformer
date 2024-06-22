@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Core.Scripts.Entity;
 using DG.Tweening;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class MonoPortalController : MonoBehaviour
     private BaseEntity _entity;
     private Transform _transform;
     private Material _dissolveMaterial;
+    private ParticleSystem[] _portalParticles;
     private static readonly int DissolveAmount = Shader.PropertyToID("_DissolveAmount");
 
     private void Awake()
@@ -26,13 +28,19 @@ public class MonoPortalController : MonoBehaviour
 
         _dissolveMaterial.SetTexture("_MainTex", texture);
         meshRenderer.materials = new[] { _dissolveMaterial };
+
+        _portalParticles = GetComponentsInChildren<ParticleSystem>();
     }
 
     public void TeleportEntity(BaseEntity entity, Vector3 position)
     {
         _entity = entity;
+        
+        foreach (var portalParticle in _portalParticles)
+        {
+            portalParticle.Play();
+        }
 
-        gameObject.SetActive(true);
         _entity.gameObject.SetActive(true);
 
         _entity.enabled = false;
@@ -51,7 +59,7 @@ public class MonoPortalController : MonoBehaviour
             _entity.enabled = true;
 
 
-            DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject).OnKill(() => gameObject.SetActive(false));
+            DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject);
         });
 
         _transform.DOMoveY(_transform.position.y + 2, 1.5f).SetLink(gameObject);
@@ -61,7 +69,10 @@ public class MonoPortalController : MonoBehaviour
     {
         if (!_entity) throw new Exception("Player not saved");
         
-        gameObject.SetActive(true);
+        foreach (var portalParticle in _portalParticles)
+        {
+            portalParticle.Play();
+        }
         
         _transform.localScale = Vector3.zero;
         _transform.position = _entity.transform.position;
@@ -74,6 +85,6 @@ public class MonoPortalController : MonoBehaviour
 
         _transform.DOScale(targetScale, 1).SetEase(Ease.OutBack).SetLink(gameObject);
         _transform.DOMoveY(_transform.position.y + 2, 1.5f).SetLink(gameObject);
-        DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 1, 0, 2).SetLink(gameObject).OnKill(() => gameObject.SetActive(false));
+        DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 1, 0, 2).SetLink(gameObject);
     }
 }

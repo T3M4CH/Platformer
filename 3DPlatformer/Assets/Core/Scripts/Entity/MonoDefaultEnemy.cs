@@ -12,7 +12,11 @@ public class MonoDefaultEnemy : BaseEntity
 
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        if (!base.TakeDamage(damage)) return false;
+        if (!base.TakeDamage(damage))
+        {
+            weapon.SetActive(false);
+            return false;
+        }
 
         if (force.HasValue)
         {
@@ -44,8 +48,8 @@ public class MonoDefaultEnemy : BaseEntity
         var patrolMove = new PatrolMoveEntityState(StateMachine, this, interactionSystem);
         StateMachine.AddState(patrolMove);
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, patrolMove, weapon, this));
-        StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this));
-        StateMachine.AddState(new ThrownEntityState(StateMachine, this));
+        StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this, EffectService));
+        StateMachine.AddState(new ThrownEntityState(StateMachine, this,EffectService));
 
         StateMachine.SetState<PatrolMoveEntityState>();
     }

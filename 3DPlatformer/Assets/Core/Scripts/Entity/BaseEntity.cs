@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
 using DG.Tweening;
@@ -10,7 +11,7 @@ namespace Core.Scripts.Entity
     public abstract class BaseEntity : MonoBehaviour, IDamageable
     {
         public event Action OnDead = () => { };
-        
+
         [SerializeField] private float maxHealth;
         [SerializeField] private Renderer skinRenderer;
         [SerializeField] private Material dissolvePrefab;
@@ -23,10 +24,11 @@ namespace Core.Scripts.Entity
         private static readonly int MainTex = Shader.PropertyToID("_MainTex");
         private static readonly int DissolveAmount = Shader.PropertyToID("_DissolveAmount");
 
-        public void Construct(HealthbarManager healthbarManager)
+        public void Construct(HealthbarManager healthbarManager, IEffectService effectService)
         {
             _health = maxHealth;
             _healthBarManager = healthbarManager;
+            EffectService = effectService;
 
             _dissolveMaterial = new Material(dissolvePrefab);
             var texture = skinRenderer.material.GetTexture(MainTex);
@@ -53,13 +55,11 @@ namespace Core.Scripts.Entity
                     entityCollider.enabled = false;
                 }
 
-                DOTween.To(t => skinRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject).OnKill(() =>
-                {
-                    Destroy(gameObject);
-                });
-
-                enabled = false;
+                DOTween.To(t => skinRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject).OnKill(() => { Destroy(gameObject); });
+                EffectService.GetEffect(EVfxType.Die, true).SetPosition(transform.position);
                 
+                enabled = false;
+
                 OnDead.Invoke();
                 return false;
             }
@@ -71,13 +71,16 @@ namespace Core.Scripts.Entity
         {
             skinRenderer.material.DOKill();
         }
-        
+
         public abstract EntityStateMachine StateMachine { get; protected set; }
         
+        public IEffectService EffectService { get; private set; }
+
         [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public Animator Animator { get; private set; }
         [field: SerializeField] public Transform AttackTransform { get; private set; }
         [field: SerializeField] public Rigidbody RigidBody { get; private set; }
+        [field: SerializeField] public GameObject KickEffect { get; private set; }
         [field: SerializeField] public EntityCollision EntityCollision { get; private set; }
         [field: SerializeField] public MonoAnimatorHelper AnimatorHelper { get; private set; }
         [field: SerializeField] public LayerMask WaterLayerMask { get; private set; }

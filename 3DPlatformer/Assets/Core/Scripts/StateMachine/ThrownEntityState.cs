@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Entity;
 using UnityEngine;
 
@@ -6,8 +7,11 @@ namespace Core.Scripts.StatesMachine
 {
     public class ThrownEntityState : EntityState, IDisposable
     {
-        public ThrownEntityState(EntityStateMachine entityStateMachine, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
+        private readonly IEffectService _effectService;
+
+        public ThrownEntityState(EntityStateMachine entityStateMachine, BaseEntity baseEntity, IEffectService effectService) : base(entityStateMachine, baseEntity)
         {
+            _effectService = effectService;
             _animator = baseEntity.Animator;
             _animatorHelper = baseEntity.AnimatorHelper;
             _entityCollision = baseEntity.EntityCollision;
@@ -28,6 +32,7 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
             
+            _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
             _animator.SetTrigger(Fall);
         }
 

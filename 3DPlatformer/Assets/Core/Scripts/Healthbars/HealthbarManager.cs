@@ -8,21 +8,22 @@ namespace Core.Scripts.Healthbars
 {
     public class HealthbarManager
     {
+        private Camera _camera;
+        
         private readonly MonoHealthbar _healthBarPrefab;
         private readonly RectTransform _rectParent;
-        private readonly Camera _camera;
         private readonly Dictionary<Transform, MonoHealthbar> _healthbars = new();
 
         public HealthbarManager(HealthbarManagerSettings healthbarManagerSettings)
         {
             _rectParent = healthbarManagerSettings.Canvas;
             _healthBarPrefab = healthbarManagerSettings.HealthBarPrefab;
-
-            _camera = Camera.main;
         }
 
         public void UpdateHp(float currentHp, float maxHealth, Transform transform, Vector3 offset)
         {
+            _camera ??= Camera.main;
+            
             if (!_healthbars.ContainsKey(transform)) _healthbars.Add(transform, CreateHealthBar());
 
             var healthBar = _healthbars[transform];

@@ -1,4 +1,5 @@
 using System;
+using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
@@ -10,12 +11,14 @@ public class EnemyManager : IStartable, IDisposable
     private readonly HealthbarManager _healthbarManager;
     private readonly IPlayerService _playerService;
     private readonly ILevelService _levelService;
+    private readonly IEffectService _effectService;
 
-    public EnemyManager(HealthbarManager healthbarManager, IPlayerService playerService, ILevelService levelService)
+    public EnemyManager(HealthbarManager healthbarManager, IPlayerService playerService, ILevelService levelService, IEffectService effectService)
     {
         _healthbarManager = healthbarManager;
         _playerService = playerService;
         _levelService = levelService;
+        _effectService = effectService;
 
         _levelService.OnLevelChanged += PerformSpawn;
     }
@@ -29,12 +32,12 @@ public class EnemyManager : IStartable, IDisposable
 
         var enemies = levelBase.Enemies;
         var positions = levelBase.EnemiesSpawnPoints;
-        
+
         for (var i = 0; i < enemies.Length; i++)
         {
             var enemy = Object.Instantiate(enemies[i], levelBase.transform);
             enemy.transform.position = positions[i].position;
-            enemy.Construct(_healthbarManager);
+            enemy.Construct(_healthbarManager, _effectService);
 
             if (enemy is MonoBomberEnemy bomberEnemy)
             {
@@ -42,10 +45,9 @@ public class EnemyManager : IStartable, IDisposable
             }
         }
     }
-    
+
     public void Start()
     {
-        
     }
 
     public void Dispose()

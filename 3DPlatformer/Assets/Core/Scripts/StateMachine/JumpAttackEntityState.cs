@@ -1,4 +1,5 @@
-﻿using Core.Scripts.Entity;
+﻿using System.Linq;
+using Core.Scripts.Entity;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
@@ -12,6 +13,9 @@ namespace Core.Scripts.StatesMachine
             _rigidBody = baseEntity.RigidBody;
             _collision = baseEntity.EntityCollision;
             _entityLayerMask = baseEntity.EntityLayerMask;
+
+            _kickEffect = BaseEntity.KickEffect;
+            _kickEffectParticles = _kickEffect.GetComponentsInChildren<ParticleSystem>().Select(el => el.emission).ToArray();
         }
 
         private float _currentTime;
@@ -24,17 +28,8 @@ namespace Core.Scripts.StatesMachine
         private readonly Rigidbody _rigidBody;
         private readonly EntityCollision _collision;
         private readonly LayerMask _entityLayerMask;
-
-        public void SetTarget(Vector3 startPosition)
-        {
-            _forceImpulse = _transform.forward * 3f;
-            _forceImpulse.y = startPosition.y;
-
-            _forceImpulse *= 3f;
-            
-            _rigidBody.velocity = Vector3.zero;
-            _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
-        }
+        private readonly GameObject _kickEffect;
+        private readonly ParticleSystem.EmissionModule[] _kickEffectParticles;
 
         public override void Enter()
         {
@@ -42,7 +37,22 @@ namespace Core.Scripts.StatesMachine
             _currentTime = 0f;
             _animator.SetTrigger(JumpAttack);
             
+            SetActiveKickParticle(true);
+            
             _collision.CollisionEnter += OnCollisionEnter;
+            
+            _forceImpulse = _transform.forward * 10f;
+            
+            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
+        }
+
+        private void SetActiveKickParticle(bool value)
+        {
+            for (var i = 0; i < _kickEffectParticles.Length; i++)
+            {
+                _kickEffectParticles[i].enabled = value;
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -69,6 +79,7 @@ namespace Core.Scripts.StatesMachine
             base.Exit();
             
             _collision.CollisionEnter -= OnCollisionEnter;
+            SetActiveKickParticle(false);
         }
     }
 }

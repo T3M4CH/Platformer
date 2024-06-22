@@ -50,7 +50,7 @@ namespace Core.Scripts.StatesMachine
             {
                 try
                 {
-                    await UniTask.Delay(TimeSpan.FromSeconds(2), cancellationToken: _tokenSource.Token);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _tokenSource.Token);
 
                     _isAbleToAttack = true;
                 }

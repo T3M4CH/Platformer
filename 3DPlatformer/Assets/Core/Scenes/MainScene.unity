@@ -1100,7 +1100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1493365865480228, guid: afc3325e46a304048a72619540268458, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4010038249821752, guid: afc3325e46a304048a72619540268458, type: 3}
       propertyPath: m_LocalScale.x
@@ -1156,6 +1156,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4010038249821752, guid: afc3325e46a304048a72619540268458, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198169605785703812, guid: afc3325e46a304048a72619540268458, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198169605785703812, guid: afc3325e46a304048a72619540268458, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 198492239878873158, guid: afc3325e46a304048a72619540268458, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198492239878873158, guid: afc3325e46a304048a72619540268458, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 199068756061082450, guid: afc3325e46a304048a72619540268458, type: 3}
+      propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1353,6 +1373,11 @@ MonoBehaviour:
     <Cameras>k__BackingField:
     - {fileID: 7585093231223160926, guid: 426c710e908b90e428a681ddc38905fe, type: 3}
     - {fileID: -7438021583560788795, guid: d485fc8ea581b4b448989a8e52c55624, type: 3}
+  effectStructs:
+  - <Type>k__BackingField: 0
+    <Effect>k__BackingField: {fileID: 8003788596706708425, guid: ebbec54bca97f1042b4317c8f2ed51a2, type: 3}
+  - <Type>k__BackingField: 1
+    <Effect>k__BackingField: {fileID: -4344883821834319783, guid: 2ff0db32dbe951b44a0bc0c297a9b0aa, type: 3}
 --- !u!114 &1532660816
 MonoBehaviour:
   m_ObjectHideFlags: 0

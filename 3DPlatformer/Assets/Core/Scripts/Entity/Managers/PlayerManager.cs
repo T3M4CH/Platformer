@@ -1,9 +1,11 @@
 ﻿using System;
 using Core.Scripts.Cameras;
+using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
 using Core.Scripts.Levels.Interfaces;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -18,9 +20,19 @@ namespace Core.Scripts.Entity.Managers
         private readonly MonoPortalController _portalController;
         private readonly MonoPlayerController _playerPrefab;
         private readonly ICameraService _cameraService;
+        private readonly IEffectService _effectService;
         private readonly PlayerVirtualCamera _playerCamera;
 
-        public PlayerManager(ILevelService levelService, WindowManager windowManager, HealthbarManager healthbarManager, MonoPortalController portalController, MonoPlayerController playerPrefab, ICameraService cameraService)
+        public PlayerManager
+        (
+            ILevelService levelService,
+            WindowManager windowManager,
+            HealthbarManager healthbarManager,
+            MonoPortalController portalController,
+            MonoPlayerController playerPrefab,
+            ICameraService cameraService,
+            IEffectService effectService
+        )
         {
             _levelService = levelService;
             _windowManager = windowManager;
@@ -28,6 +40,7 @@ namespace Core.Scripts.Entity.Managers
             _portalController = portalController;
             _playerPrefab = playerPrefab;
             _cameraService = cameraService;
+            _effectService = effectService;
             _playerCamera = _cameraService.ChangeActiveCamera<PlayerVirtualCamera>();
 
             _levelService.OnLevelChanged += PerformSpawn;
@@ -38,8 +51,7 @@ namespace Core.Scripts.Entity.Managers
             if (!PlayerInstance)
             {
                 PlayerInstance = Object.Instantiate(_playerPrefab, levelBase.PlayerSpawnPoint.position, Quaternion.identity);
-                PlayerInstance.Construct(_windowManager);
-                PlayerInstance.Construct(_healthbarManager);
+                PlayerInstance.Construct(_healthbarManager, _effectService, _windowManager);
 
                 _playerCamera.SetFollowAt(PlayerInstance.LookAtPosition).SetLookAt(PlayerInstance.LookAtPosition);
             }
@@ -49,7 +61,7 @@ namespace Core.Scripts.Entity.Managers
                 position.z -= 10;
                 _playerCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
             }
-            
+
             _portalController.TeleportEntity(PlayerInstance, levelBase.PlayerSpawnPoint.position);
 
             PlayerInstance.OnDead += Restart;
@@ -58,7 +70,12 @@ namespace Core.Scripts.Entity.Managers
         private void Restart()
         {
             PlayerInstance.OnDead -= Restart;
-            SceneManager.LoadScene(0);
+
+            UniTask.Void(async () =>
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
+                SceneManager.LoadScene(0);
+            });
         }
 
         public void Start()

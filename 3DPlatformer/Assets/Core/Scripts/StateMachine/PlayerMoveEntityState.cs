@@ -16,6 +16,7 @@ namespace Core.Scripts.StatesMachine
             _rigidBody = baseEntity.RigidBody;
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
+            _idleBehaviour = baseEntity.Animator.GetBehaviour<MoveBehaviour>();
             _interactionSystem = baseEntity.InteractionSystem;
         }
 
@@ -29,6 +30,7 @@ namespace Core.Scripts.StatesMachine
         private readonly Button _attackButton;
         private readonly Rigidbody _rigidBody;
         private readonly MonoJoystick _joystick;
+        private readonly MoveBehaviour _idleBehaviour;
         private readonly MonoInteractionSystem _interactionSystem;
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
@@ -83,8 +85,11 @@ namespace Core.Scripts.StatesMachine
 
         private void Move()
         {
-            _rigidBody.MovePosition(_rigidBody.position + _direction * (_speed * Time.deltaTime));
-            
+            if (_idleBehaviour.isIdle)
+            {
+                _rigidBody.MovePosition(_rigidBody.position + _direction * (_speed * Time.deltaTime));
+            }
+
             var angle = Math.Sign(_direction.x);
             angle = angle == 0 ? 180 : angle * 90;
             _rigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));

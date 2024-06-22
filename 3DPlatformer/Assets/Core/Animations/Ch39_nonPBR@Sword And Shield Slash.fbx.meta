@@ -64,7 +64,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.500976
+      - time: 0.4202068
         functionName: AttackExitEvent
         data: 
         objectReferenceParameter: {instanceID: 0}
