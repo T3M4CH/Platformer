@@ -57,3 +57,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0f9641100691b458167dda5c0bd010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundManagerSettings:
+    <SoundMixer>k__BackingField: {fileID: -3089213496808740025, guid: dab8ddf3112973449b961e4b68b0e592, type: 2}
+    <MusicMixer>k__BackingField: {fileID: 5518535279394164676, guid: dab8ddf3112973449b961e4b68b0e592, type: 2}

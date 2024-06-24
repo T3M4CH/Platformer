@@ -33,6 +33,7 @@ MonoBehaviour:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - Cinemachine
+    - Lofelt.NiceVibrations
     - Reflex
     - UniTask
     - UniTask.Addressables
