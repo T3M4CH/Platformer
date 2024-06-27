@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3c266a47ab448c39203494ff931a5ef, type: 3}
-  m_Name: PerfectWaterTheme
+  m_Name: Button2
   m_EditorClassIdentifier: 
   _audioClips:
-  - {fileID: 8300000, guid: 466058c676994c04dacc1d5997491cfd, type: 3}
-  hapticPattern: -1
+  - {fileID: 8300000, guid: 292aad821b16948af9cba9deaca16525, type: 3}
+  hapticPattern: 0
   <Settings>k__BackingField:
-    <MixerGroup>k__BackingField: {fileID: 5518535279394164676, guid: dab8ddf3112973449b961e4b68b0e592, type: 2}
-    <IsOneShot>k__BackingField: 0
-    <IsLoop>k__BackingField: 1
-    <Volume>k__BackingField: 0.5
-    <PlayOnEnable>k__BackingField: 1
+    <MixerGroup>k__BackingField: {fileID: -3089213496808740025, guid: dab8ddf3112973449b961e4b68b0e592, type: 2}
+    <IsOneShot>k__BackingField: 1
+    <IsLoop>k__BackingField: 0
+    <Volume>k__BackingField: 0.4
+    <PlayOnEnable>k__BackingField: 0
     <WaitPlay>k__BackingField: 0
     <MinDistance>k__BackingField: 0
     <MaxDistance>k__BackingField: 0

@@ -10,6 +10,6 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
     public void InstallBindings(ContainerBuilder descriptor)
     {
         descriptor.AddSingleton(soundManagerSettings);
-        descriptor.AddSingleton(typeof(SoundManager), typeof(IStartable));
+        descriptor.AddSingleton(typeof(SoundManager), typeof(SoundManager), typeof(IStartable));
     }
 }
