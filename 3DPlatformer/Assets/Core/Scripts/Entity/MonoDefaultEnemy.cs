@@ -22,7 +22,7 @@ public class MonoDefaultEnemy : BaseEntity
         {
             StateMachine.SetState<ThrownEntityState>();
 
-            RigidBody.AddForce(force.Value * 5, ForceMode.Impulse);
+            RigidBody.AddForce(force.Value, ForceMode.Impulse);
         }
         else
         {

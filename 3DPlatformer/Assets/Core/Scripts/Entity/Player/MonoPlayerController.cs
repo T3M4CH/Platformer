@@ -1,3 +1,4 @@
+using Core.Scripts.Bow;
 using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class MonoPlayerController : BaseEntity
 {
     [SerializeField] private GameObject sword;
+    [SerializeField] private BowController bowController;
     [SerializeField] private float damageCooldown;
 
     private float _currentCooldownTime;
@@ -16,7 +18,7 @@ public class MonoPlayerController : BaseEntity
     public void Construct(HealthbarManager healthbarManager, IEffectService effectService, WindowManager windowManager)
     {
         base.Construct(healthbarManager, effectService);
-        
+
         _controlsWindow = windowManager.GetWindow<ControlsWindow>();
         _controlsWindow.Show();
     }
@@ -51,6 +53,7 @@ public class MonoPlayerController : BaseEntity
         StateMachine.AddState(new JumpEntityState(StateMachine, this, _controlsWindow));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
+        StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, playerMoveState));
         StateMachine.SetState<PlayerMoveEntityState>();
     }
 

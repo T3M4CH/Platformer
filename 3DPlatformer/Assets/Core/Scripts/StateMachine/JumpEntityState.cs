@@ -66,6 +66,11 @@ namespace Core.Scripts.StatesMachine
             {
                 PerformAttack();
             }
+            
+            if (Keyboard.current.gKey.wasPressedThisFrame)
+            {
+                StateMachine.SetState<BowAttackEntityState>();
+            }
         }
 
         public override void FixedUpdate()

@@ -57,7 +57,7 @@ namespace Core.Scripts.StatesMachine
 
                 if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Kick")
                 {
-                    target?.TakeDamage(15f, Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up);
+                    target?.TakeDamage(15f, (Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up) * 5f);
                     continue;
                 }
 

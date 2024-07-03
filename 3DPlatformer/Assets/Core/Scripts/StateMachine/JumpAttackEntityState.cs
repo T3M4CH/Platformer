@@ -59,7 +59,7 @@ namespace Core.Scripts.StatesMachine
         {
             if (_entityLayerMask.value.Includes(collision.gameObject.layer) && collision.transform.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(15f, _transform.forward + Vector3.up);
+                damageable.TakeDamage(15f, (_transform.forward + Vector3.up) * 5f);
             }
         }
 
