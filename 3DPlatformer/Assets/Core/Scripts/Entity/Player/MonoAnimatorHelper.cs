@@ -5,13 +5,24 @@ public class MonoAnimatorHelper : MonoBehaviour
 {
     public event Action OnLand = () => { };
     public event Action OnStand = () => { };
-    public event Action OnStanding = () => { };
     public event Action OnAttacked = () => { };
+    public event Action OnDamageExit = () => { };
+    public event Action<bool> OnAbleAttack = _ => { };
     public event Action OnAttackExitEvent = () => { };
     
     public void PerformAttackEvent()
     {
         OnAttacked.Invoke();
+    }
+
+    public void AbleAttackEvent()
+    {
+        OnAbleAttack.Invoke(true);    
+    }
+    
+    public void DisableAttackEvent()
+    {
+        OnAbleAttack.Invoke(false);    
     }
 
     public void AttackExitEvent()
@@ -24,9 +35,9 @@ public class MonoAnimatorHelper : MonoBehaviour
         OnLand.Invoke();
     }
 
-    public void PerformStandingEvent()
+    public void DamageExitEvent()
     {
-        OnStanding.Invoke();
+        OnDamageExit.Invoke();
     }
 
     public void PerformStandEvent()

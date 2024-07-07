@@ -17,15 +17,15 @@ namespace Core.Scripts.StatesMachine
             _entityLayerMask = baseEntity.EntityLayerMask;
         }
 
-        private bool _isAbleToAttack;
+        private float _currentTime;
         private float _speedMultiplier;
         private Vector3 _savedPosition;
         private Vector3 _direction = Vector3.right;
 
         private readonly Animator _animator;
         private readonly Rigidbody _rigidBody;
+        private readonly float _attackDelay = 0.4f;
         private readonly EntityCollision _collision;
-        private CancellationTokenSource _tokenSource;
         private readonly LayerMask _entityLayerMask;
         private readonly MonoInteractionSystem _interactionSystem;
 
@@ -35,6 +35,7 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
+            _currentTime = _attackDelay;
             _rigidBody.velocity = Vector3.zero;
             _rigidBody.MoveRotation(Quaternion.LookRotation(_direction));
 
@@ -43,22 +44,20 @@ namespace Core.Scripts.StatesMachine
                 _savedPosition = BaseEntity.transform.position;
             }
 
-            _tokenSource = new CancellationTokenSource();
+            _speedMultiplier = 1;
+            _animator.SetFloat(JoystickOffset, 0.5f);
+
             _collision.CollisionStay += OnCollisionStay;
+            _collision.CollisionExit += OnCollisionExit;
+        }
 
-            UniTask.Void(async () =>
+        private void OnCollisionExit(Collision collision)
+        {
+            if (_entityLayerMask.value.Includes(collision.gameObject.layer))
             {
-                try
-                {
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _tokenSource.Token);
-
-                    _isAbleToAttack = true;
-                }
-                catch
-                {
-                    // ignored
-                }
-            });
+                _speedMultiplier = 1;
+                _animator.SetFloat(JoystickOffset, 0.5f);
+            }
         }
 
         private void OnCollisionStay(Collision other)
@@ -66,17 +65,14 @@ namespace Core.Scripts.StatesMachine
             if (_entityLayerMask.value.Includes(other.gameObject.layer))
             {
                 _speedMultiplier = 0;
+                _currentTime -= Time.deltaTime;
                 _animator.SetFloat(JoystickOffset, 0f);
-                
-                if (other.transform.TryGetComponent(out IDamageable damageable) && _isAbleToAttack)
+
+                if (other.transform.TryGetComponent(out IDamageable damageable) && _currentTime < 0)
                 {
+                    _currentTime = _attackDelay;
                     StateMachine.SetState<MeleeAttackEntityState>().SetAimTarget(damageable);
                 }
-            }
-            else
-            {
-                _speedMultiplier = 1;
-                _animator.SetFloat(JoystickOffset, 0.5f);
             }
         }
 
@@ -102,24 +98,13 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
-            if (_tokenSource != null)
-            {
-                _tokenSource.Cancel();
-                _tokenSource.Dispose();
-            }
-
-            _isAbleToAttack = false;
+            _collision.CollisionExit -= OnCollisionExit;
             _collision.CollisionStay -= OnCollisionStay;
         }
 
         public void Dispose()
         {
-            if (_tokenSource != null)
-            {
-                _tokenSource.Cancel();
-                _tokenSource.Dispose();
-            }
-
+            _collision.CollisionExit -= OnCollisionExit;
             _collision.CollisionStay -= OnCollisionStay;
         }
     }

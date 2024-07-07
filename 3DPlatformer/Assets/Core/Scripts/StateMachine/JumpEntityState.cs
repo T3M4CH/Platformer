@@ -22,6 +22,7 @@ namespace Core.Scripts.StatesMachine
             _interactionSystem = baseEntity.InteractionSystem;
         }
 
+        private bool _isAbleAttack;
         private Vector3 _direction;
 
         private readonly float _speed;
@@ -42,16 +43,20 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
+            _isAbleAttack = false;
             _rigidBody.velocity = Vector3.zero;
             _jumpButton.interactable = false;
-            _attackButton.interactable = true;
+            _attackButton.interactable = false;
             _animator.SetTrigger(JumpAnimation);
             _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
 
             _attackButton.onClick.AddListener(PerformAttack);
 
             _animatorHelper.OnLand += PerformLand;
+            _animatorHelper.OnAbleAttack += PerformChangeAbleAttack;
         }
+
+        private void PerformChangeAbleAttack(bool value) => _isAbleAttack = value;
 
         private void PerformAttack()
         {
@@ -62,11 +67,11 @@ namespace Core.Scripts.StatesMachine
         {
             base.Update();
 
-            if (Keyboard.current.fKey.wasPressedThisFrame)
+            if (Keyboard.current.fKey.wasPressedThisFrame && _isAbleAttack)
             {
                 PerformAttack();
             }
-            
+
             if (Keyboard.current.gKey.wasPressedThisFrame)
             {
                 StateMachine.SetState<BowAttackEntityState>();
@@ -78,7 +83,7 @@ namespace Core.Scripts.StatesMachine
             base.FixedUpdate();
 
             _direction.x = _joystick.Direction.x;
-            _attackButton.interactable = _direction.x != 0;
+            _attackButton.interactable = _direction.x != 0 && _isAbleAttack;
             Move();
         }
 
@@ -110,13 +115,16 @@ namespace Core.Scripts.StatesMachine
             base.Exit();
 
             _attackButton.onClick.RemoveListener(PerformAttack);
-
+            _attackButton.interactable = false;
+            
             _animatorHelper.OnLand -= PerformLand;
+            _animatorHelper.OnAbleAttack -= PerformChangeAbleAttack;
         }
 
         public void Dispose()
         {
             _animatorHelper.OnLand -= PerformLand;
+            _animatorHelper.OnAbleAttack -= PerformChangeAbleAttack;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Core.Scripts.StatesMachine
             _animator.ResetTrigger(Attack);
             _animator.SetTrigger(GetHit);
 
-            _animatorHelper.OnStand += PerformStand;
+            _animatorHelper.OnDamageExit += PerformStand;
         }
 
         private void PerformStand()
@@ -44,12 +44,12 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
-            _animatorHelper.OnStand -= PerformStand;
+            _animatorHelper.OnDamageExit -= PerformStand;
         }
 
         public void Dispose()
         {
-            _animatorHelper.OnStand -= PerformStand;
+            _animatorHelper.OnDamageExit -= PerformStand;
         }
     }
 }

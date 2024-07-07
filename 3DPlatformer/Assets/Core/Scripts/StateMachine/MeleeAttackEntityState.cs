@@ -14,9 +14,6 @@ namespace Core.Scripts.StatesMachine
             _entityLayerMask = baseEntity.EntityLayerMask;
             _exitState = exitState;
             _weapon = weapon;
-
-            _animatorHelper.OnAttacked += PerformDamageEvent;
-            _animatorHelper.OnAttackExitEvent += PerformAttackExit;
         }
 
         private Vector3 _relativePosition;
@@ -35,6 +32,9 @@ namespace Core.Scripts.StatesMachine
 
             _animator.SetTrigger(Attack);
             _weapon.SetActive(true);
+            
+            _animatorHelper.OnAttacked += PerformDamageEvent;
+            _animatorHelper.OnAttackExitEvent += PerformAttackExit;
         }
 
         public void SetAimTarget(IDamageable target)
@@ -75,6 +75,10 @@ namespace Core.Scripts.StatesMachine
             base.Exit();
             
             _weapon.SetActive(false);
+            
+            _animator.ResetTrigger(Attack);
+            _animatorHelper.OnAttacked -= PerformDamageEvent;
+            _animatorHelper.OnAttackExitEvent -= PerformAttackExit;
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Scripts.Entity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -16,11 +17,14 @@ namespace Core.Scripts.StatesMachine
             _rigidBody = baseEntity.RigidBody;
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
+            _collision = baseEntity.EntityCollision;
+            _entityLayerMask = baseEntity.EntityLayerMask;
             _idleBehaviour = baseEntity.Animator.GetBehaviour<MoveBehaviour>();
             _interactionSystem = baseEntity.InteractionSystem;
         }
 
         private bool _isJumping;
+        private bool _isCloseToEnemy;
         private Vector3 _direction;
 
         private readonly float _speed;
@@ -30,6 +34,8 @@ namespace Core.Scripts.StatesMachine
         private readonly Button _attackButton;
         private readonly Rigidbody _rigidBody;
         private readonly MonoJoystick _joystick;
+        private readonly LayerMask _entityLayerMask;
+        private readonly EntityCollision _collision;
         private readonly MoveBehaviour _idleBehaviour;
         private readonly MonoInteractionSystem _interactionSystem;
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
@@ -38,18 +44,38 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
+            _isCloseToEnemy = false;
             _rigidBody.velocity = Vector3.zero;
             _attackButton.interactable = true;
             _jumpButton.interactable = true;
             _jumpButton.onClick.AddListener(Jump);
             _attackButton.onClick.AddListener(Attack);
+
+            _collision.CollisionStay += OnCollisionStay;
+            _collision.CollisionExit += OnCollisionExit;
+        }
+
+        private void OnCollisionExit(Collision collision)
+        {
+            if (_entityLayerMask.value.Includes(collision.gameObject.layer))
+            {
+                _isCloseToEnemy = false;
+            }
+        }
+
+        private void OnCollisionStay(Collision collision)
+        {
+            if (_entityLayerMask.value.Includes(collision.gameObject.layer))
+            {
+                _isCloseToEnemy = true;
+            }
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
 
-            _jumpButton.interactable = _interactionSystem.IsGround.Under;
+            _jumpButton.interactable = _interactionSystem.IsGround.Under && !_isCloseToEnemy;
 
             Move();
         }
@@ -60,12 +86,12 @@ namespace Core.Scripts.StatesMachine
 
             _direction.x = _joystick.Direction.x;
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Keyboard.current.spaceKey.wasPressedThisFrame && _jumpButton.interactable)
             {
                 Jump();
             }
 
-            if (Keyboard.current.fKey.wasPressedThisFrame)
+            if (Keyboard.current.fKey.wasPressedThisFrame && _attackButton.interactable)
             {
                 Attack();
             }
@@ -103,12 +129,18 @@ namespace Core.Scripts.StatesMachine
 
             _jumpButton.onClick.RemoveListener(Jump);
             _attackButton.onClick.RemoveListener(Attack);
+            
+            _collision.CollisionStay -= OnCollisionStay;
+            _collision.CollisionExit -= OnCollisionExit;
         }
 
         public void Dispose()
         {
             _jumpButton.onClick.RemoveListener(Jump);
             _attackButton.onClick.RemoveListener(Attack);
+            
+            _collision.CollisionStay -= OnCollisionStay;
+            _collision.CollisionExit -= OnCollisionExit;
         }
     }
 }
