@@ -107,6 +107,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 200
   explosionParticle: {fileID: 28573693393756372}
+  explosionSound: {fileID: 11400000, guid: d44fad85c8d72a545b08666a94d32a32, type: 2}
 --- !u!1 &5153167665710525724
 GameObject:
   m_ObjectHideFlags: 0

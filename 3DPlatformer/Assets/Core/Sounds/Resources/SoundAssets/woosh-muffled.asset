@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c266a47ab448c39203494ff931a5ef, type: 3}
+  m_Name: woosh-muffled
+  m_EditorClassIdentifier: 
+  _audioClips:
+  - {fileID: 8300000, guid: 77f6b5c12fc97bc4c925922d27971a8d, type: 3}
+  hapticPattern: 8
+  <Settings>k__BackingField:
+    <MixerGroup>k__BackingField: {fileID: -3089213496808740025, guid: dab8ddf3112973449b961e4b68b0e592, type: 2}
+    <IsOneShot>k__BackingField: 1
+    <IsLoop>k__BackingField: 0
+    <Volume>k__BackingField: 0.3
+    <PlayOnEnable>k__BackingField: 0
+    <WaitPlay>k__BackingField: 0
+    <MinDistance>k__BackingField: 0
+    <MaxDistance>k__BackingField: 0
+    <SpatialBlend>k__BackingField: 0

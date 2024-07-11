@@ -2,9 +2,11 @@
 using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
+using Core.Sounds.Scripts;
 using DG.Tweening;
 using Reflex.Attributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Core.Scripts.Entity
 {
@@ -13,6 +15,7 @@ namespace Core.Scripts.Entity
         public event Action OnDead = () => { };
 
         [SerializeField] private float maxHealth;
+        [SerializeField] private SoundAsset deathSound;
         [SerializeField] private Renderer skinRenderer;
         [SerializeField] private Material dissolvePrefab;
 
@@ -60,6 +63,7 @@ namespace Core.Scripts.Entity
                 
                 enabled = false;
 
+                deathSound.Play(Random.Range(0.95f, 1.1f));
                 OnDead.Invoke();
                 return false;
             }
@@ -83,6 +87,9 @@ namespace Core.Scripts.Entity
         [field: SerializeField] public GameObject KickEffect { get; private set; }
         [field: SerializeField] public EntityCollision EntityCollision { get; private set; }
         [field: SerializeField] public MonoAnimatorHelper AnimatorHelper { get; private set; }
+        [field: SerializeField] public SoundAsset FlyingAttackSound { get; private set; }
+        [field: SerializeField] public SoundAsset AttackSound { get; private set; }
+        [field: SerializeField] public SoundAsset KickSound { get; private set; }
         [field: SerializeField] public LayerMask WaterLayerMask { get; private set; }
         [field: SerializeField] public LayerMask EntityLayerMask { get; private set; }
     }

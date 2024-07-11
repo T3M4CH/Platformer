@@ -814,6 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+  deathSound: {fileID: 11400000, guid: 2e8c3204710288141aa1b23a16830eb4, type: 2}
   skinRenderer: {fileID: 8990644131519689484}
   dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   <Speed>k__BackingField: 5
@@ -823,6 +824,9 @@ MonoBehaviour:
   <KickEffect>k__BackingField: {fileID: 7891626941949574916}
   <EntityCollision>k__BackingField: {fileID: 5540870827141737237}
   <AnimatorHelper>k__BackingField: {fileID: 1744511365938487016}
+  <FlyingAttackSound>k__BackingField: {fileID: 11400000, guid: d8f96579d9883ea48b66c12583878863, type: 2}
+  <AttackSound>k__BackingField: {fileID: 11400000, guid: 922e83af6ea213047a719d7f72831f0c, type: 2}
+  <KickSound>k__BackingField: {fileID: 11400000, guid: b3ef42ce19c6ab244b5df7e1d6d9cacc, type: 2}
   <WaterLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 16

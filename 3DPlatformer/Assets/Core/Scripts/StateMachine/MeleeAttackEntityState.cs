@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Core.Scripts.Entity;
+using Core.Sounds.Scripts;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Core.Scripts.StatesMachine
 {
@@ -14,6 +16,9 @@ namespace Core.Scripts.StatesMachine
             _entityLayerMask = baseEntity.EntityLayerMask;
             _exitState = exitState;
             _weapon = weapon;
+
+            _attackSound = baseEntity.AttackSound;
+            _kickSound = baseEntity.KickSound;
         }
 
         private Vector3 _relativePosition;
@@ -25,6 +30,8 @@ namespace Core.Scripts.StatesMachine
         private readonly MonoAnimatorHelper _animatorHelper;
 
         private static readonly int Attack = Animator.StringToHash("Attack");
+        private readonly SoundAsset _kickSound;
+        private readonly SoundAsset _attackSound;
 
         public override void Enter()
         {
@@ -57,10 +64,12 @@ namespace Core.Scripts.StatesMachine
 
                 if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Kick")
                 {
+                    _kickSound.Play(Random.Range(0.9f, 1.1f));
                     target?.TakeDamage(15f, (Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up) * 5f);
                     continue;
                 }
 
+                _attackSound.Play(Random.Range(0.9f, 1.1f));
                 target?.TakeDamage(10f);
             }
         }

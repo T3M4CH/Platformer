@@ -108,7 +108,7 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  explodeSound: {fileID: 11400000, guid: d61ae3d9406c6494eb4a35ee531e133d, type: 2}
+  explodeSound: {fileID: 11400000, guid: d44fad85c8d72a545b08666a94d32a32, type: 2}
   explosionParticle: {fileID: 8090796363751881801}
   explosionIndicator: {fileID: 7281980423199238693}
 --- !u!54 &9078249403703770324

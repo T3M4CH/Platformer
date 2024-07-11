@@ -1,4 +1,5 @@
 using Core.Scripts.Entity;
+using Core.Sounds.Scripts;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class MonoBomb : MonoBehaviour
     [SerializeField] private Renderer bombRenderer;
     [SerializeField] private LayerMask collisionMask;
     [SerializeField] private GameObject explosionParticle;
+    [SerializeField] private SoundAsset explosionSound;
 
     private int _explodeCount;
 
@@ -19,7 +21,7 @@ public class MonoBomb : MonoBehaviour
     {
         _explodeCount = Random.Range(1, 4);
         bombRenderer.material = materials[_explodeCount - 1];
-        
+
         UniTask.Void(async () =>
         {
             bombCollider.enabled = false;
@@ -31,7 +33,7 @@ public class MonoBomb : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         var colliderObject = other.gameObject;
-        
+
         if (collisionMask.value.Includes(colliderObject.layer))
         {
             if (colliderObject.TryGetComponent(out BaseEntity _))
@@ -47,7 +49,7 @@ public class MonoBomb : MonoBehaviour
                     Explode();
                     return;
                 }
-                
+
                 bombRenderer.material = materials[_explodeCount - 1];
                 bombModel.DOScale(0.9f, 0.3f).SetEase(Ease.OutBack).SetLink(gameObject);
             }
@@ -56,17 +58,18 @@ public class MonoBomb : MonoBehaviour
 
     private void Explode()
     {
+        explosionSound.Play(Random.Range(0.95f, 1.1f));
         bombCollider.enabled = false;
         explosionParticle.SetActive(true);
         explosionParticle.transform.SetParent(null);
 
         var colliders = Physics.OverlapSphere(transform.position, 0.5f, collisionMask);
-        
+
         foreach (var collider in colliders)
         {
             collider.GetComponent<IDamageable>()?.TakeDamage(20);
         }
-        
+
         Destroy(gameObject);
     }
 }

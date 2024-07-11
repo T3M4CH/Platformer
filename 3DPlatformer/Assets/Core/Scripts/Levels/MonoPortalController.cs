@@ -1,14 +1,18 @@
 using System;
 using System.Linq;
 using Core.Scripts.Entity;
+using Core.Sounds.Scripts;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class MonoPortalController : MonoBehaviour
 {
     [SerializeField] private float targetScale;
     [SerializeField] private Material dissolvePrefab;
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private SoundAsset portalAppearSound;
+    [SerializeField] private SoundAsset portalTeleportSound;
 
     private BaseEntity _entity;
     private Transform _transform;
@@ -51,6 +55,8 @@ public class MonoPortalController : MonoBehaviour
 
         _transform.localScale = Vector3.zero;
         _transform.position = position;
+        
+        portalTeleportSound.Play(Random.Range(0.9f,1.1f));
 
         _transform.DOScale(targetScale, 2).SetEase(Ease.OutBack).SetLink(gameObject).OnComplete(() =>
         {
@@ -74,6 +80,7 @@ public class MonoPortalController : MonoBehaviour
             portalParticle.Play();
         }
         
+        portalAppearSound.Play(Random.Range(0.9f,1.1f));
         _transform.localScale = Vector3.zero;
         _transform.position = _entity.transform.position;
         

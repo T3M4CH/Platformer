@@ -37,6 +37,7 @@ public class MonoBowArrow : MonoBehaviour
 
     private void Explode()
     {
+        explodeSound.Play(Random.Range(0.95f, 1.1f));
         explosionParticle.SetActive(true);
         explosionParticle.transform.SetParent(null);
 
@@ -48,7 +49,7 @@ public class MonoBowArrow : MonoBehaviour
         {
             collider.GetComponent<IDamageable>()?.TakeDamage(20, new Vector3(Mathf.Sign(collider.transform.position.x - _transform.position.x), 1, 0));
         }
-        
+
         Destroy(gameObject);
     }
 

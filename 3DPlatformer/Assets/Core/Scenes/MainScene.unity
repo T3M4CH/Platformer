@@ -2546,6 +2546,8 @@ MonoBehaviour:
   targetScale: 3
   dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   meshRenderer: {fileID: 1349493518}
+  portalAppearSound: {fileID: 11400000, guid: a3c29d28fa363a94ca853019550eb02a, type: 2}
+  portalTeleportSound: {fileID: 11400000, guid: 80f5ae3a012db5940bfd0514eaa776ee, type: 2}
 --- !u!1 &1360552959
 GameObject:
   m_ObjectHideFlags: 0
