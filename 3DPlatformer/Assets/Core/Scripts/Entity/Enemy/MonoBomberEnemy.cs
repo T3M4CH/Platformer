@@ -3,7 +3,7 @@ using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
 using UnityEngine;
 
-public class MonoBomberEnemy : BaseEntity
+public class MonoBomberEnemy : DefaultEntity
 {
     private IPlayerService _playerService;
 

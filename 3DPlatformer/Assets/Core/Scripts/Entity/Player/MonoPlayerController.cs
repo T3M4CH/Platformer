@@ -6,7 +6,7 @@ using Core.Scripts.Healthbars;
 using Reflex.Attributes;
 using UnityEngine;
 
-public class MonoPlayerController : BaseEntity
+public class MonoPlayerController : DefaultEntity
 {
     [SerializeField] private GameObject sword;
     [SerializeField] private BowController bowController;

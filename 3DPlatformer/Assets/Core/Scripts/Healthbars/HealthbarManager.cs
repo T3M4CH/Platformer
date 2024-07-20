@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Scripts.Entity;
+using Core.Scripts.Windows;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -9,21 +11,30 @@ namespace Core.Scripts.Healthbars
     public class HealthbarManager
     {
         private Camera _camera;
-        
+
         private readonly MonoHealthbar _healthBarPrefab;
         private readonly RectTransform _rectParent;
+        private readonly HealthWindow _healthWindow;
         private readonly Dictionary<Transform, MonoHealthbar> _healthbars = new();
 
-        public HealthbarManager(HealthbarManagerSettings healthbarManagerSettings)
+        public HealthbarManager(HealthbarManagerSettings healthbarManagerSettings, WindowManager windowManager)
         {
             _rectParent = healthbarManagerSettings.Canvas;
+            _healthWindow = windowManager.GetWindow<HealthWindow>();
             _healthBarPrefab = healthbarManagerSettings.HealthBarPrefab;
+
+            _healthWindow.Show();
+        }
+
+        public void UpdateHp(float currentHp, float maxHealth, BossEntity entity)
+        {
+            _healthWindow.UpdateHealth(currentHp, maxHealth, entity);
         }
 
         public void UpdateHp(float currentHp, float maxHealth, Transform transform, Vector3 offset)
         {
             _camera ??= Camera.main;
-            
+
             if (!_healthbars.ContainsKey(transform)) _healthbars.Add(transform, CreateHealthBar());
 
             var healthBar = _healthbars[transform];

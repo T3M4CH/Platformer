@@ -3,7 +3,7 @@ using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
 using UnityEngine;
 
-public class MonoDefaultEnemy : BaseEntity
+public class MonoDefaultEnemy : BossEntity
 {
     [SerializeField] private GameObject weapon;
     [SerializeField] private MonoInteractionSystem interactionSystem;
@@ -42,14 +42,16 @@ public class MonoDefaultEnemy : BaseEntity
         StateMachine.FixedUpdate();
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         StateMachine = new EntityStateMachine();
         var patrolMove = new PatrolMoveEntityState(StateMachine, this, interactionSystem);
         StateMachine.AddState(patrolMove);
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, patrolMove, weapon, this));
         StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this, EffectService));
-        StateMachine.AddState(new ThrownEntityState(StateMachine, this,EffectService));
+        StateMachine.AddState(new ThrownEntityState(StateMachine, this, EffectService));
 
         StateMachine.SetState<PatrolMoveEntityState>();
     }

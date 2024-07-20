@@ -13,6 +13,7 @@ namespace Core.Scripts.Entity
     public abstract class BaseEntity : MonoBehaviour, IDamageable
     {
         public event Action OnDead = () => { };
+        protected HealthbarManager HealthBarManager;
 
         [SerializeField] private float maxHealth;
         [SerializeField] private SoundAsset deathSound;
@@ -21,7 +22,6 @@ namespace Core.Scripts.Entity
 
         private float _health;
         private Material _dissolveMaterial;
-        private HealthbarManager _healthBarManager;
 
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
         private static readonly int MainTex = Shader.PropertyToID("_MainTex");
@@ -30,7 +30,7 @@ namespace Core.Scripts.Entity
         public void Construct(HealthbarManager healthbarManager, IEffectService effectService)
         {
             _health = maxHealth;
-            _healthBarManager = healthbarManager;
+            HealthBarManager = healthbarManager;
             EffectService = effectService;
 
             _dissolveMaterial = new Material(dissolvePrefab);
@@ -38,12 +38,14 @@ namespace Core.Scripts.Entity
             _dissolveMaterial.SetTexture(MainTex, texture);
         }
 
+        public abstract void UpdateHp(float health, float maxHealth);
+
         public virtual bool TakeDamage(float damage, Vector3? force = null)
         {
             if (_health < 0) return false;
 
             _health -= damage;
-            _healthBarManager.UpdateHp(_health, maxHealth, transform, Vector3.up);
+            UpdateHp(_health, maxHealth);
             skinRenderer.material.DOColor(Color.red, 0.2f).OnKill(() => skinRenderer.material.SetColor(BaseColor, Color.white));
 
             if (_health < 0)
