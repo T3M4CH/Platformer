@@ -7,10 +7,12 @@ namespace Core.Scripts.StatesMachine
 {
     public class ThrownEntityState : EntityState, IDisposable
     {
+        private readonly EntityState _exitState;
         private readonly IEffectService _effectService;
 
-        public ThrownEntityState(EntityStateMachine entityStateMachine, BaseEntity baseEntity, IEffectService effectService) : base(entityStateMachine, baseEntity)
+        public ThrownEntityState(EntityStateMachine entityStateMachine, EntityState exitState, BaseEntity baseEntity, IEffectService effectService) : base(entityStateMachine, baseEntity)
         {
+            _exitState = exitState;
             _effectService = effectService;
             _animator = baseEntity.Animator;
             _animatorHelper = baseEntity.AnimatorHelper;
@@ -21,24 +23,28 @@ namespace Core.Scripts.StatesMachine
         }
 
         private float _initialSize;
-        
+
         private readonly Animator _animator;
         private readonly EntityCollision _entityCollision;
         private readonly MonoAnimatorHelper _animatorHelper;
-        
+
         private static readonly int Fall = Animator.StringToHash("Fall");
 
         public override void Enter()
         {
             base.Enter();
-            
+
+            _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
+            _entityCollision.TriggerCollider.enabled = true;
             _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
             _animator.SetTrigger(Fall);
         }
 
         private void PerformStand()
         {
-            StateMachine.SetState<PatrolMoveEntityState>();
+            _entityCollision.DefaultCollider.excludeLayers = 0;
+            _entityCollision.TriggerCollider.enabled = false;
+            StateMachine.SetState(_exitState);
         }
 
         private void OnTriggerEnter(Collider collider)

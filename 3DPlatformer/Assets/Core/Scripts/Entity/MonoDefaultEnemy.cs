@@ -3,7 +3,7 @@ using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
 using UnityEngine;
 
-public class MonoDefaultEnemy : BossEntity
+public class MonoDefaultEnemy : DefaultEntity
 {
     [SerializeField] private GameObject weapon;
     [SerializeField] private MonoInteractionSystem interactionSystem;
@@ -22,6 +22,7 @@ public class MonoDefaultEnemy : BossEntity
         {
             StateMachine.SetState<ThrownEntityState>();
 
+            RigidBody.velocity = Vector3.zero;
             RigidBody.AddForce(force.Value, ForceMode.Impulse);
         }
         else
@@ -42,16 +43,14 @@ public class MonoDefaultEnemy : BossEntity
         StateMachine.FixedUpdate();
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         StateMachine = new EntityStateMachine();
         var patrolMove = new PatrolMoveEntityState(StateMachine, this, interactionSystem);
         StateMachine.AddState(patrolMove);
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, patrolMove, weapon, this));
         StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this, EffectService));
-        StateMachine.AddState(new ThrownEntityState(StateMachine, this, EffectService));
+        StateMachine.AddState(new ThrownEntityState(StateMachine, patrolMove, this, EffectService));
 
         StateMachine.SetState<PatrolMoveEntityState>();
     }

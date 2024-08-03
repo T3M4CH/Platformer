@@ -41,7 +41,8 @@ namespace Core.Scripts.Entity
         {
             CollisionStay.Invoke(other);
         }
-        
-        [field: SerializeField] public Collider Collider { get; private set; }
+
+        [field: SerializeField] public Collider DefaultCollider { get; private set; }
+        [field: SerializeField] public Collider TriggerCollider { get; private set; }
     }
 }

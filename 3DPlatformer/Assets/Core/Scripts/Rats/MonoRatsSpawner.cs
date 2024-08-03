@@ -30,6 +30,7 @@ namespace Core.Scripts.Rats
 
                 part.DOShakePosition(2, 0.05f).OnComplete(() =>
                 {
+                    
                     part.position = _woodPositions[index];
                 }).SetLink(gameObject);
             }

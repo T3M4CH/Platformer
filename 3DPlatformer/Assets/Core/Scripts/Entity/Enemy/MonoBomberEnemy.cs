@@ -1,9 +1,10 @@
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
+using Core.Scripts.Entity.Interfaces;
 using UnityEngine;
 
-public class MonoBomberEnemy : DefaultEntity
+public class MonoBomberEnemy : DefaultEntity, IPlayerConsumer
 {
     private IPlayerService _playerService;
 

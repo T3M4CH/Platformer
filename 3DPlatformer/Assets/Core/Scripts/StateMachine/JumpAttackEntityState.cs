@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Core.Scripts.Entity;
 using Core.Sounds.Scripts;
 using UnityEngine;
@@ -7,8 +8,9 @@ namespace Core.Scripts.StatesMachine
 {
     public class JumpAttackEntityState : EntityState
     {
-        public JumpAttackEntityState(EntityStateMachine entityStateMachine, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
+        public JumpAttackEntityState(EntityStateMachine entityStateMachine, EntityState exitState, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
         {
+            _exitState = exitState;
             _animator = baseEntity.Animator;
             _transform = baseEntity.transform;
             _rigidBody = baseEntity.RigidBody;
@@ -29,12 +31,15 @@ namespace Core.Scripts.StatesMachine
         private readonly Transform _transform;
         private static readonly int JumpAttack = Animator.StringToHash("JumpAttack");
         private readonly Rigidbody _rigidBody;
+        private readonly EntityState _exitState;
         private readonly EntityCollision _collision;
         private readonly LayerMask _entityLayerMask;
         private readonly GameObject _kickEffect;
         private readonly ParticleSystem.EmissionModule[] _kickEffectParticles;
         private readonly SoundAsset _flyingAttackSound;
         private readonly SoundAsset _kickSound;
+
+        private Queue<IDamageable> _damageableAtState = new();
 
         public override void Enter()
         {
@@ -46,11 +51,26 @@ namespace Core.Scripts.StatesMachine
             SetActiveKickParticle(true);
 
             _collision.CollisionEnter += OnCollisionEnter;
+            _collision.TriggerEnter += OnTriggerEnter;
 
             _forceImpulse = _transform.forward * 10f;
 
             _rigidBody.velocity = Vector3.zero;
             _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
+        }
+
+        private void OnTriggerEnter(Collider collision)
+        {
+            if (_entityLayerMask.value.Includes(collision.gameObject.layer) && collision.transform.TryGetComponent(out IDamageable damageable) && damageable is BaseEntity entity)
+            {
+                if (_damageableAtState.Contains(damageable)) return;
+                if (entity.StateMachine.CurrentEntityState is ThrownEntityState)
+                {
+                    _kickSound.Play(Random.Range(0.9f, 1.1f));
+                    damageable.TakeDamage(15f, (_transform.forward + Vector3.up) * 5f);
+                    _damageableAtState.Enqueue(damageable);
+                }
+            }
         }
 
         private void SetActiveKickParticle(bool value)
@@ -65,8 +85,10 @@ namespace Core.Scripts.StatesMachine
         {
             if (_entityLayerMask.value.Includes(collision.gameObject.layer) && collision.transform.TryGetComponent(out IDamageable damageable))
             {
+                if (_damageableAtState.Contains(damageable)) return;
                 _kickSound.Play(Random.Range(0.9f, 1.1f));
                 damageable.TakeDamage(15f, (_transform.forward + Vector3.up) * 5f);
+                _damageableAtState.Enqueue(damageable);
             }
         }
 
@@ -77,7 +99,7 @@ namespace Core.Scripts.StatesMachine
 
             if (_currentTime >= 1)
             {
-                StateMachine.SetState<PlayerMoveEntityState>();
+                StateMachine.SetState(_exitState);
             }
         }
 
@@ -85,7 +107,9 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
+            _damageableAtState.Clear();
             _collision.CollisionEnter -= OnCollisionEnter;
+            _collision.TriggerEnter -= OnTriggerEnter;
             SetActiveKickParticle(false);
         }
     }

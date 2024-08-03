@@ -1,37 +1,31 @@
-﻿using System;
+﻿using UnityEngine.InputSystem;
 using Core.Scripts.Entity;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using System;
 
 namespace Core.Scripts.StatesMachine
 {
     public class JumpEntityState : EntityState, IDisposable
     {
-        public JumpEntityState(EntityStateMachine entityStateMachine, MonoPlayerController baseEntity, ControlsWindow controlsWindow) : base(entityStateMachine, baseEntity)
+        public JumpEntityState(EntityStateMachine entityStateMachine, EntityState exitState, float jumpForce, MonoInteractionSystem interactionSystem, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
         {
-            _joystick = controlsWindow.Joystick;
-            _jumpButton = controlsWindow.JumpButton;
-            _attackButton = controlsWindow.AttackButton;
-
+            _exitState = exitState;
+            _jumpForce = jumpForce;
+            _interactionSystem = interactionSystem;
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
             _rigidBody = baseEntity.RigidBody;
-            _jumpForce = baseEntity.JumpForce;
             _animatorHelper = baseEntity.AnimatorHelper;
-            _interactionSystem = baseEntity.InteractionSystem;
         }
 
-        private bool _isAbleAttack;
-        private Vector3 _direction;
+        protected bool IsAbleAttack;
+        protected Vector3 Direction;
 
         private readonly float _speed;
         private readonly float _jumpForce;
-        private readonly Button _jumpButton;
         private readonly Animator _animator;
-        private readonly Button _attackButton;
         private readonly Rigidbody _rigidBody;
-        private readonly MonoJoystick _joystick;
+        private readonly EntityState _exitState;
         private readonly EntityCollision _collision;
         private readonly MonoAnimatorHelper _animatorHelper;
         private readonly MonoInteractionSystem _interactionSystem;
@@ -43,22 +37,21 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
-            _isAbleAttack = false;
+            IsAbleAttack = false;
             _rigidBody.velocity = Vector3.zero;
-            _jumpButton.interactable = false;
-            _attackButton.interactable = false;
             _animator.SetTrigger(JumpAnimation);
             _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-
-            _attackButton.onClick.AddListener(PerformAttack);
 
             _animatorHelper.OnLand += PerformLand;
             _animatorHelper.OnAbleAttack += PerformChangeAbleAttack;
         }
 
-        private void PerformChangeAbleAttack(bool value) => _isAbleAttack = value;
+        protected virtual void PerformChangeAbleAttack(bool value)
+        {
+            IsAbleAttack = value;
+        }
 
-        private void PerformAttack()
+        protected void PerformAttack()
         {
             StateMachine.SetState<JumpAttackEntityState>();
         }
@@ -67,12 +60,12 @@ namespace Core.Scripts.StatesMachine
         {
             base.Update();
 
-            if (Keyboard.current.fKey.wasPressedThisFrame && _isAbleAttack)
+            if (Keyboard.current.fKey.wasPressedThisFrame && IsAbleAttack)
             {
                 PerformAttack();
             }
 
-            if (Keyboard.current.gKey.wasPressedThisFrame)
+            if (Keyboard.current.gKey.wasPressedThisFrame && IsAbleAttack)
             {
                 StateMachine.SetState<BowAttackEntityState>();
             }
@@ -82,20 +75,18 @@ namespace Core.Scripts.StatesMachine
         {
             base.FixedUpdate();
 
-            _direction.x = _joystick.Direction.x;
-            _attackButton.interactable = _direction.x != 0 && _isAbleAttack;
             Move();
         }
 
-        private void Move()
+        protected void Move()
         {
-            _rigidBody.MovePosition(_rigidBody.position + _direction * (_speed * Time.deltaTime));
+            _rigidBody.MovePosition(_rigidBody.position + Direction * (_speed * Time.deltaTime));
 
-            var angle = Math.Sign(_direction.x);
+            var angle = Math.Sign(Direction.x);
             angle = angle == 0 ? 180 : angle * 90;
             _rigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
-            _animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
+            _animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
         }
 
         private void PerformLand()
@@ -105,7 +96,7 @@ namespace Core.Scripts.StatesMachine
                 var isGround = _interactionSystem.IsGround.Under;
 
                 var velocity = isGround ? Vector3.zero : _rigidBody.velocity;
-                StateMachine.SetState<PlayerMoveEntityState>();
+                StateMachine.SetState(_exitState);
                 _rigidBody.velocity = velocity;
             }
         }
@@ -114,9 +105,6 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
-            _attackButton.onClick.RemoveListener(PerformAttack);
-            _attackButton.interactable = false;
-            
             _animatorHelper.OnLand -= PerformLand;
             _animatorHelper.OnAbleAttack -= PerformChangeAbleAttack;
         }

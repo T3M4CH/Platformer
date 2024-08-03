@@ -1,5 +1,6 @@
 using System;
 using Core.Scripts.Effects.Interfaces;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
@@ -39,9 +40,9 @@ public class EnemyManager : IStartable, IDisposable
             enemy.transform.position = positions[i].position;
             enemy.Construct(_healthbarManager, _effectService);
 
-            if (enemy is MonoBomberEnemy bomberEnemy)
+            if (enemy is IPlayerConsumer playerConsumer)
             {
-                bomberEnemy.Initialize(_playerService);
+                playerConsumer.Initialize(_playerService);
             }
         }
     }

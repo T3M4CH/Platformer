@@ -3,7 +3,6 @@ using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
 using Core.Scripts.Healthbars;
-using Reflex.Attributes;
 using UnityEngine;
 
 public class MonoPlayerController : DefaultEntity
@@ -29,7 +28,7 @@ public class MonoPlayerController : DefaultEntity
 
         _currentCooldownTime = damageCooldown;
 
-        return base.TakeDamage(damage);
+        return base.TakeDamage(damage, force);
     }
 
     private void FixedUpdate()
@@ -48,10 +47,10 @@ public class MonoPlayerController : DefaultEntity
     private void Start()
     {
         StateMachine = new EntityStateMachine();
-        var playerMoveState = new PlayerMoveEntityState(StateMachine, this, _controlsWindow);
+        var playerMoveState = new PlayerMoveEntityState(StateMachine, this, InteractionSystem, _controlsWindow);
         StateMachine.AddState(playerMoveState);
-        StateMachine.AddState(new JumpEntityState(StateMachine, this, _controlsWindow));
-        StateMachine.AddState(new JumpAttackEntityState(StateMachine, this));
+        StateMachine.AddState(new PlayerJumpEntityState(StateMachine, playerMoveState, JumpForce, InteractionSystem, this, _controlsWindow));
+        StateMachine.AddState(new JumpAttackEntityState(StateMachine, playerMoveState, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
         StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, playerMoveState));
         StateMachine.SetState<PlayerMoveEntityState>();
