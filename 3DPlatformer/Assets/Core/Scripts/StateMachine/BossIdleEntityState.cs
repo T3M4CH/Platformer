@@ -19,31 +19,22 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
-            // UniTask.Void(async () =>
-            // {
-            //     await UniTask.Delay(TimeSpan.FromSeconds(2));
-            //
-            //     var condition = Random.Range(0, 100f) > 50;
-            //
-            //     if (condition)
-            //     {
-            //         StateMachine.SetState<MeleeAttackEntityState>();
-            //     }
-            //     else
-            //     {
-            //         StateMachine.SetState<BossJumpEntityState>();
-            //     }
-            // });
+            UniTask.Void(async () =>
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(2));
+
+                StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);;
+            });
         }
 
         public override void Update()
         {
-            base.Update();
-
-            if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
-            {
-                StateMachine.SetState<BossMoveEntityState>();
-            }
+            // base.Update();
+            //
+            // if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
+            // {
+            //     StateMachine.SetState<BossMoveEntityState>();
+            // }
         }
     }
 }

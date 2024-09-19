@@ -14,7 +14,7 @@ namespace Core.Scripts.StatesMachine
             _speed = baseEntity.Speed;
             _animator = baseEntity.Animator;
             _collision = baseEntity.EntityCollision;
-            _entityLayerMask = baseEntity.EntityLayerMask;
+            EntityLayerMask = baseEntity.EntityLayerMask;
             _idleBehaviour = baseEntity.Animator.GetBehaviour<MoveBehaviour>();
             InteractionSystem = interactionSystem;
         }
@@ -27,7 +27,7 @@ namespace Core.Scripts.StatesMachine
         private readonly float _jumpForce;
         private readonly Animator _animator;
         private readonly Rigidbody _rigidBody;
-        private readonly LayerMask _entityLayerMask;
+        protected readonly LayerMask EntityLayerMask;
         private readonly EntityCollision _collision;
         private readonly MoveBehaviour _idleBehaviour;
         protected readonly MonoInteractionSystem InteractionSystem;
@@ -46,7 +46,7 @@ namespace Core.Scripts.StatesMachine
 
         private void OnCollisionExit(Collision collision)
         {
-            if (_entityLayerMask.value.Includes(collision.gameObject.layer))
+            if (EntityLayerMask.value.Includes(collision.gameObject.layer))
             {
                 IsCloseToEnemy = false;
             }
@@ -54,7 +54,7 @@ namespace Core.Scripts.StatesMachine
 
         private void OnCollisionStay(Collision collision)
         {
-            if (_entityLayerMask.value.Includes(collision.gameObject.layer))
+            if (EntityLayerMask.value.Includes(collision.gameObject.layer))
             {
                 IsCloseToEnemy = true;
             }

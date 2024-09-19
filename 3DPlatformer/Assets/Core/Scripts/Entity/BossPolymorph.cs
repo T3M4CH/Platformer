@@ -52,9 +52,9 @@ namespace Core.Scripts.Entity
             StateMachine.AddState(idleState);
             var moveState = new BossMoveEntityState(StateMachine, this, PlayerService, interactionSystem);
             StateMachine.AddState(moveState);
-            StateMachine.AddState(new MeleeAttackEntityState(StateMachine, idleState, weapon, this));
-            StateMachine.AddState(new BossJumpEntityState(StateMachine, idleState, 5, interactionSystem, this));
-            StateMachine.AddState(new JumpAttackEntityState(StateMachine, idleState, this));
+            StateMachine.AddState(new MeleeAttackEntityState(StateMachine, moveState, weapon, this));
+            StateMachine.AddState(new BossJumpEntityState(StateMachine, moveState, 5, interactionSystem, this));
+            StateMachine.AddState(new JumpAttackEntityState(StateMachine, moveState, this));
             StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, idleState));
             StateMachine.AddState(new DamagedEntityState(StateMachine, moveState, this, EffectService));
             StateMachine.AddState(new ThrownEntityState(StateMachine, moveState, this, EffectService));

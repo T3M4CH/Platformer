@@ -4,6 +4,7 @@ using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
 using Core.Scripts.Healthbars;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MonoPlayerController : DefaultEntity
 {
@@ -28,7 +29,27 @@ public class MonoPlayerController : DefaultEntity
 
         _currentCooldownTime = damageCooldown;
 
-        return base.TakeDamage(damage, force);
+        if (!base.TakeDamage(damage, force))
+        {
+            sword.SetActive(false);
+            return false;
+        }
+
+        if (force.HasValue)
+        {
+            StateMachine.SetState<ThrownEntityState>();
+
+            var relativePosition = force.Value;
+            relativePosition.y = 0;
+
+            Debug.DrawRay(RigidBody.position, RigidBody.position + force.Value, Color.red, 10f);
+            Debug.DrawRay(RigidBody.position, force.Value, Color.green, 10f);
+            RigidBody.MoveRotation(Quaternion.LookRotation(-relativePosition));
+            RigidBody.velocity = Vector3.zero;
+            RigidBody.AddForce(force.Value, ForceMode.Impulse);
+        }
+
+        return true;
     }
 
     private void FixedUpdate()
@@ -40,6 +61,11 @@ public class MonoPlayerController : DefaultEntity
     {
         _currentCooldownTime -= Time.deltaTime;
         _currentCooldownTime = Mathf.Max(0, _currentCooldownTime);
+
+        if (Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            StateMachine.SetState<BowAttackEntityState>();
+        }
 
         StateMachine.Update();
     }
@@ -53,6 +79,7 @@ public class MonoPlayerController : DefaultEntity
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, playerMoveState, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
         StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, playerMoveState));
+        StateMachine.AddState(new ThrownEntityState(StateMachine, playerMoveState, this, EffectService));
         StateMachine.SetState<PlayerMoveEntityState>();
     }
 

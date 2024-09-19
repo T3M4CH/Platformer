@@ -33,7 +33,7 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-
+            
             _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
             _entityCollision.TriggerCollider.enabled = true;
             _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
@@ -53,6 +53,14 @@ namespace Core.Scripts.StatesMachine
             {
                 BaseEntity.TakeDamage(float.MaxValue);
             }
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            _entityCollision.DefaultCollider.excludeLayers = 0;
+            _entityCollision.TriggerCollider.enabled = false;
         }
 
         public void Dispose()

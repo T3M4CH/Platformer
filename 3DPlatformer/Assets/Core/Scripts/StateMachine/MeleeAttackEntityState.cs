@@ -39,16 +39,16 @@ namespace Core.Scripts.StatesMachine
 
             _animator.SetTrigger(Attack);
             _weapon.SetActive(true);
-            
+
             _animatorHelper.OnAttacked += PerformDamageEvent;
             _animatorHelper.OnAttackExitEvent += PerformAttackExit;
         }
 
         public void SetAimTarget(IDamageable target)
         {
-            var relativePosition = target.transform.position - BaseEntity.transform.position;
-            relativePosition.y = 0;
-            BaseEntity.RigidBody.MoveRotation(Quaternion.LookRotation(relativePosition));
+            _relativePosition = target.transform.position - BaseEntity.transform.position;
+            _relativePosition.y = 0;
+            BaseEntity.RigidBody.MoveRotation(Quaternion.LookRotation(_relativePosition));
         }
 
         private void PerformDamageEvent()
@@ -64,7 +64,10 @@ namespace Core.Scripts.StatesMachine
 
                 if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Kick")
                 {
+                    _relativePosition = target.transform.position - BaseEntity.transform.position;
+                    _relativePosition.y = 0;
                     _kickSound.Play(Random.Range(0.9f, 1.1f));
+                    Debug.LogWarning($"Relative position is {_relativePosition} + Mathf.Sign is{Mathf.Sign(_relativePosition.x)}");
                     target?.TakeDamage(15f, (Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up) * 5f);
                     continue;
                 }
@@ -82,9 +85,9 @@ namespace Core.Scripts.StatesMachine
         public override void Exit()
         {
             base.Exit();
-            
+
             _weapon.SetActive(false);
-            
+
             _animator.ResetTrigger(Attack);
             _animatorHelper.OnAttacked -= PerformDamageEvent;
             _animatorHelper.OnAttackExitEvent -= PerformAttackExit;

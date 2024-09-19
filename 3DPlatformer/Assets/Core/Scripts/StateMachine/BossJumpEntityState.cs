@@ -18,13 +18,20 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
         }
 
+        public void SetAimTarget(Transform target)
+        {
+            var direction = (target.position - BaseEntity.transform.position).normalized;
+
+            Direction.x = direction.x;
+        }
+
         protected override void PerformChangeAbleAttack(bool value)
         {
             base.PerformChangeAbleAttack(value);
 
             if (value)
             {
-                var condition = Random.Range(0, 100f) > 50;
+                var condition = true; //Random.Range(0, 100f) >= 0;
 
                 if (condition)
                 {
