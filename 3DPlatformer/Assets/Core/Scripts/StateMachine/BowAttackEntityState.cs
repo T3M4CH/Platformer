@@ -27,6 +27,11 @@ namespace Core.Scripts.StatesMachine
             _exitState = exitState;
         }
 
+        public void SetAimTarget(Transform targetPosition)
+        {
+            _endPosition = targetPosition.position;
+        }
+
         public override void Enter()
         {
             base.Enter();
@@ -38,7 +43,7 @@ namespace Core.Scripts.StatesMachine
             _currentShots = 1;
             _currentTime = 0f;
             _estimatedTime = 1.5f;
-            _segmentTime = _estimatedTime / 3;
+            _segmentTime = _estimatedTime;
 
             var transform = BaseEntity.transform;
             var position = transform.position + Vector3.down;
@@ -71,15 +76,10 @@ namespace Core.Scripts.StatesMachine
 
                 if (_currentTime > _segmentTime * _currentShots)
                 {
-                    _currentShots += 1;
                     _bowController.Shot();
+                    _isShooting = false;
+                    StateMachine.SetState(_exitState);
                 }
-            }
-
-            if (_currentTime > _estimatedTime + _segmentTime)
-            {
-                _isShooting = false;
-                StateMachine.SetState(_exitState);
             }
         }
 

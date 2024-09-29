@@ -21,7 +21,7 @@ namespace Core.Scripts.StatesMachine
 
             UniTask.Void(async () =>
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(2));
+                await UniTask.Delay(TimeSpan.FromSeconds(3.5f));
 
                 StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);;
             });

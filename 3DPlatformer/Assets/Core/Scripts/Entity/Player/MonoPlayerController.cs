@@ -1,12 +1,15 @@
+using System;
 using Core.Scripts.Bow;
 using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Scripts.Entity;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Healthbars;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MonoPlayerController : DefaultEntity
+public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 {
     [SerializeField] private GameObject sword;
     [SerializeField] private BowController bowController;
@@ -70,6 +73,20 @@ public class MonoPlayerController : DefaultEntity
         StateMachine.Update();
     }
 
+    public void ExecuteExtraJump()
+    {
+        UniTask.Void(async () =>
+        {
+            Time.timeScale = 0.75f;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: this.GetCancellationTokenOnDestroy());
+
+            Time.timeScale = 1f;
+        });
+
+        StateMachine.SetState<PlayerJumpEntityState>().SetFlipAnimation();
+    }
+
     private void Start()
     {
         StateMachine = new EntityStateMachine();
@@ -87,4 +104,6 @@ public class MonoPlayerController : DefaultEntity
     [field: SerializeField] public float JumpForce { get; private set; }
     [field: SerializeField] public Transform LookAtPosition { get; private set; }
     [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
+
+    public EntityState CurrentEntityState => StateMachine?.CurrentEntityState;
 }

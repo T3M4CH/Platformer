@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Core.Scripts.StatesMachine
 {
@@ -24,6 +25,14 @@ namespace Core.Scripts.StatesMachine
             _attackButton.interactable = false;
 
             _attackButton.onClick.AddListener(PerformAttack);
+        }
+
+        public void SetFlipAnimation()
+        {
+            Animator.CrossFade("JumpBounce", 0f, 0);
+            RigidBody.velocity = Vector3.zero;
+            RigidBody.angularVelocity = Vector3.zero;
+            RigidBody.AddForce(Vector3.up * JumpForce * 0.5f, ForceMode.Impulse);
         }
 
         public override void FixedUpdate()

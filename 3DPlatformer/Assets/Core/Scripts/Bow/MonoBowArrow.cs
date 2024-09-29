@@ -1,4 +1,6 @@
 using System.Collections;
+using Core.Scripts.Entity.Interfaces;
+using Core.Scripts.StatesMachine;
 using Core.Sounds.Scripts;
 using UnityEngine;
 
@@ -24,6 +26,19 @@ public class MonoBowArrow : MonoBehaviour
     {
         if (entityLayerMask.value.Includes(other.gameObject.layer) && other.transform != ArrowOwnwer)
         {
+            var damageable = other.gameObject.TryGetComponent(out IPlayerInteractor playerController);
+
+            if (damageable)
+            {
+                if (playerController.CurrentEntityState is JumpAttackEntityState)
+                {
+                    playerController.ExecuteExtraJump();
+
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+
             Explode();
         }
 

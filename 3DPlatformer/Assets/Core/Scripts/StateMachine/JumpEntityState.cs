@@ -10,21 +10,21 @@ namespace Core.Scripts.StatesMachine
         public JumpEntityState(EntityStateMachine entityStateMachine, EntityState exitState, float jumpForce, MonoInteractionSystem interactionSystem, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
         {
             _exitState = exitState;
-            _jumpForce = jumpForce;
+            JumpForce = jumpForce;
             _interactionSystem = interactionSystem;
             _speed = baseEntity.Speed;
-            _animator = baseEntity.Animator;
-            _rigidBody = baseEntity.RigidBody;
+            Animator = baseEntity.Animator;
+            RigidBody = baseEntity.RigidBody;
             _animatorHelper = baseEntity.AnimatorHelper;
         }
 
         protected bool IsAbleAttack;
         protected Vector3 Direction;
+        protected readonly float JumpForce;
+        protected readonly Animator Animator;
+        protected readonly Rigidbody RigidBody;
 
         private readonly float _speed;
-        private readonly float _jumpForce;
-        private readonly Animator _animator;
-        private readonly Rigidbody _rigidBody;
         private readonly EntityState _exitState;
         private readonly EntityCollision _collision;
         private readonly MonoAnimatorHelper _animatorHelper;
@@ -38,9 +38,9 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             IsAbleAttack = false;
-            _rigidBody.velocity = Vector3.zero;
-            _animator.SetTrigger(JumpAnimation);
-            _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+            RigidBody.velocity = Vector3.zero;
+            Animator.CrossFade("Jump", 0f, 0);
+            RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
 
             _animatorHelper.OnLand += PerformLand;
             _animatorHelper.OnAbleAttack += PerformChangeAbleAttack;
@@ -80,13 +80,13 @@ namespace Core.Scripts.StatesMachine
 
         protected void Move()
         {
-            _rigidBody.MovePosition(_rigidBody.position + Direction * (_speed * Time.deltaTime));
+            RigidBody.MovePosition(RigidBody.position + Direction * (_speed * Time.deltaTime));
 
             var angle = Math.Sign(Direction.x);
             angle = angle == 0 ? 180 : angle * 90;
-            _rigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
+            RigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
-            _animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
+            Animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
         }
 
         private void PerformLand()
@@ -95,9 +95,9 @@ namespace Core.Scripts.StatesMachine
             {
                 var isGround = _interactionSystem.IsGround.Under;
 
-                var velocity = isGround ? Vector3.zero : _rigidBody.velocity;
+                var velocity = isGround ? Vector3.zero : RigidBody.velocity;
                 StateMachine.SetState(_exitState);
-                _rigidBody.velocity = velocity;
+                RigidBody.velocity = velocity;
             }
         }
 
