@@ -75,6 +75,8 @@ namespace Core.Scripts.StatesMachine
         {
             base.FixedUpdate();
 
+            Debug.LogWarning(Direction.x);
+
             Move();
         }
 

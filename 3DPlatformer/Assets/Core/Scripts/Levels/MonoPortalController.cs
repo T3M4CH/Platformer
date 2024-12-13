@@ -13,6 +13,7 @@ public class MonoPortalController : MonoBehaviour
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private SoundAsset portalAppearSound;
     [SerializeField] private SoundAsset portalTeleportSound;
+    [SerializeField] private AnimationCurve animationCurve;
 
     private BaseEntity _entity;
     private Transform _transform;
@@ -38,14 +39,14 @@ public class MonoPortalController : MonoBehaviour
 
     public void TeleportEntity(BaseEntity entity, Vector3 position)
     {
+        Debug.LogWarning("Teleport");
+
         _entity = entity;
-        
+
         foreach (var portalParticle in _portalParticles)
         {
             portalParticle.Play();
         }
-
-        _entity.gameObject.SetActive(true);
 
         _entity.enabled = false;
         _entity.RigidBody.isKinematic = true;
@@ -55,15 +56,16 @@ public class MonoPortalController : MonoBehaviour
 
         _transform.localScale = Vector3.zero;
         _transform.position = position;
-        
-        portalTeleportSound.Play(Random.Range(0.9f,1.1f));
+
+        portalTeleportSound.Play(Random.Range(0.9f, 1.1f));
 
         _transform.DOScale(targetScale, 2).SetEase(Ease.OutBack).SetLink(gameObject).OnComplete(() =>
         {
             _entity.transform.SetParent(null);
             _entity.RigidBody.isKinematic = false;
             _entity.enabled = true;
-
+            _entity.Animator.speed = 1;
+            _entity.Animator.CrossFade("Jump", 0, 0, 0);
 
             DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject);
         });
@@ -74,24 +76,36 @@ public class MonoPortalController : MonoBehaviour
     public void AppearPortalAtPlayer()
     {
         if (!_entity) throw new Exception("Player not saved");
-        
+
+        Debug.LogWarning("Appear");
+
         foreach (var portalParticle in _portalParticles)
         {
             portalParticle.Play();
         }
-        
-        portalAppearSound.Play(Random.Range(0.9f,1.1f));
+
+        portalAppearSound.Play(Random.Range(0.9f, 1.1f));
         _transform.localScale = Vector3.zero;
         _transform.position = _entity.transform.position;
-        
-        
+
         _entity.enabled = false;
         _entity.RigidBody.isKinematic = true;
-        _entity.transform.SetParent(transform);
-        _entity.transform.localPosition = Vector3.zero;
+        //_entity.transform.SetParent(transform);
+        //_entity.transform.localPosition = Vector3.zero;
+        _entity.transform.DORotate(new Vector3(0, 180, 0), 1f);
+        _entity.Animator.CrossFade("Jump", 0, 0);
 
         _transform.DOScale(targetScale, 1).SetEase(Ease.OutBack).SetLink(gameObject);
         _transform.DOMoveY(_transform.position.y + 2, 1.5f).SetLink(gameObject);
-        DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 1, 0, 2).SetLink(gameObject);
+
+
+        var tween = _entity.transform.DOMoveY(_transform.position.y + 2, 2).SetLink(gameObject);
+        tween.OnUpdate(() =>
+        {
+            _entity.Animator.speed = animationCurve.Evaluate(tween.position / tween.Duration());
+            //Debug.LogWarning(tween.position / tween.Duration());
+        });
+
+        DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 1, 0, 4).SetLink(gameObject);
     }
 }

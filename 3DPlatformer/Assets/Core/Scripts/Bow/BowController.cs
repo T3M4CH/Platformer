@@ -25,7 +25,6 @@ namespace Core.Scripts.Bow
             BowTransform.DOLocalMove(handPosition, duration).From(startPosition).SetEase(ease);
 
             exclamationMark.SetActive(true);
-            Debug.LogWarning("Start");
         }
 
         public void PerformMoveBowAlongBody(float ratio)

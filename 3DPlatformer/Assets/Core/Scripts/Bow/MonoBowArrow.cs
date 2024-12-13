@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Sounds.Scripts;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class MonoBowArrow : MonoBehaviour
 {
@@ -15,10 +17,12 @@ public class MonoBowArrow : MonoBehaviour
     [SerializeField] private GameObject explosionIndicator;
 
     private Transform _transform;
+    private Vector3 _startPosition;
 
     private void Start()
     {
         _transform = transform;
+        _startPosition = _transform.position;
         rigidBody.AddForce(-_transform.up * speed, ForceMode.Impulse);
     }
 
@@ -59,10 +63,16 @@ public class MonoBowArrow : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         rigidBody.isKinematic = true;
 
-        var colliders = Physics.OverlapSphere(_transform.position, .5f, entityLayerMask);
+        var colliders = Physics.OverlapSphere(_transform.position, 1f, entityLayerMask);
+        var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.GetComponent<Collider>().enabled = false;
+        sphere.transform.position = _transform.position;
+        sphere.transform.localScale = Vector3.one * 2;
+        Destroy(sphere, 2);
         foreach (var collider in colliders)
         {
-            collider.GetComponent<IDamageable>()?.TakeDamage(20, new Vector3(Mathf.Sign(collider.transform.position.x - _transform.position.x), 1, 0));
+            if (collider.isTrigger) continue;
+            collider.GetComponent<IDamageable>()?.TakeDamage(20, 5 * new Vector3(Mathf.Sign(_transform.position.x - _startPosition.x), 1, 0));
         }
 
         Destroy(gameObject);

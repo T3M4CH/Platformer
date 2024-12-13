@@ -24,6 +24,8 @@ namespace Core.Scripts.StatesMachine
             _jumpButton.interactable = true;
             _jumpButton.onClick.AddListener(Jump);
             _attackButton.onClick.AddListener(Attack);
+            
+            Direction.x = _joystick.Direction.x;
         }
 
         public override void FixedUpdate()

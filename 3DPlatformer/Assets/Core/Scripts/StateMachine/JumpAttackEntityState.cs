@@ -107,10 +107,26 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
+            if (BaseEntity is MonoPlayerController playerController)
+            {
+                Debug.LogWarning("IsGround : " + playerController.InteractionSystem.IsGround.Under);
+                if (!playerController.InteractionSystem.IsGround.Under)
+                {
+                    _animator.CrossFade("Jump", playerController.JumpTransitionOffsetTest, 0, playerController.JumpTimeOffsetTest);
+                    if (playerController.JumpPauseTest)
+                    {
+                        Debug.Break();
+                    }
+                }
+            }
+
+
             _damageableAtState.Clear();
             _collision.CollisionEnter -= OnCollisionEnter;
             _collision.TriggerEnter -= OnTriggerEnter;
             SetActiveKickParticle(false);
+
+            _animator.ResetTrigger(JumpAttack);
         }
     }
 }

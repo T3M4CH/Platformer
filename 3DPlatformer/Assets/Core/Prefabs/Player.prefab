@@ -2051,6 +2051,7 @@ MonoBehaviour:
   bowArrow: {fileID: -1372667256400489456, guid: c655c9047aee1c848a63509d0353b913, type: 3}
   leftHandPosition: {fileID: 2436476817573235783}
   rightHandPosition: {fileID: 7139103365149135046}
+  exclamationMark: {fileID: 0}
   endBodyPosition: {x: -0.4, y: 0, z: 0.416}
   startPosition: {x: 0, y: 0, z: -0.5}
   handPosition: {x: 0, y: 0, z: 0}

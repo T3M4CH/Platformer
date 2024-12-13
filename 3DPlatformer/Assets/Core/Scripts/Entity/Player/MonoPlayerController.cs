@@ -28,7 +28,11 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 
     public override bool TakeDamage(float damage, Vector3? force = null)
     {
-        if (_currentCooldownTime > 0) return false;
+        if (_currentCooldownTime > 0)
+        {
+            Debug.LogWarning("cd > 0 tf");
+            return false;
+        }
 
         _currentCooldownTime = damageCooldown;
 
@@ -40,6 +44,7 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 
         if (force.HasValue)
         {
+            Debug.LogWarning("Force is " + force.Value);
             StateMachine.SetState<ThrownEntityState>();
 
             var relativePosition = force.Value;
@@ -77,7 +82,7 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
     {
         UniTask.Void(async () =>
         {
-            Time.timeScale = 0.75f;
+            Time.timeScale = 0.5f;
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: this.GetCancellationTokenOnDestroy());
 
@@ -102,6 +107,9 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 
     public override EntityStateMachine StateMachine { get; protected set; }
     [field: SerializeField] public float JumpForce { get; private set; }
+    [field: SerializeField] public float JumpTimeOffsetTest { get; private set; }
+    [field: SerializeField] public float JumpTransitionOffsetTest { get; private set; }
+    [field: SerializeField] public bool JumpPauseTest { get; private set; }
     [field: SerializeField] public Transform LookAtPosition { get; private set; }
     [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
 
