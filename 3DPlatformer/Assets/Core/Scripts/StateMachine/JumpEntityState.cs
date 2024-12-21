@@ -75,8 +75,6 @@ namespace Core.Scripts.StatesMachine
         {
             base.FixedUpdate();
 
-            Debug.LogWarning(Direction.x);
-
             Move();
         }
 
@@ -89,6 +87,11 @@ namespace Core.Scripts.StatesMachine
             RigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
             Animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
+            
+            if (BaseEntity is MonoPlayerController playerController)
+            {
+                Animator.SetBool("IsGround", playerController.InteractionSystem.IsGround.Under);
+            }
         }
 
         private void PerformLand()

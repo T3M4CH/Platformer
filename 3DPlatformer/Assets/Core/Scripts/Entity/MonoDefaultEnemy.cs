@@ -6,8 +6,7 @@ using UnityEngine;
 public class MonoDefaultEnemy : DefaultEntity
 {
     [SerializeField] private GameObject weapon;
-    [SerializeField] private MonoInteractionSystem interactionSystem;
-
+        
     private HealthbarManager _healthBarManager;
 
     public override bool TakeDamage(float damage, Vector3? force = null)
@@ -46,7 +45,7 @@ public class MonoDefaultEnemy : DefaultEntity
     private void Start()
     {
         StateMachine = new EntityStateMachine();
-        var patrolMove = new PatrolMoveEntityState(StateMachine, this, interactionSystem);
+        var patrolMove = new PatrolMoveEntityState(StateMachine, this, InteractionSystem);
         StateMachine.AddState(patrolMove);
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, patrolMove, weapon, this));
         StateMachine.AddState(new DamagedEntityState(StateMachine, patrolMove, this, EffectService));

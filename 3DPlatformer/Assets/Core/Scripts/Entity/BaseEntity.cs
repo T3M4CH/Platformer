@@ -92,6 +92,7 @@ namespace Core.Scripts.Entity
         [field: SerializeField] public SoundAsset FlyingAttackSound { get; private set; }
         [field: SerializeField] public SoundAsset AttackSound { get; private set; }
         [field: SerializeField] public SoundAsset KickSound { get; private set; }
+        [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
         [field: SerializeField] public LayerMask WaterLayerMask { get; private set; }
         [field: SerializeField] public LayerMask EntityLayerMask { get; private set; }
     }

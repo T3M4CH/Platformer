@@ -6,6 +6,7 @@ using Core.Scripts.Entity;
 using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Healthbars;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +14,7 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 {
     [SerializeField] private GameObject sword;
     [SerializeField] private BowController bowController;
+    [SerializeField] private TMP_Text stateText;
     [SerializeField] private float damageCooldown;
 
     private float _currentCooldownTime;
@@ -76,6 +78,8 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
         }
 
         StateMachine.Update();
+
+        stateText.text = StateMachine.CurrentEntityState.GetType().Name;
     }
 
     public void ExecuteExtraJump()
@@ -98,11 +102,12 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
         var playerMoveState = new PlayerMoveEntityState(StateMachine, this, InteractionSystem, _controlsWindow);
         StateMachine.AddState(playerMoveState);
         StateMachine.AddState(new PlayerJumpEntityState(StateMachine, playerMoveState, JumpForce, InteractionSystem, this, _controlsWindow));
+        StateMachine.AddState(new FallEntityState(StateMachine, InteractionSystem, this, _controlsWindow));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, playerMoveState, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
         StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, playerMoveState));
         StateMachine.AddState(new ThrownEntityState(StateMachine, playerMoveState, this, EffectService));
-        StateMachine.SetState<PlayerMoveEntityState>();
+        StateMachine.SetState(playerMoveState);
     }
 
     public override EntityStateMachine StateMachine { get; protected set; }
@@ -111,7 +116,6 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
     [field: SerializeField] public float JumpTransitionOffsetTest { get; private set; }
     [field: SerializeField] public bool JumpPauseTest { get; private set; }
     [field: SerializeField] public Transform LookAtPosition { get; private set; }
-    [field: SerializeField] public MonoInteractionSystem InteractionSystem { get; private set; }
 
     public EntityState CurrentEntityState => StateMachine?.CurrentEntityState;
 }

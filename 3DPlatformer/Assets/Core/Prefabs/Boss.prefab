@@ -2923,6 +2923,7 @@ MonoBehaviour:
   <FlyingAttackSound>k__BackingField: {fileID: 11400000, guid: d8f96579d9883ea48b66c12583878863, type: 2}
   <AttackSound>k__BackingField: {fileID: 11400000, guid: 922e83af6ea213047a719d7f72831f0c, type: 2}
   <KickSound>k__BackingField: {fileID: 11400000, guid: b3ef42ce19c6ab244b5df7e1d6d9cacc, type: 2}
+  <InteractionSystem>k__BackingField: {fileID: 0}
   <WaterLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 16
@@ -2931,7 +2932,6 @@ MonoBehaviour:
     m_Bits: 64
   weapon: {fileID: 3946823212626834670}
   bowController: {fileID: 6687005408254545345}
-  interactionSystem: {fileID: 1015223681539584116}
 --- !u!136 &6785065930229357998
 CapsuleCollider:
   m_ObjectHideFlags: 0

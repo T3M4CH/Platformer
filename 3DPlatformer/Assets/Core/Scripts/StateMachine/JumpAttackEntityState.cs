@@ -99,27 +99,21 @@ namespace Core.Scripts.StatesMachine
 
             if (_currentTime >= 1)
             {
-                StateMachine.SetState(_exitState);
+                if (!BaseEntity.InteractionSystem.IsGround.Under)
+                {
+                    //todo Который только для игрока, но эт хуйня какая-та 
+                    StateMachine.SetState<FallEntityState>();
+                }
+                else
+                {
+                    StateMachine.SetState(_exitState);
+                }
             }
         }
 
         public override void Exit()
         {
             base.Exit();
-
-            if (BaseEntity is MonoPlayerController playerController)
-            {
-                Debug.LogWarning("IsGround : " + playerController.InteractionSystem.IsGround.Under);
-                if (!playerController.InteractionSystem.IsGround.Under)
-                {
-                    _animator.CrossFade("Jump", playerController.JumpTransitionOffsetTest, 0, playerController.JumpTimeOffsetTest);
-                    if (playerController.JumpPauseTest)
-                    {
-                        Debug.Break();
-                    }
-                }
-            }
-
 
             _damageableAtState.Clear();
             _collision.CollisionEnter -= OnCollisionEnter;
