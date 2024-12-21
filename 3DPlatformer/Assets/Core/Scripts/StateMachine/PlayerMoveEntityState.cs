@@ -52,7 +52,7 @@ namespace Core.Scripts.StatesMachine
                 Attack();
             }
         }
-
+        
         public override void Exit()
         {
             base.Exit();
