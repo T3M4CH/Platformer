@@ -21,7 +21,7 @@ public class MonoDefaultEnemy : DefaultEntity
         {
             StateMachine.SetState<ThrownEntityState>();
 
-            RigidBody.velocity = Vector3.zero;
+            RigidBody.linearVelocity = Vector3.zero;
             RigidBody.AddForce(force.Value, ForceMode.Impulse);
         }
         else

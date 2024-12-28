@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core.Scripts.Entity;
+using Core.Scripts.StatesMachine;
 using Core.Sounds.Scripts;
 using DG.Tweening;
 using UnityEngine;
@@ -65,7 +66,8 @@ public class MonoPortalController : MonoBehaviour
             _entity.RigidBody.isKinematic = false;
             _entity.enabled = true;
             _entity.Animator.speed = 1;
-            _entity.Animator.CrossFade("Jump", 0, 0, 0);
+            //_entity.StateMachine.SetState<FallEntityState>();
+            //_entity.Animator.CrossFade("Jump", 0, 0, 0);
 
             DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject);
         });
@@ -90,14 +92,11 @@ public class MonoPortalController : MonoBehaviour
 
         _entity.enabled = false;
         _entity.RigidBody.isKinematic = true;
-        //_entity.transform.SetParent(transform);
-        //_entity.transform.localPosition = Vector3.zero;
         _entity.transform.DORotate(new Vector3(0, 180, 0), 1f);
         _entity.Animator.CrossFade("Jump", 0, 0);
 
         _transform.DOScale(targetScale, 1).SetEase(Ease.OutBack).SetLink(gameObject);
         _transform.DOMoveY(_transform.position.y + 2, 1.5f).SetLink(gameObject);
-
 
         var tween = _entity.transform.DOMoveY(_transform.position.y + 2, 2).SetLink(gameObject);
         tween.OnUpdate(() =>

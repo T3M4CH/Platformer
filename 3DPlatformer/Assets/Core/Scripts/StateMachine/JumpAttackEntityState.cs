@@ -55,7 +55,7 @@ namespace Core.Scripts.StatesMachine
 
             _forceImpulse = _transform.forward * 10f;
 
-            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
         }
 

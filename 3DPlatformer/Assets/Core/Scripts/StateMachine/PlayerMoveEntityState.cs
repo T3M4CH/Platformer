@@ -24,7 +24,7 @@ namespace Core.Scripts.StatesMachine
             _jumpButton.interactable = true;
             _jumpButton.onClick.AddListener(Jump);
             _attackButton.onClick.AddListener(Attack);
-            
+
             Direction.x = _joystick.Direction.x;
         }
 
@@ -32,6 +32,11 @@ namespace Core.Scripts.StatesMachine
         {
             _jumpButton.interactable = InteractionSystem.IsGround.Under && !IsCloseToEnemy;
             _attackButton.interactable = InteractionSystem.IsGround.Under && Direction.x != 0;
+
+            if (!BaseEntity.InteractionSystem.IsGround.Under)
+            {
+                StateMachine.SetState<FallEntityState>();
+            }
 
             base.FixedUpdate();
         }
@@ -52,7 +57,7 @@ namespace Core.Scripts.StatesMachine
                 Attack();
             }
         }
-        
+
         public override void Exit()
         {
             base.Exit();

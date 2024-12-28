@@ -36,7 +36,7 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             _currentTime = _attackDelay;
-            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.MoveRotation(Quaternion.LookRotation(_direction));
 
             if (_interactionSystem.IsGround.Under)

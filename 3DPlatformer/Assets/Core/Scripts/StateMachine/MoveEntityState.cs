@@ -38,7 +38,7 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             IsCloseToEnemy = false;
-            _rigidBody.velocity = Vector3.zero;
+            _rigidBody.linearVelocity = Vector3.zero;
 
             _collision.CollisionStay += OnCollisionStay;
             _collision.CollisionExit += OnCollisionExit;

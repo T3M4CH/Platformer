@@ -55,7 +55,7 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
             Debug.DrawRay(RigidBody.position, RigidBody.position + force.Value, Color.red, 10f);
             Debug.DrawRay(RigidBody.position, force.Value, Color.green, 10f);
             RigidBody.MoveRotation(Quaternion.LookRotation(-relativePosition));
-            RigidBody.velocity = Vector3.zero;
+            RigidBody.linearVelocity = Vector3.zero;
             RigidBody.AddForce(force.Value, ForceMode.Impulse);
         }
 

@@ -38,7 +38,7 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             IsAbleAttack = false;
-            RigidBody.velocity = Vector3.zero;
+            RigidBody.linearVelocity = Vector3.zero;
             Animator.CrossFade("Jump", 0f, 0);
             RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
 
@@ -100,9 +100,9 @@ namespace Core.Scripts.StatesMachine
             {
                 var isGround = _interactionSystem.IsGround.Under;
 
-                var velocity = isGround ? Vector3.zero : RigidBody.velocity;
+                var velocity = isGround ? Vector3.zero : RigidBody.linearVelocity;
                 StateMachine.SetState(_exitState);
-                RigidBody.velocity = velocity;
+                RigidBody.linearVelocity = velocity;
             }
         }
 

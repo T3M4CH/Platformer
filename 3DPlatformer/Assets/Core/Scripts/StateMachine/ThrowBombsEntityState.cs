@@ -72,7 +72,7 @@ namespace Core.Scripts.StatesMachine
 
             var bombInstance = Object.Instantiate(_bomb, _transform.position + Vector3.up, Quaternion.identity);
             bombInstance.transform.SetParent(_transform.parent);
-            bombInstance.velocity = velocityY + velocityXZ;
+            bombInstance.linearVelocity = velocityY + velocityXZ;
         }
 
         public void Dispose()
