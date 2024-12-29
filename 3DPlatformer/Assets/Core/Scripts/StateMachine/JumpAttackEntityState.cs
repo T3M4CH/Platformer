@@ -21,6 +21,8 @@ namespace Core.Scripts.StatesMachine
 
             _kickEffect = BaseEntity.KickEffect;
             _kickEffectParticles = _kickEffect.GetComponentsInChildren<ParticleSystem>().Select(el => el.emission).ToArray();
+
+            _animatorHelper = baseEntity.AnimatorHelper;
         }
 
         private float _currentTime;
@@ -38,6 +40,7 @@ namespace Core.Scripts.StatesMachine
         private readonly ParticleSystem.EmissionModule[] _kickEffectParticles;
         private readonly SoundAsset _flyingAttackSound;
         private readonly SoundAsset _kickSound;
+        private readonly MonoAnimatorHelper _animatorHelper;
 
         private Queue<IDamageable> _damageableAtState = new();
 
@@ -57,6 +60,7 @@ namespace Core.Scripts.StatesMachine
 
             _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
+            _animatorHelper.OnLand += OnLand;
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -92,22 +96,16 @@ namespace Core.Scripts.StatesMachine
             }
         }
 
-        public override void Update()
+        public void OnLand()
         {
-            base.Update();
-            _currentTime += Time.deltaTime * 2f;
-
-            if (_currentTime >= 1)
+            if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
-                if (!BaseEntity.InteractionSystem.IsGround.Under)
-                {
-                    //todo Который только для игрока, но эт хуйня какая-та 
-                    StateMachine.SetState<FallEntityState>();
-                }
-                else
-                {
-                    StateMachine.SetState(_exitState);
-                }
+                //todo Который только для игрока, но эт хуйня какая-та 
+                StateMachine.SetState<FallEntityState>();
+            }
+            else
+            {
+                StateMachine.SetState(_exitState);
             }
         }
 
@@ -118,6 +116,7 @@ namespace Core.Scripts.StatesMachine
             _damageableAtState.Clear();
             _collision.CollisionEnter -= OnCollisionEnter;
             _collision.TriggerEnter -= OnTriggerEnter;
+            _animatorHelper.OnLand -= OnLand;
             SetActiveKickParticle(false);
 
             _animator.ResetTrigger(JumpAttack);
