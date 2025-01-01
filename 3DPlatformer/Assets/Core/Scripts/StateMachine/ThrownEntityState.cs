@@ -28,16 +28,16 @@ namespace Core.Scripts.StatesMachine
         private readonly EntityCollision _entityCollision;
         private readonly MonoAnimatorHelper _animatorHelper;
 
-        private static readonly int Fall = Animator.StringToHash("Fall");
+        private static readonly int Knocked = Animator.StringToHash("Knocked");
 
         public override void Enter()
         {
             base.Enter();
-            
+
             _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
             _entityCollision.TriggerCollider.enabled = true;
             _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
-            _animator.SetTrigger(Fall);
+            _animator.SetTrigger(Knocked);
         }
 
         private void PerformStand()
@@ -58,7 +58,7 @@ namespace Core.Scripts.StatesMachine
         public override void Exit()
         {
             base.Exit();
-            
+
             _entityCollision.DefaultCollider.excludeLayers = 0;
             _entityCollision.TriggerCollider.enabled = false;
         }

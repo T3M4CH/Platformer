@@ -29,7 +29,7 @@ public class MonoAnimatorHelper : MonoBehaviour
     {
         OnAttackExitEvent.Invoke();
     }
-
+    
     public void PerformLandEvent()
     {
         OnLand.Invoke();

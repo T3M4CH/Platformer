@@ -55,8 +55,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.8255391
-        functionName: PerformLandEvent
+      - time: 0.9240521
+        functionName: AttackExitEvent
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

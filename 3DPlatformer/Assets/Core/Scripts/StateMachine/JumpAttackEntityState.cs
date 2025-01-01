@@ -59,7 +59,7 @@ namespace Core.Scripts.StatesMachine
 
             _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
-            _animatorHelper.OnLand += OnLand;
+            _animatorHelper.OnAttackExitEvent += OnLand;
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -95,18 +95,14 @@ namespace Core.Scripts.StatesMachine
             }
         }
 
-        public void OnLand()
+        private void OnLand()
         {
-            Debug.LogWarning("LandTry");
             if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
-                Debug.LogWarning("LandFall");
-                //todo Который только для игрока, но эт хуйня какая-та 
                 StateMachine.SetState<FallEntityState>();
             }
             else
             {
-                Debug.LogWarning("LandExit");
                 StateMachine.SetState(_exitState);
             }
         }
@@ -118,7 +114,7 @@ namespace Core.Scripts.StatesMachine
             _damageableAtState.Clear();
             _collision.CollisionEnter -= OnCollisionEnter;
             _collision.TriggerEnter -= OnTriggerEnter;
-            _animatorHelper.OnLand -= OnLand;
+            _animatorHelper.OnAttackExitEvent -= OnLand;
             SetActiveKickParticle(false);
 
             _animator.ResetTrigger(JumpAttack);
