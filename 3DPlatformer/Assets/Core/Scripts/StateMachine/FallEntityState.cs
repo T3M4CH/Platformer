@@ -32,7 +32,10 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
-            Animator.CrossFade("JumpMiddle", 0);
+            Debug.Break();
+
+            Animator.speed = 0.75f;
+            Animator.SetTrigger("Fall");
             Animator.SetBool("IsGround", false);
         }
 
@@ -45,7 +48,6 @@ namespace Core.Scripts.StatesMachine
             RigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
             Animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
-
 
             if (_player.InteractionSystem.IsGround.Under)
             {
@@ -66,6 +68,8 @@ namespace Core.Scripts.StatesMachine
         public override void Exit()
         {
             base.Exit();
+
+            Animator.speed = 1f;
         }
 
         public void Dispose()

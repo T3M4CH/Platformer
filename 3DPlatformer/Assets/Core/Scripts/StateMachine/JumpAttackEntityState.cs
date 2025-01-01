@@ -25,7 +25,6 @@ namespace Core.Scripts.StatesMachine
             _animatorHelper = baseEntity.AnimatorHelper;
         }
 
-        private float _currentTime;
         private Vector3 _forceImpulse;
         private IDamageable _damageable;
 
@@ -47,7 +46,8 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-            _currentTime = 0f;
+
+            _animator.SetTrigger(JumpAttack);
             _animator.SetTrigger(JumpAttack);
             _flyingAttackSound.Play(Random.Range(0.9f, 1.1f));
 
@@ -98,13 +98,16 @@ namespace Core.Scripts.StatesMachine
 
         public void OnLand()
         {
+            Debug.LogWarning("LandTry");
             if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
+                Debug.LogWarning("LandFall");
                 //todo Который только для игрока, но эт хуйня какая-та 
                 StateMachine.SetState<FallEntityState>();
             }
             else
             {
+                Debug.LogWarning("LandExit");
                 StateMachine.SetState(_exitState);
             }
         }

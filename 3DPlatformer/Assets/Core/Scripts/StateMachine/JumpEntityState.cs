@@ -39,7 +39,8 @@ namespace Core.Scripts.StatesMachine
 
             IsAbleAttack = false;
             RigidBody.linearVelocity = Vector3.zero;
-            Animator.CrossFade("Jump", 0f, 0);
+            //Animator.SetTrigger(JumpAnimation);
+            Animator.CrossFade("Jump", 0, 0);
             RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
 
             _animatorHelper.OnLand += PerformLand;
@@ -87,7 +88,7 @@ namespace Core.Scripts.StatesMachine
             RigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
             Animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
-            
+
             if (BaseEntity is MonoPlayerController playerController)
             {
                 Animator.SetBool("IsGround", playerController.InteractionSystem.IsGround.Under);
@@ -96,13 +97,13 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformLand()
         {
-            if (StateMachine.CurrentEntityState == this)
+            Debug.LogWarning("Try");
+            if (StateMachine.CurrentEntityState == this && _interactionSystem.IsGround.Under)
             {
-                var isGround = _interactionSystem.IsGround.Under;
-
-                var velocity = isGround ? Vector3.zero : RigidBody.linearVelocity;
+                //var velocity = isGround ? Vector3.zero : RigidBody.linearVelocity;
+                Debug.LogWarning("Exit");
                 StateMachine.SetState(_exitState);
-                RigidBody.linearVelocity = velocity;
+                //RigidBody.linearVelocity = velocity;
             }
         }
 
@@ -110,6 +111,7 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
+            Animator.ResetTrigger(JumpAnimation);
             _animatorHelper.OnLand -= PerformLand;
             _animatorHelper.OnAbleAttack -= PerformChangeAbleAttack;
         }
