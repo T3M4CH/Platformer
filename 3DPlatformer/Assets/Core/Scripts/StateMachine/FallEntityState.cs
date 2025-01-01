@@ -32,8 +32,6 @@ namespace Core.Scripts.StatesMachine
         {
             base.Enter();
 
-            Debug.Break();
-
             Animator.speed = 0.75f;
             Animator.SetTrigger("Fall");
             Animator.SetBool("IsGround", false);

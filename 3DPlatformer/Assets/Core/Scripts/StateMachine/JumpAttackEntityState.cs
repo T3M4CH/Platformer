@@ -48,7 +48,6 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             _animator.SetTrigger(JumpAttack);
-            _animator.SetTrigger(JumpAttack);
             _flyingAttackSound.Play(Random.Range(0.9f, 1.1f));
 
             SetActiveKickParticle(true);
