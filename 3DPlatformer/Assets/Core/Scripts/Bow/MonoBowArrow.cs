@@ -64,11 +64,6 @@ public class MonoBowArrow : MonoBehaviour
         rigidBody.isKinematic = true;
 
         var colliders = Physics.OverlapSphere(_transform.position, 1f, entityLayerMask);
-        var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.GetComponent<Collider>().enabled = false;
-        sphere.transform.position = _transform.position;
-        sphere.transform.localScale = Vector3.one * 2;
-        Destroy(sphere, 2);
         foreach (var collider in colliders)
         {
             if (collider.isTrigger) continue;

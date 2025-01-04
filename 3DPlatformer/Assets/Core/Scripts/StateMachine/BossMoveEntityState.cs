@@ -36,7 +36,7 @@ namespace Core.Scripts.StatesMachine
 
             if (_playerController.StateMachine.CurrentEntityState is ThrownEntityState)
             {
-                //TODO: Make Distance
+                StateMachine.SetState<ExplodeEntityState>();
                 Direction.x = 0;
                 return;
             }

@@ -1,8 +1,6 @@
 ﻿using System;
 using Core.Scripts.Entity;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Core.Scripts.StatesMachine
 {
@@ -23,7 +21,8 @@ namespace Core.Scripts.StatesMachine
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(3.5f));
 
-                StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);;
+                //StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);;
+                StateMachine.SetState<ExplodeEntityState>();
             });
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
 {
@@ -13,20 +14,22 @@ namespace Core.Scripts.StatesMachine
             {
                 return;
             }
-            
+
             _states.Add(entityState.GetType(), entityState);
         }
 
-        public void SetState(EntityState entityState)
+        public EntityState SetState(EntityState entityState)
         {
             var type = entityState.GetType();
-            
+
             if (_states.TryGetValue(type, out var state))
             {
                 CurrentEntityState?.Exit();
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
             }
+
+            return state;
         }
 
         public T SetState<T>() where T : EntityState
@@ -39,7 +42,7 @@ namespace Core.Scripts.StatesMachine
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
             }
-            
+
             return (T)CurrentEntityState;
         }
 

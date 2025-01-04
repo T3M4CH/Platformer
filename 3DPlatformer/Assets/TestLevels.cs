@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Core.Scripts.Levels.Interfaces;
+using UnityEngine.InputSystem;
 using Reflex.Attributes;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TestLevels : MonoBehaviour
 {

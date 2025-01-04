@@ -5,8 +5,9 @@ namespace Core.Scripts.StatesMachine
 {
     public class BossJumpEntityState : JumpEntityState
     {
-        private readonly BossEntity _baseEntity;
+        private float _distance;
         private Transform _targetTransform;
+        private readonly BossEntity _baseEntity;
 
         public BossJumpEntityState(EntityStateMachine entityStateMachine, EntityState exitState, float jumpForce, MonoInteractionSystem interactionSystem, BossEntity baseEntity)
             : base(entityStateMachine, exitState, jumpForce, interactionSystem, baseEntity)
@@ -31,11 +32,13 @@ namespace Core.Scripts.StatesMachine
         {
             base.PerformChangeAbleAttack(value);
 
+
             if (value)
             {
-                var condition = true; //Random.Range(0, 100f) >= 0;
+                _distance = Vector3.Distance(_targetTransform.position, BaseEntity.transform.position);
 
-                if (condition)
+                Debug.LogWarning("Distance : " + _distance);
+                if (_distance > 4)
                 {
                     StateMachine.SetState<BowAttackEntityState>().SetAimTarget(_targetTransform);
                 }
