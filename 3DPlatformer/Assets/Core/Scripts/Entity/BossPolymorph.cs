@@ -1,4 +1,5 @@
-﻿using Core.Scripts.Bow;
+﻿using System.Globalization;
+using Core.Scripts.Bow;
 using Core.Scripts.StatesMachine;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Core.Scripts.Entity
         [SerializeField] private GameObject weapon;
         [SerializeField] private BowController bowController;
         [SerializeField] private TMP_Text statusText;
+        [SerializeField] private TMP_Text statusText2;
 
         public override bool TakeDamage(float damage, Vector3? force = null)
         {
@@ -21,11 +23,7 @@ namespace Core.Scripts.Entity
 
             if (force.HasValue)
             {
-                Debug.LogWarning("Set State " + gameObject.name + "  " + gameObject.GetHashCode());
-                StateMachine.SetState<ThrownExplodeEntityState>();
-
-                RigidBody.linearVelocity = Vector3.zero;
-                RigidBody.AddForce(force.Value, ForceMode.Impulse);
+                StateMachine.SetState<ThrownExplodeEntityState>().SetForce(force.Value);
             }
             else
             {
@@ -40,6 +38,8 @@ namespace Core.Scripts.Entity
             StateMachine.Update();
 
             statusText.text = StateMachine.CurrentEntityState.GetType().Name;
+            statusText.text = Animator.speed.ToString(CultureInfo.InvariantCulture);
+            //statusText2.text = StateMachine.PreviousEntityState?.GetType().Name;
         }
 
         private void FixedUpdate()
@@ -47,10 +47,8 @@ namespace Core.Scripts.Entity
             StateMachine.FixedUpdate();
         }
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-
             StateMachine = new EntityStateMachine();
             var idleState = new BossIdleEntityState(StateMachine, PlayerService.PlayerInstance, this);
             StateMachine.AddState(idleState);
@@ -62,7 +60,7 @@ namespace Core.Scripts.Entity
             StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, moveState));
             StateMachine.AddState(new DamagedEntityState(StateMachine, moveState, this, EffectService));
             StateMachine.AddState(new ThrownExplodeEntityState(StateMachine, moveState, this, EffectService));
-            StateMachine.AddState(new ExplodeEntityState(StateMachine, moveState, this, EffectService));
+            StateMachine.AddState(new ExplodeEntityState(StateMachine, this, EffectService));
 
             StateMachine.SetState<BossIdleEntityState>();
         }

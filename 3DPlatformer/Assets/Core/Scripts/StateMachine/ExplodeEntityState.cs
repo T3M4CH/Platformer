@@ -11,12 +11,10 @@ namespace Core.Scripts.StatesMachine
 
         private MonoEffect _prepareEffect;
 
-        private EntityState _exitState;
         private readonly IEffectService _effectService;
 
-        public ExplodeEntityState(EntityStateMachine entityStateMachine, EntityState exitState, BaseEntity baseEntity, IEffectService effectService) : base(entityStateMachine, baseEntity)
+        public ExplodeEntityState(EntityStateMachine entityStateMachine, BaseEntity baseEntity, IEffectService effectService) : base(entityStateMachine, baseEntity)
         {
-            _exitState = exitState;
             _effectService = effectService;
         }
 
@@ -52,14 +50,18 @@ namespace Core.Scripts.StatesMachine
             var transform = BaseEntity.transform;
             _effectService.GetEffect(EVfxType.Hit, true).SetPosition(transform.position);
 
+            var damagedCount = 0;
+
             var colliders = Physics.OverlapSphere(transform.position, 3f, BaseEntity.EntityLayerMask);
             foreach (var collider in colliders)
             {
                 if (collider.isTrigger || collider.transform == transform) continue;
+                damagedCount += 1;
                 collider.GetComponent<IDamageable>()?.TakeDamage(20, 5 * new Vector3(Mathf.Sign(collider.transform.position.x - transform.position.x), 1, 0));
             }
 
-            StateMachine.SetState(_exitState);
+            //TODO : Change to bow attack
+            StateMachine.SetState<BossMoveEntityState>().DamagedCount = damagedCount;
         }
 
         public override void Exit()

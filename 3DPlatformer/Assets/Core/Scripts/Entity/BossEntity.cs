@@ -12,11 +12,6 @@ namespace Core.Scripts.Entity
             PlayerService = playerService;
         }
 
-        protected virtual void Start()
-        {
-            UpdateHp(1, 1);
-        }
-
         public override void UpdateHp(float health, float maxHealth)
         {
             HealthBarManager.UpdateHp(health, maxHealth, this);

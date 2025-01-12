@@ -22,9 +22,11 @@ namespace Core.Scripts.StatesMachine
         {
             var type = entityState.GetType();
 
+
             if (_states.TryGetValue(type, out var state))
             {
-                CurrentEntityState?.Exit();
+                PreviousEntityState = CurrentEntityState;
+                PreviousEntityState?.Exit();
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
             }
@@ -36,9 +38,11 @@ namespace Core.Scripts.StatesMachine
         {
             var type = typeof(T);
 
+
             if (_states.TryGetValue(type, out var state))
             {
-                CurrentEntityState?.Exit();
+                PreviousEntityState = CurrentEntityState;
+                PreviousEntityState?.Exit();
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
             }
@@ -68,5 +72,6 @@ namespace Core.Scripts.StatesMachine
         }
 
         public EntityState CurrentEntityState { get; private set; }
+        public EntityState PreviousEntityState { get; private set; }
     }
 }

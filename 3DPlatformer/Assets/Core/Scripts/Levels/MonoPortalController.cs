@@ -40,8 +40,6 @@ public class MonoPortalController : MonoBehaviour
 
     public void TeleportEntity(BaseEntity entity, Vector3 position)
     {
-        Debug.LogWarning("Teleport");
-
         _entity = entity;
 
         foreach (var portalParticle in _portalParticles)
@@ -78,8 +76,6 @@ public class MonoPortalController : MonoBehaviour
     public void AppearPortalAtPlayer()
     {
         if (!_entity) throw new Exception("Player not saved");
-
-        Debug.LogWarning("Appear");
 
         foreach (var portalParticle in _portalParticles)
         {

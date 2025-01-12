@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class MoveBehaviour : StateMachineBehaviour
 {
-    public bool isIdle;
+    public bool isMoving;
     
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        isIdle = true;
+        isMoving = true;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -21,7 +21,7 @@ public class MoveBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        isIdle = false;
+        isMoving = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

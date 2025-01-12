@@ -15,6 +15,7 @@ namespace Core.Scripts.StatesMachine
             ExitState = exitState;
             EffectService = effectService;
             _animator = baseEntity.Animator;
+            _rigidbody = baseEntity.RigidBody;
             _animatorHelper = baseEntity.AnimatorHelper;
             _entityCollision = baseEntity.EntityCollision;
 
@@ -27,6 +28,7 @@ namespace Core.Scripts.StatesMachine
         private readonly Animator _animator;
         private readonly EntityCollision _entityCollision;
         private readonly MonoAnimatorHelper _animatorHelper;
+        private readonly Rigidbody _rigidbody;
 
         private static readonly int Knocked = Animator.StringToHash("Knocked");
 
@@ -38,6 +40,18 @@ namespace Core.Scripts.StatesMachine
             _entityCollision.TriggerCollider.enabled = true;
             EffectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
             _animator.SetTrigger(Knocked);
+        }
+
+        public void SetForce(Vector3 force)
+        {
+            var relativePosition = force;
+            relativePosition.y = 0;
+
+            Debug.DrawRay(BaseEntity.transform.position, _rigidbody.position + force, Color.red, 10f);
+            Debug.DrawRay(_rigidbody.position, force, Color.green, 10f);
+            _rigidbody.MoveRotation(Quaternion.LookRotation(-relativePosition));
+            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.AddForce(force, ForceMode.Impulse);
         }
 
         private void PerformStand()

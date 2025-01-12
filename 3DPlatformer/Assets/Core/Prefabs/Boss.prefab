@@ -2944,6 +2944,7 @@ MonoBehaviour:
   weapon: {fileID: 3946823212626834670}
   bowController: {fileID: 6687005408254545345}
   statusText: {fileID: 2239788136632806629}
+  statusText2: {fileID: 4234032574919387774}
 --- !u!136 &6785065930229357998
 CapsuleCollider:
   m_ObjectHideFlags: 0

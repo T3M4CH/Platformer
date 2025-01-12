@@ -25,13 +25,13 @@ namespace Core.Scripts.StatesMachine
 
         private readonly float _speed;
         private readonly float _jumpForce;
-        private readonly Animator _animator;
+        protected readonly Animator _animator;
         private readonly Rigidbody _rigidBody;
         protected readonly LayerMask EntityLayerMask;
         private readonly EntityCollision _collision;
         private readonly MoveBehaviour _idleBehaviour;
         protected readonly MonoInteractionSystem InteractionSystem;
-        private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
+        protected static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
         public override void Enter()
         {
@@ -81,7 +81,7 @@ namespace Core.Scripts.StatesMachine
 
         private void Move()
         {
-            if (_idleBehaviour.isIdle)
+            if (_idleBehaviour.isMoving)
             {
                 _rigidBody.MovePosition(_rigidBody.position + Direction * (_speed * Time.deltaTime));
             }

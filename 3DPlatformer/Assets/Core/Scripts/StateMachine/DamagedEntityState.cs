@@ -22,11 +22,13 @@ namespace Core.Scripts.StatesMachine
 
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int GetHit = Animator.StringToHash("GetHit");
+        protected static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
         public override void Enter()
         {
             base.Enter();
 
+            _animator.SetFloat(JoystickOffset, 0);
             _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.25f);
             
             _animator.ResetTrigger(Attack);

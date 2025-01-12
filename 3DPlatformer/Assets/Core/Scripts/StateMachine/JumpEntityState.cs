@@ -97,11 +97,9 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformLand()
         {
-            Debug.LogWarning("Try");
             if (StateMachine.CurrentEntityState == this && _interactionSystem.IsGround.Under)
             {
                 //var velocity = isGround ? Vector3.zero : RigidBody.linearVelocity;
-                Debug.LogWarning("Exit");
                 StateMachine.SetState(_exitState);
                 //RigidBody.linearVelocity = velocity;
             }

@@ -46,17 +46,7 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
 
         if (force.HasValue)
         {
-            Debug.LogWarning("Force is " + force.Value);
-            StateMachine.SetState<ThrownEntityState>();
-
-            var relativePosition = force.Value;
-            relativePosition.y = 0;
-
-            Debug.DrawRay(RigidBody.position, RigidBody.position + force.Value, Color.red, 10f);
-            Debug.DrawRay(RigidBody.position, force.Value, Color.green, 10f);
-            RigidBody.MoveRotation(Quaternion.LookRotation(-relativePosition));
-            RigidBody.linearVelocity = Vector3.zero;
-            RigidBody.AddForce(force.Value, ForceMode.Impulse);
+            StateMachine.SetState<ThrownEntityState>().SetForce(force.Value);
         }
 
         return true;
@@ -71,6 +61,11 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
     {
         _currentCooldownTime -= Time.deltaTime;
         _currentCooldownTime = Mathf.Max(0, _currentCooldownTime);
+
+        if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
+        {
+            Debug.Break();
+        }
 
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
