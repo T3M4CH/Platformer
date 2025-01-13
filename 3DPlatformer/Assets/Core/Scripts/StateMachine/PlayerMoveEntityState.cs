@@ -30,6 +30,7 @@ namespace Core.Scripts.StatesMachine
 
         public override void FixedUpdate()
         {
+            //TODO: Прыжок можно делать но если близко атаковать нельзя
             _jumpButton.interactable = InteractionSystem.IsGround.Under && !IsCloseToEnemy;
             _attackButton.interactable = InteractionSystem.IsGround.Under && Direction.x != 0;
 

@@ -35,6 +35,8 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
+            
+            //TODO: Оффать управление
 
             _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
             _entityCollision.TriggerCollider.enabled = true;

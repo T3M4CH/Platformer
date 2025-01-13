@@ -91,6 +91,8 @@ namespace Core.Scripts.StatesMachine
             {
                 CoroutineRunner.Instance.StopConcreteCoroutine(_bowJumpCoroutine);
             }
+
+            _bowJumpCoroutine = null;
         }
     }
 }

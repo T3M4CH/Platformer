@@ -842,7 +842,7 @@ MonoBehaviour:
   sword: {fileID: 6482648159284935470}
   bowController: {fileID: 276980808678150936}
   stateText: {fileID: 9203665162562168840}
-  damageCooldown: 0.4
+  damageCooldown: 0
   <JumpForce>k__BackingField: 5
   <JumpTimeOffsetTest>k__BackingField: 0
   <JumpTransitionOffsetTest>k__BackingField: 0

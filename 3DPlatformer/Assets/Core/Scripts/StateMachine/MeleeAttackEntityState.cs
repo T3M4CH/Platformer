@@ -2,6 +2,7 @@
 using System.Linq;
 using Core.Scripts.Entity;
 using Core.Sounds.Scripts;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,6 +22,7 @@ namespace Core.Scripts.StatesMachine
             _kickSound = baseEntity.KickSound;
         }
 
+        private bool isKeepAttacking;
         private Vector3 _relativePosition;
 
         private readonly Animator _animator;
@@ -53,14 +55,16 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformDamageEvent()
         {
-            var damageables = Physics.OverlapSphere(BaseEntity.AttackTransform.position, 1f, _entityLayerMask).Select(coll => coll.GetComponent<IDamageable>()).ToArray();
+            //TODO: Выход в мили у игрока, а нахуя??
+            isKeepAttacking = false;
+
+            var damageables = Enumerable.ToHashSet(Physics.OverlapSphere(BaseEntity.AttackTransform.position, 2f, _entityLayerMask)
+                .Select(coll => coll.GetComponent<IDamageable>())
+                .Where(target => target != null && !ReferenceEquals(target, BaseEntity)));
 
             foreach (var target in damageables)
             {
-                if (ReferenceEquals(target, BaseEntity))
-                {
-                    continue;
-                }
+                Debug.LogWarning(target.transform.name);
 
                 if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Kick")
                 {
@@ -68,18 +72,28 @@ namespace Core.Scripts.StatesMachine
                     _relativePosition.y = 0;
                     _kickSound.Play(Random.Range(0.9f, 1.1f));
                     Debug.LogWarning($"Relative position is {_relativePosition} + Mathf.Sign is{Mathf.Sign(_relativePosition.x)}");
-                    target?.TakeDamage(15f, (Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up) * 5f);
+                    target.TakeDamage(15f, (Vector3.right * Mathf.Sign(_relativePosition.x) + Vector3.up) * 5f);
                     continue;
                 }
 
                 _attackSound.Play(Random.Range(0.9f, 1.1f));
-                target?.TakeDamage(10f);
+                target.TakeDamage(10f);
+
+                if (BaseEntity is not MonoPlayerController)
+                {
+                    isKeepAttacking = true;
+                    _animator.SetTrigger(Attack);
+                }
             }
         }
 
         private void PerformAttackExit()
         {
-            StateMachine.SetState(_exitState);
+            Debug.LogWarning("2");
+            if (!isKeepAttacking)
+            {
+                StateMachine.SetState(_exitState);
+            }
         }
 
         public override void Exit()

@@ -38,8 +38,8 @@ namespace Core.Scripts.Entity
             StateMachine.Update();
 
             statusText.text = StateMachine.CurrentEntityState.GetType().Name;
-            statusText.text = Animator.speed.ToString(CultureInfo.InvariantCulture);
-            //statusText2.text = StateMachine.PreviousEntityState?.GetType().Name;
+            //statusText.text = StateMachine.CurrentEntityState?.GetType().Name;
+            statusText2.text = StateMachine.PreviousEntityState?.GetType().Name;
         }
 
         private void FixedUpdate()
