@@ -40,8 +40,13 @@ namespace Core.Scripts.StatesMachine
             IsAbleAttack = false;
             RigidBody.linearVelocity = Vector3.zero;
             //Animator.SetTrigger(JumpAnimation);
-            Animator.CrossFade("Jump", 0, 0);
-            RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+
+            var vel = RigidBody.linearVelocity;
+            vel.y = BaseEntity.JumpForce;
+            RigidBody.linearVelocity = vel;
+
+            Animator.CrossFadeInFixedTime("Jump", 0, 0);
+            //RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
 
             _animatorHelper.OnLand += PerformLand;
             _animatorHelper.OnAbleAttack += PerformChangeAbleAttack;
@@ -81,7 +86,13 @@ namespace Core.Scripts.StatesMachine
 
         protected void Move()
         {
-            RigidBody.MovePosition(RigidBody.position + Direction * (_speed * Time.deltaTime));
+            var targetPosition = RigidBody.position + (Direction * 5) * Time.deltaTime;
+            var targetVelocity = (targetPosition - BaseEntity.transform.position) / Time.deltaTime;
+
+            targetVelocity.y = RigidBody.linearVelocity.y;
+            RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity, targetVelocity, 6 * Time.deltaTime);
+
+            //RigidBody.MovePosition(RigidBody.position + Direction * (_speed * Time.deltaTime));
 
             var angle = Math.Sign(Direction.x);
             angle = angle == 0 ? 180 : angle * 90;
@@ -102,6 +113,10 @@ namespace Core.Scripts.StatesMachine
                 //var velocity = isGround ? Vector3.zero : RigidBody.linearVelocity;
                 StateMachine.SetState(_exitState);
                 //RigidBody.linearVelocity = velocity;
+            }
+            else
+            {
+                StateMachine.SetState<FallEntityState>();
             }
         }
 

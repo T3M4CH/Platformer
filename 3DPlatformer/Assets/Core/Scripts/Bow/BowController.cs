@@ -17,7 +17,7 @@ namespace Core.Scripts.Bow
         [SerializeField] private float duration;
         [SerializeField] private Ease ease;
 
-        private bool _bowInHands;
+        private bool _bowInHands = true;
 
         public void PerformBowAnim()
         {
@@ -34,28 +34,36 @@ namespace Core.Scripts.Bow
 
         public void Shot()
         {
-            var target = BowTransform.TransformPoint(-Vector3.up * 3f);
+            var target = BowTransform.TransformPoint(Vector3.forward * 3f);
+            Debug.Break();
             var relativePosition = target - BowTransform.position;
             relativePosition.z = 0;
 
-            Instantiate(bowArrow, BowTransform.position, Quaternion.LookRotation(relativePosition) * Quaternion.Euler(-90, 0, 0)).ArrowOwnwer = transform.parent;
+            Instantiate(bowArrow, BowTransform.position, Quaternion.LookRotation(relativePosition)).ArrowOwnwer = transform;
         }
 
         private void OnAnimatorIK(int layerIndex)
         {
+            Debug.LogWarning(transform.name);
+            if (transform.name == "Boss(Clone)")
+            {
+                Debug.LogWarning("Всё ок?" + layerIndex);
+            }
+
             if (animator == null) return;
 
-            if (!BowInHands) return;
+            if (!BowInHands || transform.name != "Boss(Clone)") return;
+            Debug.LogWarning("!!" + layerIndex);
 
             animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
-            animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftHandPosition.position);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition.position);
 
             animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
             animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
             animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandPosition.rotation);
-            animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftHandPosition.rotation);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandPosition.rotation);
         }
 
         private void Start()

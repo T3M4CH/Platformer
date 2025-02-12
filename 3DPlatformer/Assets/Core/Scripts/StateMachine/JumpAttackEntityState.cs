@@ -53,13 +53,20 @@ namespace Core.Scripts.StatesMachine
             SetActiveKickParticle(true);
 
             _collision.CollisionEnter += OnCollisionEnter;
+            _animatorHelper.OnAttackExitEvent += OnLand;
             _collision.TriggerEnter += OnTriggerEnter;
 
             _forceImpulse = _transform.forward * 10f;
 
             _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.AddForce(_forceImpulse, ForceMode.Impulse);
-            _animatorHelper.OnAttackExitEvent += OnLand;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _rigidBody.AddForce(_transform.up * 5);
         }
 
         private void OnTriggerEnter(Collider collision)

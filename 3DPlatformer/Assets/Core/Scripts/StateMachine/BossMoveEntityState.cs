@@ -58,7 +58,7 @@ namespace Core.Scripts.StatesMachine
                 return;
             }
 
-            var direction = (_playerController.transform.position - BaseEntity.transform.position).normalized;
+            var direction = Vector3.ClampMagnitude(_playerController.transform.position - BaseEntity.transform.position, 0.6f);
 
             Direction.x = direction.x;
 

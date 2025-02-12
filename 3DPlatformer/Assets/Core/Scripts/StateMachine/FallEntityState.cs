@@ -39,7 +39,12 @@ namespace Core.Scripts.StatesMachine
 
         protected void Move()
         {
-            RigidBody.MovePosition(RigidBody.position + _direction * (_speed * Time.deltaTime));
+            var targetPosition = RigidBody.position + (_direction * 5) * Time.deltaTime;
+            var targetVelocity = (targetPosition - BaseEntity.transform.position) / Time.deltaTime;
+
+            targetVelocity.y = RigidBody.linearVelocity.y;
+            RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity, targetVelocity, 6 * Time.deltaTime);
+
 
             var angle = Math.Sign(_direction.x);
             angle = angle == 0 ? 180 : angle * 90;

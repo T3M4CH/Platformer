@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 558597391172763392}
   - component: {fileID: 494048002713805943}
   - component: {fileID: 4075227371864749494}
+  - component: {fileID: 5981558887745701105}
+  - component: {fileID: 1571117867329294587}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -96,6 +98,7 @@ MonoBehaviour:
   <FlyingAttackSound>k__BackingField: {fileID: 11400000, guid: d8f96579d9883ea48b66c12583878863, type: 2}
   <AttackSound>k__BackingField: {fileID: 11400000, guid: b3ef42ce19c6ab244b5df7e1d6d9cacc, type: 2}
   <KickSound>k__BackingField: {fileID: 11400000, guid: b3ef42ce19c6ab244b5df7e1d6d9cacc, type: 2}
+  <InteractionSystem>k__BackingField: {fileID: 0}
   <WaterLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 16
@@ -103,7 +106,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   weapon: {fileID: 7871481112056185715}
-  interactionSystem: {fileID: 6191952637598238697}
 --- !u!114 &6191952637598238697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad60306372615743ba0ef8a9173e432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yOffset: 0
   rayLenght: 2.5
   groundMask:
     serializedVersion: 2
@@ -207,6 +210,48 @@ CapsuleCollider:
   m_Height: 2.2398005
   m_Direction: 1
   m_Center: {x: 0, y: 0.2, z: 0}
+--- !u!95 &5981558887745701105
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36762657697756935}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e4ac3ef9ea14af149864045ff9d03bde, type: 3}
+  m_Controller: {fileID: 9100000, guid: 772ff0172c8823746b647f26359c336b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 1
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 1
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+    'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
+    'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
+    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
+    'mixamorig:RightArm'\n\tand more ...\n\tFrom animation clip 'Throw'"
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1571117867329294587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36762657697756935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3c439e17343c649b244ae654446888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApplyRootMotion: 1
+  rigidbody: {fileID: 3098923345377906657}
 --- !u!1 &64794217215007640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1570,6 +1615,9 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3471,7 +3519,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4161428065151735183
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3485,6 +3533,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
     by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform

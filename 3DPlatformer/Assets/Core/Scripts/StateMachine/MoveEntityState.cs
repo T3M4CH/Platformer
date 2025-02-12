@@ -83,7 +83,7 @@ namespace Core.Scripts.StatesMachine
         {
             if (_idleBehaviour.isMoving)
             {
-                _rigidBody.MovePosition(_rigidBody.position + Direction * (_speed * Time.deltaTime));
+                //_rigidBody.MovePosition(_rigidBody.position + Direction * (_speed * Time.deltaTime));
             }
 
             var angle = Math.Sign(Direction.x);

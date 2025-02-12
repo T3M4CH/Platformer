@@ -62,7 +62,7 @@ namespace Core.Scripts.Entity
 
                 DOTween.To(t => skinRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject).OnKill(() => { Destroy(gameObject); });
                 EffectService.GetEffect(EVfxType.Die, true).SetPosition(transform.position);
-                
+
                 enabled = false;
 
                 deathSound.Play(Random.Range(0.95f, 1.1f));
@@ -79,10 +79,12 @@ namespace Core.Scripts.Entity
         }
 
         public abstract EntityStateMachine StateMachine { get; protected set; }
-        
+
         public IEffectService EffectService { get; private set; }
 
         [field: SerializeField] public float Speed { get; private set; }
+        [field: SerializeField] public float JumpForce { get; private set; }
+        [field: SerializeField] public Vector3 RotationOffset { get; private set; }
         [field: SerializeField] public Animator Animator { get; private set; }
         [field: SerializeField] public Transform AttackTransform { get; private set; }
         [field: SerializeField] public Rigidbody RigidBody { get; private set; }

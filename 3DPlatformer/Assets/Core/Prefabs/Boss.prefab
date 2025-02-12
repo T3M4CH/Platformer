@@ -1258,9 +1258,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3320040750247751266}
-  - component: {fileID: 7077596307331277330}
-  - component: {fileID: 2104012114174048661}
-  - component: {fileID: 6687005408254545345}
   m_Layer: 6
   m_Name: Vampire A Lusth
   m_TagString: Untagged
@@ -1287,69 +1284,6 @@ Transform:
   - {fileID: 449694404305091624}
   m_Father: {fileID: 914525855722810829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7077596307331277330
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3408777650862487635}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: e4ac3ef9ea14af149864045ff9d03bde, type: 3}
-  m_Controller: {fileID: 9100000, guid: 772ff0172c8823746b647f26359c336b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
-    'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
-    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
-    'mixamorig:RightArm'\n\tand more ...\n\tFrom animation clip 'Throw'"
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2104012114174048661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3408777650862487635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aec2f32737a59042a4cc5570a9d9c8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6687005408254545345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3408777650862487635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b789b9a80544cafbc6b4e97b1bab814, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  bowArrow: {fileID: -1372667256400489456, guid: c655c9047aee1c848a63509d0353b913, type: 3}
-  leftHandPosition: {fileID: 4699232676577507117}
-  rightHandPosition: {fileID: 284902527917403052}
-  exclamationMark: {fileID: 7952545675987679252}
-  endBodyPosition: {x: -0.4, y: 0, z: 0.416}
-  startPosition: {x: 0, y: 0, z: -0.5}
-  handPosition: {x: 0, y: 0, z: 0}
-  duration: 0.3
-  ease: 2
-  <BowTransform>k__BackingField: {fileID: 3180703640097684154}
 --- !u!1 &3646531588590763178
 GameObject:
   m_ObjectHideFlags: 0
@@ -2803,6 +2737,10 @@ GameObject:
   - component: {fileID: 6711426240211997674}
   - component: {fileID: 4087422361262709629}
   - component: {fileID: 6785065930229357998}
+  - component: {fileID: 364640283492712454}
+  - component: {fileID: 5166760652891423365}
+  - component: {fileID: 6923344659306181078}
+  - component: {fileID: 6011554858489652037}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Untagged
@@ -2840,6 +2778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad60306372615743ba0ef8a9173e432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yOffset: 0
   rayLenght: 2.5
   groundMask:
     serializedVersion: 2
@@ -2925,12 +2864,14 @@ MonoBehaviour:
   skinRenderer: {fileID: 1797304566765729471}
   dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   <Speed>k__BackingField: 5
-  <Animator>k__BackingField: {fileID: 7077596307331277330}
+  <JumpForce>k__BackingField: 0
+  <RotationOffset>k__BackingField: {x: 0, y: 0, z: 0}
+  <Animator>k__BackingField: {fileID: 364640283492712454}
   <AttackTransform>k__BackingField: {fileID: 449694404305091624}
   <RigidBody>k__BackingField: {fileID: 8140650828022642812}
   <KickEffect>k__BackingField: {fileID: 2591720039119234926}
   <EntityCollision>k__BackingField: {fileID: 6711426240211997674}
-  <AnimatorHelper>k__BackingField: {fileID: 2104012114174048661}
+  <AnimatorHelper>k__BackingField: {fileID: 5166760652891423365}
   <FlyingAttackSound>k__BackingField: {fileID: 11400000, guid: d8f96579d9883ea48b66c12583878863, type: 2}
   <AttackSound>k__BackingField: {fileID: 11400000, guid: 922e83af6ea213047a719d7f72831f0c, type: 2}
   <KickSound>k__BackingField: {fileID: 11400000, guid: b3ef42ce19c6ab244b5df7e1d6d9cacc, type: 2}
@@ -2942,7 +2883,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   weapon: {fileID: 3946823212626834670}
-  bowController: {fileID: 6687005408254545345}
+  bowController: {fileID: 6923344659306181078}
   statusText: {fileID: 2239788136632806629}
   statusText2: {fileID: 4234032574919387774}
 --- !u!136 &6785065930229357998
@@ -2968,6 +2909,83 @@ CapsuleCollider:
   m_Height: 2.2398005
   m_Direction: 1
   m_Center: {x: 0, y: 0.2, z: 0}
+--- !u!95 &364640283492712454
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6591699616285048986}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e4ac3ef9ea14af149864045ff9d03bde, type: 3}
+  m_Controller: {fileID: 9100000, guid: 772ff0172c8823746b647f26359c336b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+    'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
+    'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
+    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
+    'mixamorig:RightArm'\n\tand more ...\n\tFrom animation clip 'Throw'"
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5166760652891423365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6591699616285048986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aec2f32737a59042a4cc5570a9d9c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6923344659306181078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6591699616285048986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b789b9a80544cafbc6b4e97b1bab814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 364640283492712454}
+  bowArrow: {fileID: -1372667256400489456, guid: c655c9047aee1c848a63509d0353b913, type: 3}
+  leftHandPosition: {fileID: 4699232676577507117}
+  rightHandPosition: {fileID: 284902527917403052}
+  exclamationMark: {fileID: 7952545675987679252}
+  endBodyPosition: {x: -0.4, y: 0, z: 0.416}
+  startPosition: {x: 0, y: 0, z: -0.5}
+  handPosition: {x: 0, y: 0, z: 0}
+  duration: 0.3
+  ease: 2
+  <BowTransform>k__BackingField: {fileID: 3180703640097684154}
+--- !u!114 &6011554858489652037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6591699616285048986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3c439e17343c649b244ae654446888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApplyRootMotion: 1
+  rigidbody: {fileID: 8140650828022642812}
 --- !u!1 &6598929434583279988
 GameObject:
   m_ObjectHideFlags: 0
@@ -4262,6 +4280,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.052858833
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.99860203
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 173.94
+      objectReference: {fileID: 0}
     - target: {fileID: 7470540409191554907, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
       propertyPath: m_Name
       value: BowUpd
@@ -4269,6 +4307,18 @@ PrefabInstance:
     - target: {fileID: 7470540409191554907, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7563284202169025843, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7563284202169025843, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7563284202169025843, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 180
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -106,10 +106,6 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
     }
 
     public override EntityStateMachine StateMachine { get; protected set; }
-    [field: SerializeField] public float JumpForce { get; private set; }
-    [field: SerializeField] public float JumpTimeOffsetTest { get; private set; }
-    [field: SerializeField] public float JumpTransitionOffsetTest { get; private set; }
-    [field: SerializeField] public bool JumpPauseTest { get; private set; }
     [field: SerializeField] public Transform LookAtPosition { get; private set; }
 
     public EntityState CurrentEntityState => StateMachine?.CurrentEntityState;

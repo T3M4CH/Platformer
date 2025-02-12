@@ -1,8 +1,8 @@
 using System;
-using Cinemachine;
 using Core.Scripts.Entity;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class MonoHellLevel : MonoLevelBase

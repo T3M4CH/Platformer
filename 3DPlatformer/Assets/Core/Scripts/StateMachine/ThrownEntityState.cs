@@ -18,9 +18,6 @@ namespace Core.Scripts.StatesMachine
             _rigidbody = baseEntity.RigidBody;
             _animatorHelper = baseEntity.AnimatorHelper;
             _entityCollision = baseEntity.EntityCollision;
-
-            _animatorHelper.OnStand += PerformStand;
-            _entityCollision.TriggerEnter += OnTriggerEnter;
         }
 
         private float _initialSize;
@@ -35,8 +32,11 @@ namespace Core.Scripts.StatesMachine
         public override void Enter()
         {
             base.Enter();
-            
+
             //TODO: Оффать управление
+
+            _animatorHelper.OnStand += PerformStand;
+            _entityCollision.TriggerEnter += OnTriggerEnter;
 
             _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
             _entityCollision.TriggerCollider.enabled = true;
@@ -58,6 +58,8 @@ namespace Core.Scripts.StatesMachine
 
         private void PerformStand()
         {
+            Debug.LogWarning("StandUp");
+
             _entityCollision.DefaultCollider.excludeLayers = 0;
             _entityCollision.TriggerCollider.enabled = false;
             StateMachine.SetState(ExitState);
@@ -75,6 +77,8 @@ namespace Core.Scripts.StatesMachine
         {
             base.Exit();
 
+            _animatorHelper.OnStand -= PerformStand;
+            _entityCollision.TriggerEnter -= OnTriggerEnter;
             _entityCollision.DefaultCollider.excludeLayers = 0;
             _entityCollision.TriggerCollider.enabled = false;
         }

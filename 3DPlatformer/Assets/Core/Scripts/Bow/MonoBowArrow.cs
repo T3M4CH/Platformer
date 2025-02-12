@@ -23,13 +23,14 @@ public class MonoBowArrow : MonoBehaviour
     {
         _transform = transform;
         _startPosition = _transform.position;
-        rigidBody.AddForce(-_transform.up * speed, ForceMode.Impulse);
+        rigidBody.AddForce(_transform.up * speed, ForceMode.Impulse);
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (entityLayerMask.value.Includes(other.gameObject.layer) && other.transform != ArrowOwnwer)
         {
+            Debug.LogWarning("Collision! " + ArrowOwnwer);
             var damageable = other.gameObject.TryGetComponent(out IPlayerInteractor playerController);
 
             if (damageable)

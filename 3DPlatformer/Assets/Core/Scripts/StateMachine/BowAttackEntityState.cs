@@ -1,5 +1,6 @@
 ﻿using Core.Scripts.Bow;
 using Core.Scripts.Entity;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
@@ -29,7 +30,7 @@ namespace Core.Scripts.StatesMachine
 
         public void SetAimTarget(Transform targetPosition)
         {
-            _endPosition = targetPosition.position;
+            _endPosition = targetPosition.position + Vector3.up * 1.5f;
         }
 
         public override void Enter()
@@ -45,12 +46,12 @@ namespace Core.Scripts.StatesMachine
             _estimatedTime = 1.5f;
             _segmentTime = _estimatedTime;
 
-            var transform = BaseEntity.transform;
-            var position = transform.position + Vector3.down;
-            var forward = transform.forward;
-
-            _startPosition = position + forward * 5f;
-            _endPosition = position + forward * 1.5f;
+            // var transform = BaseEntity.transform;
+            // var position = transform.position + Vector3.down;
+            // var forward = transform.forward;
+            //
+            // _startPosition = position + forward * 5f;
+            // _endPosition = position + forward * 1.5f;
 
             _bowController.PerformBowAnim();
 
