@@ -23,7 +23,7 @@ public class MonoBowArrow : MonoBehaviour
     {
         _transform = transform;
         _startPosition = _transform.position;
-        rigidBody.AddForce(_transform.up * speed, ForceMode.Impulse);
+        rigidBody.AddForce(_transform.forward * speed, ForceMode.Impulse);
     }
 
     private void OnCollisionEnter(Collision other)

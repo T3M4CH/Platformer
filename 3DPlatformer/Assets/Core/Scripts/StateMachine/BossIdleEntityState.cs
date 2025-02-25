@@ -33,12 +33,12 @@ namespace Core.Scripts.StatesMachine
         {
             base.Update();
 
-            //StateMachine.SetState<BossMoveEntityState>();
-            if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
-            {
-                _baseEntity.UpdateHp(1, 1);
-                StateMachine.SetState<BossMoveEntityState>();
-            }
+            StateMachine.SetState<BossMoveEntityState>();
+            // if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
+            // {
+            //     _baseEntity.UpdateHp(1, 1);
+            //     StateMachine.SetState<BossMoveEntityState>();
+            // }
         }
     }
 }

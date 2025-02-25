@@ -23,7 +23,7 @@ public class LevelManager : ILevelService, IStartable
         _portalController = portalController;
         _cameraService = cameraService;
         _levelsConfig = Resources.Load<LevelsConfig>("LevelsConfig");
-        _currentId = ES3.Load(SaveConstants.CurrentLevel, 0);
+        _currentId = PlayerPrefs.GetInt(SaveConstants.CurrentLevel, 0);
     }
 
     public void CompleteLevel()
@@ -35,7 +35,7 @@ public class LevelManager : ILevelService, IStartable
             _currentId = 0;
         }
 
-        ES3.Save(SaveConstants.CurrentLevel, _currentId);
+        PlayerPrefs.SetInt(SaveConstants.CurrentLevel, _currentId);
         ChangeLevel();
     }
 
@@ -46,11 +46,11 @@ public class LevelManager : ILevelService, IStartable
             UniTask.Void(async () =>
             {
                 _portalController.AppearPortalAtPlayer();
-                
+
                 await UniTask.Delay(TimeSpan.FromSeconds(2.5f));
 
                 Object.Destroy(_levelInstance.gameObject);
-                
+
                 _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
                 _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
                 OnLevelChanged.Invoke(_levelInstance);

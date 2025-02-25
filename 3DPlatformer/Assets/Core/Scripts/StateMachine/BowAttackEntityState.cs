@@ -7,9 +7,7 @@ namespace Core.Scripts.StatesMachine
 {
     public class BowAttackEntityState : EntityState
     {
-        private int _currentShots;
         private bool _isShooting;
-        private float _segmentTime;
         private float _estimatedTime;
         private float _currentTime;
         private Vector3 _startPosition;
@@ -41,10 +39,8 @@ namespace Core.Scripts.StatesMachine
             _bowController.BowInHands = true;
             _animator.speed = 0.07f;
 
-            _currentShots = 1;
             _currentTime = 0f;
             _estimatedTime = 1.5f;
-            _segmentTime = _estimatedTime;
 
             // var transform = BaseEntity.transform;
             // var position = transform.position + Vector3.down;
@@ -67,15 +63,14 @@ namespace Core.Scripts.StatesMachine
                 _currentTime += Time.deltaTime;
 
                 var ratio = _currentTime / _estimatedTime;
-                var targetPosition = Vector3.Lerp(_startPosition, _endPosition, ratio);
-                _bowController.PerformMoveBowAlongBody(ratio);
+                _bowController.PerformMoveBowAlongBody(ratio, _endPosition);
 
-                var directionToTarget = targetPosition - _bowController.BowTransform.position;
-                var lookRotation = Quaternion.LookRotation(directionToTarget);
+                // var directionToTarget = targetPosition - _bowController.BowTransform.position;
+                // var lookRotation = Quaternion.LookRotation(directionToTarget);
+                //
+                // _bowController.BowTransform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
 
-                _bowController.BowTransform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
-
-                if (_currentTime > _segmentTime * _currentShots)
+                if (_currentTime > _estimatedTime)
                 {
                     _bowController.Shot();
                     _isShooting = false;

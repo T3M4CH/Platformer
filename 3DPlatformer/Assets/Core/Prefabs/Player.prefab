@@ -733,7 +733,6 @@ GameObject:
   - component: {fileID: -7654264378804596915}
   - component: {fileID: 8358497973743020209}
   - component: {fileID: 7592060413418696265}
-  - component: {fileID: 7735171596866325908}
   - component: {fileID: 699991483485057691}
   m_Layer: 6
   m_Name: Player
@@ -829,7 +828,7 @@ MonoBehaviour:
   dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   <Speed>k__BackingField: 5
   <JumpForce>k__BackingField: 7
-  <GravityMultiplier>k__BackingField: 0
+  <RotationOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <Animator>k__BackingField: {fileID: 7592060413418696265}
   <AttackTransform>k__BackingField: {fileID: 5121383952392780683}
   <RigidBody>k__BackingField: {fileID: 5141422342040946597}
@@ -847,7 +846,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   sword: {fileID: 6482648159284935470}
-  bowController: {fileID: 7735171596866325908}
+  bowController: {fileID: 0}
   stateText: {fileID: 9203665162562168840}
   damageCooldown: 0
   <LookAtPosition>k__BackingField: {fileID: 5121383952392780683}
@@ -961,29 +960,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7735171596866325908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016494718897287951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b789b9a80544cafbc6b4e97b1bab814, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 7592060413418696265}
-  bowArrow: {fileID: -1372667256400489456, guid: c655c9047aee1c848a63509d0353b913, type: 3}
-  leftHandPosition: {fileID: 2436476817573235783}
-  rightHandPosition: {fileID: 7139103365149135046}
-  exclamationMark: {fileID: 0}
-  endBodyPosition: {x: -0.4, y: 0, z: 0.416}
-  startPosition: {x: 0, y: 0, z: -0.5}
-  handPosition: {x: 0, y: 0, z: 0}
-  duration: 0.3
-  ease: 2
-  <BowTransform>k__BackingField: {fileID: 5531331711409996240}
 --- !u!114 &699991483485057691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2883,19 +2859,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
---- !u!4 &2436476817573235783 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7563284202169025843, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
-  m_PrefabInstance: {fileID: 5270957765713889652}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5531331711409996240 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 424755411619727524, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
-  m_PrefabInstance: {fileID: 5270957765713889652}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7139103365149135046 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3041342100654528946, guid: ad083da765c3875438131ef4e2b018ea, type: 3}
   m_PrefabInstance: {fileID: 5270957765713889652}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7496481477662879430

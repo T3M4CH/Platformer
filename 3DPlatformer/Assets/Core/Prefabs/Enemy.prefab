@@ -64,14 +64,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36762657697756935}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.70090926, z: 0, w: 0.7132505}
   m_LocalPosition: {x: 10.74, y: 0, z: 0.112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8497122521885940223}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -89, z: 0}
 --- !u!114 &1955901236433168227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,6 +89,8 @@ MonoBehaviour:
   skinRenderer: {fileID: 4830601438628348194}
   dissolvePrefab: {fileID: 2100000, guid: d56630d67b339044e9d945fd27f0c01b, type: 2}
   <Speed>k__BackingField: 3
+  <JumpForce>k__BackingField: 0
+  <RotationOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <Animator>k__BackingField: {fileID: 4161428065151735183}
   <AttackTransform>k__BackingField: {fileID: 6756897236639599541}
   <RigidBody>k__BackingField: {fileID: 3098923345377906657}

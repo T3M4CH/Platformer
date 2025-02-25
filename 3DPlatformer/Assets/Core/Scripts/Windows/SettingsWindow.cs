@@ -43,9 +43,9 @@ public class SettingsWindow : UIWindow, IGameSettings
 
     private void Start()
     {
-        Music = ES3.Load(SaveConstants.MusicSettings, true);
-        Sound = ES3.Load(SaveConstants.SoundSettings, true);
-        Haptic = ES3.Load(SaveConstants.HapticSettings, true);
+        Music = PlayerPrefs.GetInt(SaveConstants.MusicSettings, 1) == 1;
+        Sound = PlayerPrefs.GetInt(SaveConstants.SoundSettings, 1) == 1;
+        Haptic = PlayerPrefs.GetInt(SaveConstants.HapticSettings, 1) == 1;
 
         toggleSound.SetupToggle(Sound);
         toggleMusic.SetupToggle(Music);
@@ -99,7 +99,7 @@ public class SettingsWindow : UIWindow, IGameSettings
         private set
         {
             _isHaptic = value;
-            ES3.Save(SaveConstants.HapticSettings, value);
+            PlayerPrefs.SetInt(SaveConstants.HapticSettings, value ? 1 : 0);
             OnChangeHaptic.Invoke();
         }
     }
@@ -110,7 +110,7 @@ public class SettingsWindow : UIWindow, IGameSettings
         private set
         {
             _isSound = value;
-            ES3.Save(SaveConstants.SoundSettings, value);
+            PlayerPrefs.SetInt(SaveConstants.SoundSettings, value ? 1 : 0);
             OnChangeSounds.Invoke();
         }
     }
@@ -121,7 +121,7 @@ public class SettingsWindow : UIWindow, IGameSettings
         private set
         {
             _isMusic = value;
-            ES3.Save(SaveConstants.MusicSettings, value);
+            PlayerPrefs.SetInt(SaveConstants.MusicSettings, value ? 1 : 0);
             OnChangeMusic.Invoke();
         }
     }
