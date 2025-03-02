@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
@@ -29,15 +30,15 @@ namespace Core.Scripts.StatesMachine
                 PreviousEntityState?.Exit();
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
+                return CurrentEntityState;
             }
 
-            return state;
+            throw new Exception();
         }
 
         public T SetState<T>() where T : EntityState
         {
             var type = typeof(T);
-
 
             if (_states.TryGetValue(type, out var state))
             {
@@ -45,9 +46,24 @@ namespace Core.Scripts.StatesMachine
                 PreviousEntityState?.Exit();
                 CurrentEntityState = state;
                 CurrentEntityState?.Enter();
+                return (T)CurrentEntityState;
             }
 
-            return (T)CurrentEntityState;
+            throw new Exception();
+        }
+
+        public T SetInheritedState<T>() where T : EntityState
+        {
+            var type = typeof(T);
+            foreach (var kvp in _states)
+            {
+                if (type.IsAssignableFrom(kvp.Key))
+                {
+                    return (T)SetState(kvp.Value);
+                }
+            }
+
+            throw new Exception();
         }
 
         public T GetState<T>() where T : EntityState
@@ -58,7 +74,7 @@ namespace Core.Scripts.StatesMachine
                 return (T)state;
             }
 
-            return null;
+            throw new Exception();
         }
 
         public void Update()

@@ -10,22 +10,18 @@ namespace Core.Scripts.StatesMachine
         private readonly float _speed;
         private readonly Animator Animator;
         private readonly Rigidbody RigidBody;
-        private readonly MonoJoystick _joystick;
-        private readonly MonoPlayerController _player;
-        private readonly MonoAnimatorHelper _animatorHelper;
-        private readonly MonoInteractionSystem _interactionSystem;
+        private readonly BaseEntity _entity;
 
+        private readonly MonoInteractionSystem _interactionSystem;
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
-        public FallEntityState(EntityStateMachine entityStateMachine, MonoInteractionSystem interactionSystem, MonoPlayerController baseEntity, ControlsWindow controlsWindow) : base(entityStateMachine, baseEntity)
+        public FallEntityState(EntityStateMachine entityStateMachine, MonoInteractionSystem interactionSystem, BaseEntity baseEntity) : base(entityStateMachine, baseEntity)
         {
-            _player = baseEntity;
+            _entity = baseEntity;
             _speed = BaseEntity.Speed;
             _interactionSystem = interactionSystem;
             Animator = baseEntity.Animator;
             RigidBody = baseEntity.RigidBody;
-            _animatorHelper = baseEntity.AnimatorHelper;
-            _joystick = controlsWindow.Joystick;
         }
 
         public override void Enter()
@@ -52,18 +48,21 @@ namespace Core.Scripts.StatesMachine
 
             Animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
 
-            if (_player.InteractionSystem.IsGround.Under)
+            if (_interactionSystem.IsGround.Under)
             {
                 Animator.SetBool("IsGround", true);
                 StateMachine.SetState<PlayerMoveEntityState>();
             }
         }
 
+        public override void Update()
+        {
+            base.Update();
+        }
+
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-
-            _direction.x = _joystick.Direction.x;
 
             Move();
         }

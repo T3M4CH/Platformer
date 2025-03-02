@@ -6,6 +6,7 @@ using Core.Scripts.Entity;
 using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Healthbars;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -97,12 +98,19 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
         var playerMoveState = new PlayerMoveEntityState(StateMachine, this, InteractionSystem, _controlsWindow);
         StateMachine.AddState(playerMoveState);
         StateMachine.AddState(new PlayerJumpEntityState(StateMachine, playerMoveState, JumpForce, InteractionSystem, this, _controlsWindow));
-        StateMachine.AddState(new FallEntityState(StateMachine, InteractionSystem, this, _controlsWindow));
+        StateMachine.AddState(new FallEntityState(StateMachine, InteractionSystem, this));
         StateMachine.AddState(new JumpAttackEntityState(StateMachine, playerMoveState, this));
         StateMachine.AddState(new MeleeAttackEntityState(StateMachine, playerMoveState, sword, this));
         StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, playerMoveState));
         StateMachine.AddState(new ThrownEntityState(StateMachine, playerMoveState, this, EffectService));
         StateMachine.SetState(playerMoveState);
+    }
+
+    [Button]
+    private void Test()
+    {
+        var x = StateMachine.SetInheritedState<MoveEntityState>();
+        Debug.LogWarning(x);
     }
 
     public override EntityStateMachine StateMachine { get; protected set; }

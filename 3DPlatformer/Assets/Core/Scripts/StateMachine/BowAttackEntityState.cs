@@ -42,15 +42,6 @@ namespace Core.Scripts.StatesMachine
             _currentTime = 0f;
             _estimatedTime = 1.5f;
 
-            // var transform = BaseEntity.transform;
-            // var position = transform.position + Vector3.down;
-            // var forward = transform.forward;
-            //
-            // _startPosition = position + forward * 5f;
-            // _endPosition = position + forward * 1.5f;
-
-            _bowController.PerformBowAnim();
-
             _isShooting = true;
         }
 
@@ -64,11 +55,6 @@ namespace Core.Scripts.StatesMachine
 
                 var ratio = _currentTime / _estimatedTime;
                 _bowController.PerformMoveBowAlongBody(ratio, _endPosition);
-
-                // var directionToTarget = targetPosition - _bowController.BowTransform.position;
-                // var lookRotation = Quaternion.LookRotation(directionToTarget);
-                //
-                // _bowController.BowTransform.rotation = lookRotation * Quaternion.Euler(-90, 0, 0);
 
                 if (_currentTime > _estimatedTime)
                 {

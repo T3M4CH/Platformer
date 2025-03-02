@@ -33,20 +33,22 @@ namespace Core.Scripts.StatesMachine
         private static readonly int JumpAnimation = Animator.StringToHash("Jump");
         private static readonly int JoystickOffset = Animator.StringToHash("JoystickOffset");
 
+        public float diff;
+
         public override void Enter()
         {
             base.Enter();
 
+            diff = Time.time;
+
             IsAbleAttack = false;
             RigidBody.linearVelocity = Vector3.zero;
-            //Animator.SetTrigger(JumpAnimation);
 
             var vel = RigidBody.linearVelocity;
             vel.y = BaseEntity.JumpForce;
             RigidBody.linearVelocity = vel;
 
-            Animator.CrossFadeInFixedTime("Jump", 0, 0);
-            //RigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            Animator.SetTrigger(JumpAnimation);
 
             _animatorHelper.OnLand += PerformLand;
             _animatorHelper.OnAbleAttack += PerformChangeAbleAttack;
@@ -59,6 +61,10 @@ namespace Core.Scripts.StatesMachine
 
         protected void PerformAttack()
         {
+            diff = Time.time - diff;
+
+            Debug.LogWarning(RigidBody.transform.name + " " + diff);
+
             StateMachine.SetState<JumpAttackEntityState>();
         }
 

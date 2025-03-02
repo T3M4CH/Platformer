@@ -25,7 +25,7 @@ namespace Core.Scripts.StatesMachine
             _currentTime = 0;
 
             _prepareEffect = _effectService.GetEffect(EVfxType.ExplosionPrepare, true);
-            _prepareEffect.SetPosition(BaseEntity.transform.position, scale: Vector3.zero);
+            _prepareEffect.SetPosition(BaseEntity.transform.position + new Vector3(0, 1, 0), scale: Vector3.zero);
             _prepareEffect.transform.SetParent(BaseEntity.transform);
         }
 

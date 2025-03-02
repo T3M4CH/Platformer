@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Core.Scripts.Bow;
 using Core.Scripts.StatesMachine;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -13,6 +15,12 @@ namespace Core.Scripts.Entity
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private TMP_Text statusText2;
 
+        [Button]
+        private void TakeDamageTest()
+        {
+            TakeDamage(5, new Vector3(1, 0, 0));
+        }
+
         public override bool TakeDamage(float damage, Vector3? force = null)
         {
             if (!base.TakeDamage(damage, force))
@@ -23,6 +31,7 @@ namespace Core.Scripts.Entity
 
             if (force.HasValue)
             {
+                Debug.LogWarning("Damag!!!");
                 StateMachine.SetState<ThrownExplodeEntityState>().SetForce(force.Value);
             }
             else
@@ -40,6 +49,12 @@ namespace Core.Scripts.Entity
             statusText.text = StateMachine.CurrentEntityState.GetType().Name;
             //statusText.text = StateMachine.CurrentEntityState?.GetType().Name;
             statusText2.text = StateMachine.PreviousEntityState?.GetType().Name;
+        }
+
+        private void LateUpdate()
+        {
+            // var m_CurrentClipInfo = Animator.GetCurrentAnimatorClipInfo(0);
+            // Debug.LogWarning(m_CurrentClipInfo.Length + m_CurrentClipInfo[0].clip.name);
         }
 
         private void FixedUpdate()
@@ -60,6 +75,7 @@ namespace Core.Scripts.Entity
             StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, moveState));
             StateMachine.AddState(new DamagedEntityState(StateMachine, moveState, this, EffectService));
             StateMachine.AddState(new ThrownExplodeEntityState(StateMachine, moveState, this, EffectService));
+            //StateMachine.AddState(new FallEntityState(StateMachine,InteractionSystem,this, null);
             StateMachine.AddState(new ExplodeEntityState(StateMachine, this, EffectService));
 
             StateMachine.SetState<BossIdleEntityState>();

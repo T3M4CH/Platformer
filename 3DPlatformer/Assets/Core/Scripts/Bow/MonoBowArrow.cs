@@ -67,7 +67,7 @@ public class MonoBowArrow : MonoBehaviour
         var colliders = Physics.OverlapSphere(_transform.position, 1f, entityLayerMask);
         foreach (var collider in colliders)
         {
-            if (collider.isTrigger) continue;
+            if (collider.isTrigger || collider.transform == ArrowOwnwer) continue;
             collider.GetComponent<IDamageable>()?.TakeDamage(20, 5 * new Vector3(Mathf.Sign(_transform.position.x - _startPosition.x), 1, 0));
         }
 

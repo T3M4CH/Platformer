@@ -9,7 +9,7 @@ public class MonoAnimatorHelper : MonoBehaviour
     public event Action OnDamageExit = () => { };
     public event Action<bool> OnAbleAttack = _ => { };
     public event Action OnAttackExitEvent = () => { };
-    
+
     public void PerformAttackEvent()
     {
         OnAttacked.Invoke();
@@ -17,19 +17,20 @@ public class MonoAnimatorHelper : MonoBehaviour
 
     public void AbleAttackEvent()
     {
-        OnAbleAttack.Invoke(true);    
+        OnAbleAttack.Invoke(true);
     }
-    
+
     public void DisableAttackEvent()
     {
-        OnAbleAttack.Invoke(false);    
+        OnAbleAttack.Invoke(false);
     }
 
     public void AttackExitEvent()
     {
         OnAttackExitEvent.Invoke();
+        Debug.LogWarning(transform.name + " exit event");
     }
-    
+
     public void PerformLandEvent()
     {
         OnLand.Invoke();
