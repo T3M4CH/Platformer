@@ -1,6 +1,4 @@
-﻿using System;
-using Core.Scripts.Entity;
-using Cysharp.Threading.Tasks;
+﻿using Core.Scripts.Entity;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
@@ -16,29 +14,16 @@ namespace Core.Scripts.StatesMachine
             _baseEntity = baseEntity;
         }
 
-        public override void Enter()
-        {
-            base.Enter();
-
-            // UniTask.Void(async () =>
-            // {
-            //     await UniTask.Delay(TimeSpan.FromSeconds(3.5f));
-            //
-            //     //StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);;
-            //     StateMachine.SetState<ExplodeEntityState>();
-            // });
-        }
-
         public override void Update()
         {
             base.Update();
 
-            StateMachine.SetState<BossMoveEntityState>();
-            // if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
-            // {
-            //     _baseEntity.UpdateHp(1, 1);
-            //     StateMachine.SetState<BossMoveEntityState>();
-            // }
+            //StateMachine.SetState<BossMoveEntityState>();
+            if (Vector3.Distance(BaseEntity.transform.position, _playerController.transform.position) < 5)
+            {
+                _baseEntity.UpdateHp(1, 1);
+                StateMachine.SetState<BossMoveEntityState>();
+            }
         }
     }
 }

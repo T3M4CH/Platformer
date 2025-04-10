@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Collections;
 using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Entity;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine
@@ -28,11 +27,13 @@ namespace Core.Scripts.StatesMachine
                 collider.GetComponent<IDamageable>()?.TakeDamage(20, 5 * new Vector3(Mathf.Sign(collider.transform.position.x - transform.position.x), 1, 0));
             }
 
-            UniTask.Void(async () =>
-            {
-                await UniTask.Yield(PlayerLoopTiming.Update);
-                StateMachine.SetState(ExitState);
-            });
+            CoroutineRunner.Instance.StartCoroutine(SkipFrame());
+        }
+
+        private IEnumerator SkipFrame()
+        {
+            yield return new WaitForEndOfFrame();
+            StateMachine.SetState(ExitState);
         }
 
         public override void Enter()

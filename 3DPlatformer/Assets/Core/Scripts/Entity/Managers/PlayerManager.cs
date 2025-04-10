@@ -1,11 +1,10 @@
 ﻿using System;
-using Core.Scripts.Cameras;
+using System.Collections;
 using Core.Scripts.Effects.Interfaces;
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
 using Core.Scripts.Levels.Interfaces;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -71,11 +70,13 @@ namespace Core.Scripts.Entity.Managers
         {
             PlayerInstance.OnDead -= Restart;
 
-            UniTask.Void(async () =>
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
-                SceneManager.LoadScene(0);
-            });
+            CoroutineRunner.Instance.StartCoroutine(RestartScene());
+        }
+
+        private IEnumerator RestartScene()
+        {
+            yield return new WaitForSeconds(1.5f);
+            SceneManager.LoadScene(0);
         }
 
         public void Start()

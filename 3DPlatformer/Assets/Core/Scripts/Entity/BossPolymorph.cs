@@ -53,8 +53,8 @@ namespace Core.Scripts.Entity
 
         private void LateUpdate()
         {
-            // var m_CurrentClipInfo = Animator.GetCurrentAnimatorClipInfo(0);
-            // Debug.LogWarning(m_CurrentClipInfo.Length + m_CurrentClipInfo[0].clip.name);
+            var m_CurrentClipInfo = Animator.GetCurrentAnimatorClipInfo(0);
+            //Debug.LogWarning(m_CurrentClipInfo.Length + m_CurrentClipInfo[0].clip.name);
         }
 
         private void FixedUpdate()
@@ -75,7 +75,7 @@ namespace Core.Scripts.Entity
             StateMachine.AddState(new BowAttackEntityState(StateMachine, this, bowController, moveState));
             StateMachine.AddState(new DamagedEntityState(StateMachine, moveState, this, EffectService));
             StateMachine.AddState(new ThrownExplodeEntityState(StateMachine, moveState, this, EffectService));
-            //StateMachine.AddState(new FallEntityState(StateMachine,InteractionSystem,this, null);
+            StateMachine.AddState(new FallEntityState(StateMachine, InteractionSystem, this));
             StateMachine.AddState(new ExplodeEntityState(StateMachine, this, EffectService));
 
             StateMachine.SetState<BossIdleEntityState>();

@@ -6,7 +6,8 @@ namespace Core.Scripts.StatesMachine
 {
     public class FallEntityState : EntityState, IDisposable
     {
-        private Vector3 _direction;
+        protected Vector3 Direction;
+        
         private readonly float _speed;
         private readonly Animator Animator;
         private readonly Rigidbody RigidBody;
@@ -35,23 +36,23 @@ namespace Core.Scripts.StatesMachine
 
         protected void Move()
         {
-            var targetPosition = RigidBody.position + (_direction * 5) * Time.deltaTime;
+            var targetPosition = RigidBody.position + Direction * (5 * Time.deltaTime);
             var targetVelocity = (targetPosition - BaseEntity.transform.position) / Time.deltaTime;
 
             targetVelocity.y = RigidBody.linearVelocity.y;
             RigidBody.linearVelocity = Vector3.Lerp(RigidBody.linearVelocity, targetVelocity, 6 * Time.deltaTime);
 
 
-            var angle = Math.Sign(_direction.x);
+            var angle = Math.Sign(Direction.x);
             angle = angle == 0 ? 180 : angle * 90;
             RigidBody.MoveRotation(Quaternion.Euler(0, angle, 0));
 
-            Animator.SetFloat(JoystickOffset, Mathf.Abs(_direction.x));
+            Animator.SetFloat(JoystickOffset, Mathf.Abs(Direction.x));
 
             if (_interactionSystem.IsGround.Under)
             {
                 Animator.SetBool("IsGround", true);
-                StateMachine.SetState<PlayerMoveEntityState>();
+                StateMachine.SetInheritedState<MoveEntityState>();
             }
         }
 

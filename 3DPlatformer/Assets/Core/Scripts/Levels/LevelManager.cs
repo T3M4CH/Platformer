@@ -1,8 +1,8 @@
 using Core.Scripts.Levels.Interfaces;
 using System;
+using System.Collections;
 using Core.Scripts.Extensions;
 using Core.Scripts.Levels;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -43,18 +43,7 @@ public class LevelManager : ILevelService, IStartable
     {
         if (_levelInstance)
         {
-            UniTask.Void(async () =>
-            {
-                _portalController.AppearPortalAtPlayer();
-
-                await UniTask.Delay(TimeSpan.FromSeconds(2.5f));
-
-                Object.Destroy(_levelInstance.gameObject);
-
-                _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
-                _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
-                OnLevelChanged.Invoke(_levelInstance);
-            });
+            CoroutineRunner.Instance.StartCoroutine(ChangeLevelCoroutine());
         }
         else
         {
@@ -62,6 +51,19 @@ public class LevelManager : ILevelService, IStartable
             _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
             OnLevelChanged.Invoke(_levelInstance);
         }
+    }
+
+    private IEnumerator ChangeLevelCoroutine()
+    {
+        _portalController.AppearPortalAtPlayer();
+
+        yield return new WaitForSeconds(2.5f);
+
+        Object.Destroy(_levelInstance.gameObject);
+
+        _levelInstance = Object.Instantiate(_levelsConfig.Levels[_currentId]);
+        _levelInstance.Initialize(this, _windowManager, _portalController, _cameraService);
+        OnLevelChanged.Invoke(_levelInstance);
     }
 
     public void Start()

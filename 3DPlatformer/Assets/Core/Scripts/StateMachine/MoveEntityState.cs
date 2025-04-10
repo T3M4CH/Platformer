@@ -74,11 +74,6 @@ namespace Core.Scripts.StatesMachine
             StateMachine.SetState<MeleeAttackEntityState>();
         }
 
-        protected void Jump()
-        {
-            StateMachine.SetState<PlayerJumpEntityState>();
-        }
-
         private void Move()
         {
             if (_idleBehaviour.isMoving)

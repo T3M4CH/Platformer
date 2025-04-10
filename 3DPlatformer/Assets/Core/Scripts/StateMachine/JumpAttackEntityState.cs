@@ -104,10 +104,10 @@ namespace Core.Scripts.StatesMachine
 
         private void OnLand()
         {
-            Debug.LogWarning("Land");
+            //Debug.LogWarning("Land");
             if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
-                StateMachine.SetState<FallEntityState>();
+                StateMachine.SetInheritedState<FallEntityState>();
             }
             else
             {

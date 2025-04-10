@@ -36,10 +36,15 @@ namespace Core.Scripts.StatesMachine
 
             if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
-                StateMachine.SetState<FallEntityState>();
+                StateMachine.SetState<PlayerFallEntityState>();
             }
 
             base.FixedUpdate();
+        }
+        
+        private void Jump()
+        {
+            StateMachine.SetState<PlayerJumpEntityState>();
         }
 
         public override void Update()

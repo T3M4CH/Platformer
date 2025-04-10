@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Core.Scripts.Entity;
 using Core.Scripts.Windows;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -47,36 +46,35 @@ namespace Core.Scripts.Healthbars
                 return;
             }
 
-            var token = transform.GetCancellationTokenOnDestroy();
+            CoroutineRunner.Instance.RunCoroutine(UpdateHealthbarRoutine(healthBar, transform, offset));
+        }
 
-            UniTask.Void(async () =>
+        private IEnumerator UpdateHealthbarRoutine(MonoHealthbar healthBar, Transform transform, Vector3 offset)
+        {
+            var currentTime = 0f;
+            while (currentTime < 2f)
             {
-                var currentTime = 0f;
-                while (currentTime < 2f)
+                currentTime += Time.deltaTime;
+                yield return null;
+
+                if (transform == null)
                 {
-                    currentTime += Time.deltaTime;
-                    await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow();
-
-                    if (token.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    healthBar.CanvasGroup.alpha = Mathf.InverseLerp(0, 0.3f, currentTime);
-                    healthBar.transform.localPosition = (transform.position + offset).WorldToScreenPosition(_camera, _rectParent);
+                    yield break;
                 }
 
-                if (healthBar.CanvasGroup)
-                {
-                    healthBar.CanvasGroup.alpha = 0;
-                }
-            });
+                healthBar.CanvasGroup.alpha = Mathf.InverseLerp(0, 0.3f, currentTime);
+                healthBar.transform.localPosition = (transform.position + offset).WorldToScreenPosition(_camera, _rectParent);
+            }
+
+            if (healthBar.CanvasGroup)
+            {
+                healthBar.CanvasGroup.alpha = 0;
+            }
         }
 
         private MonoHealthbar CreateHealthBar()
         {
             var instance = Object.Instantiate(_healthBarPrefab, _rectParent);
-
             return instance;
         }
     }

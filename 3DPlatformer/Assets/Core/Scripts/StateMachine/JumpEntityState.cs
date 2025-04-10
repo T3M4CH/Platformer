@@ -122,7 +122,7 @@ namespace Core.Scripts.StatesMachine
             }
             else
             {
-                StateMachine.SetState<FallEntityState>();
+                StateMachine.SetInheritedState<FallEntityState>();
             }
         }
 

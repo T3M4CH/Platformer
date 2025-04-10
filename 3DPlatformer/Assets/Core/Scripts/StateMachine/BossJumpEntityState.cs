@@ -16,12 +16,6 @@ namespace Core.Scripts.StatesMachine
             _baseEntity = baseEntity;
         }
 
-        public override void Enter()
-        {
-            base.Enter();
-            Debug.Log(Time.time + "ВХОД");
-        }
-
         public void SetAimTarget(Transform target, bool isBowAttack = false)
         {
             _targetTransform = target;
@@ -40,11 +34,6 @@ namespace Core.Scripts.StatesMachine
             {
                 _distance = Vector3.Distance(_targetTransform.position, BaseEntity.transform.position);
 
-                diff = Time.time - diff;
-                Debug.LogWarning(RigidBody.transform.name + " " + diff);
-                
-                StateMachine.SetState<JumpAttackEntityState>();
-                return;
                 if (_distance > 4 || _isBowAttack)
                 {
                     StateMachine.SetState<BowAttackEntityState>().SetAimTarget(_targetTransform);

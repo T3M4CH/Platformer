@@ -42,9 +42,6 @@ namespace Core.Scripts.StatesMachine
 
             //TODO: Скиллы + добавить индикаторы + КД
 
-            StateMachine.SetState<BossJumpEntityState>().SetAimTarget(_playerController.transform);
-            return;
-
             if (!_moveBehaviour.isMoving || _bowJumpCoroutine != null) return;
 
             if (_playerController.StateMachine.CurrentEntityState is ThrownEntityState)

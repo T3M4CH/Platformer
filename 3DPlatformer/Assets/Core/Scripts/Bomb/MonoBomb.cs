@@ -1,6 +1,6 @@
+using System.Collections;
 using Core.Scripts.Entity;
 using Core.Sounds.Scripts;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -21,13 +21,15 @@ public class MonoBomb : MonoBehaviour
     {
         _explodeCount = Random.Range(1, 4);
         bombRenderer.material = materials[_explodeCount - 1];
+        
+        CoroutineRunner.Instance.RunCoroutine(EnableColliderAfterDelay());
+    }
 
-        UniTask.Void(async () =>
-        {
-            bombCollider.enabled = false;
-            await UniTask.WaitForSeconds(0.4f, cancellationToken: this.GetCancellationTokenOnDestroy());
-            bombCollider.enabled = true;
-        });
+    private IEnumerator EnableColliderAfterDelay()
+    {
+        bombCollider.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        bombCollider.enabled = true;
     }
 
     private void OnCollisionEnter(Collision other)

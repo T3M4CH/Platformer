@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading;
 using Core.Scripts.Entity;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Scripts.StatesMachine

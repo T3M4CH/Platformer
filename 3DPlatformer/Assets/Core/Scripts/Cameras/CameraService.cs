@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Core.Scripts.Cameras;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -13,7 +10,6 @@ public class CameraService : ICameraService
     public CameraService(SerializableCameraSettings cameraSettings)
     {
         var cameras = cameraSettings.Cameras;
-
         var parent = new GameObject("CameraController").transform;
 
         Object.Instantiate(cameraSettings.CinemachineBrain, parent);
@@ -22,7 +18,6 @@ public class CameraService : ICameraService
             var cameraInstance = cameras[id];
             var camera = Object.Instantiate(cameraInstance, parent);
             camera.name = cameraInstance.name;
-
             return camera;
         }).ToArray();
 
@@ -30,64 +25,52 @@ public class CameraService : ICameraService
     }
 
     private BaseVirtualCamera _activeCamera;
-    private CancellationTokenSource _tokenSource;
-
+    private Coroutine _fovCoroutine;
     private readonly BaseVirtualCamera[] _cameras;
 
     public void SetFovInstantly(float value)
     {
-        _tokenSource?.Cancel();
-        _tokenSource?.Dispose();
-        
-        _tokenSource = null;
+        if (_fovCoroutine != null)
+        {
+            CoroutineRunner.Instance.StopConcreteCoroutine(_fovCoroutine);
+            _fovCoroutine = null;
+        }
 
         _activeCamera.Camera.m_Lens.FieldOfView = value;
-
         FOV = value;
     }
 
     public void SetFov(float value, float duration)
     {
-        _tokenSource?.Cancel();
-        _tokenSource?.Dispose();
-        
-        _tokenSource = null;
+        if (_fovCoroutine != null)
+        {
+            CoroutineRunner.Instance.StopConcreteCoroutine(_fovCoroutine);
+        }
 
-        _tokenSource = new CancellationTokenSource();
-        var token = _tokenSource.Token;
-        
-        PerformChangingFov(value, duration, token);
+        _fovCoroutine = CoroutineRunner.Instance.RunCoroutine(PerformChangingFov(value, duration));
     }
 
-    private async void PerformChangingFov(float value, float duration, CancellationToken token)
+    private IEnumerator PerformChangingFov(float value, float duration)
     {
-        var delay = duration;
+        var elapsed = 0f;
         var initialFov = FOV;
 
-        while (delay > 0)
+        while (elapsed < duration)
         {
-            await UniTask.Yield(PlayerLoopTiming.LastUpdate);
-
-            if (token.IsCancellationRequested)
-            {
-                break;
-            }
-
-            delay -= Time.deltaTime;
-
-            var newFov = Mathf.Lerp(value, initialFov, delay / duration);
-
+            elapsed += Time.deltaTime;
+            float newFov = Mathf.Lerp(initialFov, value, elapsed / duration);
             _activeCamera.Camera.m_Lens.FieldOfView = newFov;
-
             FOV = newFov;
+            yield return null;
         }
-    }
 
+        _activeCamera.Camera.m_Lens.FieldOfView = value;
+        FOV = value;
+    }
 
     public T GetCamera<T>() where T : BaseVirtualCamera
     {
         var camera = _cameras.FirstOrDefault(camera => camera is T);
-
         if (camera == null)
         {
             throw new Exception("Camera was not presented");
@@ -99,7 +82,6 @@ public class CameraService : ICameraService
     public T ChangeActiveCamera<T>() where T : BaseVirtualCamera
     {
         var camera = _cameras.FirstOrDefault(camera => camera is T);
-
         if (camera == null)
         {
             throw new Exception("Camera was not presented");
@@ -108,9 +90,8 @@ public class CameraService : ICameraService
         _activeCamera.Camera.Priority = 0;
         _activeCamera = camera;
         _activeCamera.Camera.Priority = 1;
-
         FOV = _activeCamera.Camera.m_Lens.FieldOfView;
-        
+
         return camera as T;
     }
 
@@ -119,13 +100,10 @@ public class CameraService : ICameraService
         _activeCamera.Camera.Priority = 0;
         _activeCamera = _cameras[id];
         _activeCamera.Camera.Priority = 1;
-
         FOV = _activeCamera.Camera.m_Lens.FieldOfView;
-
         return _activeCamera;
     }
-    
+
     public BaseVirtualCamera GetActiveCamera() => _activeCamera;
-    
     public float FOV { get; private set; }
 }
