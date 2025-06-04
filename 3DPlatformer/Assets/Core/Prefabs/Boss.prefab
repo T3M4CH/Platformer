@@ -27508,6 +27508,7 @@ GameObject:
   - component: {fileID: 50569276578315760}
   - component: {fileID: 408324904692575693}
   - component: {fileID: 8955638568421942160}
+  - component: {fileID: -5917872774924879163}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Untagged
@@ -27775,6 +27776,60 @@ MonoBehaviour:
   - m_Rig: {fileID: 933980714051420669}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &-5917872774924879163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7486014991729936007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f0709e8016c42f69c9963c5d0e41687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1.0000001
+      outSlope: -1.0000001
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5029947
+      value: 0.49700525
+      inSlope: -1.6161149
+      outSlope: -1.6161149
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6773684
+      value: 0.10776314
+      inSlope: -0.8672998
+      outSlope: -0.8672998
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.334013
+      outSlope: -0.334013
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7506491229806882745
 GameObject:
   m_ObjectHideFlags: 0

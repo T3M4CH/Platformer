@@ -36,7 +36,7 @@ public class CameraService : ICameraService
             _fovCoroutine = null;
         }
 
-        _activeCamera.Camera.m_Lens.FieldOfView = value;
+        _activeCamera.Camera.Lens.FieldOfView = value;
         FOV = value;
     }
 
@@ -59,12 +59,12 @@ public class CameraService : ICameraService
         {
             elapsed += Time.deltaTime;
             float newFov = Mathf.Lerp(initialFov, value, elapsed / duration);
-            _activeCamera.Camera.m_Lens.FieldOfView = newFov;
+            _activeCamera.Camera.Lens.FieldOfView = newFov;
             FOV = newFov;
             yield return null;
         }
 
-        _activeCamera.Camera.m_Lens.FieldOfView = value;
+        _activeCamera.Camera.Lens.FieldOfView = value;
         FOV = value;
     }
 
@@ -90,7 +90,7 @@ public class CameraService : ICameraService
         _activeCamera.Camera.Priority = 0;
         _activeCamera = camera;
         _activeCamera.Camera.Priority = 1;
-        FOV = _activeCamera.Camera.m_Lens.FieldOfView;
+        FOV = _activeCamera.Camera.Lens.FieldOfView;
 
         return camera as T;
     }
@@ -100,7 +100,7 @@ public class CameraService : ICameraService
         _activeCamera.Camera.Priority = 0;
         _activeCamera = _cameras[id];
         _activeCamera.Camera.Priority = 1;
-        FOV = _activeCamera.Camera.m_Lens.FieldOfView;
+        FOV = _activeCamera.Camera.Lens.FieldOfView;
         return _activeCamera;
     }
 

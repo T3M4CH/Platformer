@@ -27,8 +27,8 @@ namespace Core.Scripts.StatesMachine
             if (_states.TryGetValue(type, out var state))
             {
                 PreviousEntityState = CurrentEntityState;
-                PreviousEntityState?.Exit();
                 CurrentEntityState = state;
+                PreviousEntityState?.Exit();
                 CurrentEntityState?.Enter();
                 return CurrentEntityState;
             }
@@ -43,8 +43,8 @@ namespace Core.Scripts.StatesMachine
             if (_states.TryGetValue(type, out var state))
             {
                 PreviousEntityState = CurrentEntityState;
-                PreviousEntityState?.Exit();
                 CurrentEntityState = state;
+                PreviousEntityState?.Exit();
                 CurrentEntityState?.Enter();
                 return (T)CurrentEntityState;
             }

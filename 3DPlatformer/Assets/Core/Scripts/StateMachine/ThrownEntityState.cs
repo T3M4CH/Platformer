@@ -40,7 +40,7 @@ namespace Core.Scripts.StatesMachine
 
             _entityCollision.DefaultCollider.excludeLayers = BaseEntity.EntityLayerMask;
             _entityCollision.TriggerCollider.enabled = true;
-            EffectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.5f);
+            EffectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position + new Vector3(0, 1, 0), scale: Vector3.one * 0.5f);
             _animator.SetTrigger(Knocked);
         }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core.Scripts.Cameras
 {
-    [RequireComponent(typeof(CinemachineVirtualCamera))]
+    [RequireComponent(typeof(CinemachineCamera))]
     public class BaseVirtualCamera : MonoBehaviour
     {
         public BaseVirtualCamera SetFollowAt(Transform target)
@@ -20,6 +20,6 @@ namespace Core.Scripts.Cameras
             return this;
         }
         
-        [field: SerializeField] public CinemachineVirtualCamera Camera { get; private set; }
+        [field: SerializeField] public CinemachineCamera Camera { get; private set; }
     }
 }

@@ -32,7 +32,6 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
     {
         if (_currentCooldownTime > 0)
         {
-            Debug.LogWarning("cd > 0 tf");
             return false;
         }
 
@@ -67,10 +66,10 @@ public class MonoPlayerController : DefaultEntity, IPlayerInteractor
             Debug.Break();
         }
 
-        if (Keyboard.current.gKey.wasPressedThisFrame)
-        {
-            StateMachine.SetState<BowAttackEntityState>();
-        }
+        // if (Keyboard.current.gKey.wasPressedThisFrame)
+        // {
+        //     StateMachine.SetState<BowAttackEntityState>();
+        // }
 
         StateMachine.Update();
 

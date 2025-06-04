@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Core.Scripts.Entity;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.StatesMachine;
 using Core.Sounds.Scripts;
 using DG.Tweening;
@@ -16,9 +17,9 @@ public class MonoPortalController : MonoBehaviour
     [SerializeField] private SoundAsset portalTeleportSound;
     [SerializeField] private AnimationCurve animationCurve;
 
-    private BaseEntity _entity;
     private Transform _transform;
     private Material _dissolveMaterial;
+    private IAuraCharger _currentAuraChanger;
     private ParticleSystem[] _portalParticles;
     private static readonly int DissolveAmount = Shader.PropertyToID("_DissolveAmount");
 
@@ -38,20 +39,21 @@ public class MonoPortalController : MonoBehaviour
         _portalParticles = GetComponentsInChildren<ParticleSystem>();
     }
 
-    public void TeleportEntity(BaseEntity entity, Vector3 position)
+    public void TeleportEntity(IAuraCharger auraCharger, Vector3 position)
     {
-        _entity = entity;
+        _currentAuraChanger = auraCharger;
+        var entity = auraCharger.BaseEntity;
 
         foreach (var portalParticle in _portalParticles)
         {
             portalParticle.Play();
         }
 
-        _entity.enabled = false;
-        _entity.RigidBody.isKinematic = true;
-        _entity.transform.SetParent(transform);
-        _entity.transform.localPosition = Vector3.zero;
-        _entity.transform.localScale = Vector3.one / 3f;
+        entity.enabled = false;
+        entity.RigidBody.isKinematic = true;
+        entity.transform.SetParent(transform);
+        entity.transform.localPosition = Vector3.zero;
+        entity.transform.localScale = Vector3.one / 3f;
 
         _transform.localScale = Vector3.zero;
         _transform.position = position;
@@ -60,12 +62,10 @@ public class MonoPortalController : MonoBehaviour
 
         _transform.DOScale(targetScale, 2).SetEase(Ease.OutBack).SetLink(gameObject).OnComplete(() =>
         {
-            _entity.transform.SetParent(null);
-            _entity.RigidBody.isKinematic = false;
-            _entity.enabled = true;
-            _entity.Animator.speed = 1;
-            //_entity.StateMachine.SetState<FallEntityState>();
-            //_entity.Animator.CrossFade("Jump", 0, 0, 0);
+            entity.transform.SetParent(null);
+            entity.RigidBody.isKinematic = false;
+            entity.enabled = true;
+            entity.Animator.speed = 1;
 
             DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 0, 1, 1).SetLink(gameObject);
         });
@@ -75,7 +75,7 @@ public class MonoPortalController : MonoBehaviour
 
     public void AppearPortalAtPlayer()
     {
-        if (!_entity) throw new Exception("Player not saved");
+        if (!_currentAuraChanger?.BaseEntity) throw new Exception("Player not saved");
 
         foreach (var portalParticle in _portalParticles)
         {
@@ -84,22 +84,12 @@ public class MonoPortalController : MonoBehaviour
 
         portalAppearSound.Play(Random.Range(0.9f, 1.1f));
         _transform.localScale = Vector3.zero;
-        _transform.position = _entity.transform.position;
+        _transform.position = _currentAuraChanger.BaseEntity.transform.position;
 
-        _entity.enabled = false;
-        _entity.RigidBody.isKinematic = true;
-        _entity.transform.DORotate(new Vector3(0, 180, 0), 1f);
-        _entity.Animator.CrossFade("Jump", 0, 0);
+        _currentAuraChanger.Show(_transform.position.y + 2, 2, true);
 
         _transform.DOScale(targetScale, 1).SetEase(Ease.OutBack).SetLink(gameObject);
         _transform.DOMoveY(_transform.position.y + 2, 1.5f).SetLink(gameObject);
-
-        var tween = _entity.transform.DOMoveY(_transform.position.y + 2, 2).SetLink(gameObject);
-        tween.OnUpdate(() =>
-        {
-            _entity.Animator.speed = animationCurve.Evaluate(tween.position / tween.Duration());
-            //Debug.LogWarning(tween.position / tween.Duration());
-        });
 
         DOTween.To(t => meshRenderer.material.SetFloat(DissolveAmount, t), 1, 0, 4).SetLink(gameObject);
     }

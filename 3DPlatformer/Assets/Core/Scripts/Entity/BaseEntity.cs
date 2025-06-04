@@ -1,5 +1,6 @@
 ﻿using System;
 using Core.Scripts.Effects.Interfaces;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Healthbars;
 using Core.Scripts.StatesMachine;
 using Core.Sounds.Scripts;

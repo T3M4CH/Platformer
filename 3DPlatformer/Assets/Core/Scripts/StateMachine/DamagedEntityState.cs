@@ -29,8 +29,8 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             _animator.SetFloat(JoystickOffset, 0);
-            _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position, scale: Vector3.one * 0.25f);
-            
+            _effectService.GetEffect(EVfxType.Hit, true).SetPosition(BaseEntity.transform.position + new Vector3(0, 1, 0), scale: Vector3.one * 0.25f);
+
             _animator.ResetTrigger(Attack);
             _animator.SetTrigger(GetHit);
 

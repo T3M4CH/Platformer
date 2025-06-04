@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Core.Scripts.Bow;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.StatesMachine;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -31,7 +32,6 @@ namespace Core.Scripts.Entity
 
             if (force.HasValue)
             {
-                Debug.LogWarning("Damag!!!");
                 StateMachine.SetState<ThrownExplodeEntityState>().SetForce(force.Value);
             }
             else
@@ -40,6 +40,19 @@ namespace Core.Scripts.Entity
             }
 
             return true;
+        }
+
+        [Button]
+        private void ShodExplode()
+        {
+            var auraCharger = GetComponent<IAuraCharger>();
+            
+            StateMachine.SetState<ExplodeEntityState>();
+            //auraCharger.Show(transform.position.y + offset, time, false);
+            // var prepareEffect = EffectService.GetEffect(EVfxType.ExplosionPrepare, true);
+            // prepareEffect.SetPosition(transform.position + new Vector3(0, 1, 0), scale: Vector3.zero);
+            // prepareEffect.transform.SetParent(transform);
+
         }
 
         private void Update()

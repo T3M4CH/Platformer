@@ -30,7 +30,7 @@ public class MonoBowArrow : MonoBehaviour
     {
         if (entityLayerMask.value.Includes(other.gameObject.layer) && other.transform != ArrowOwnwer)
         {
-            Debug.LogWarning("Collision! " + ArrowOwnwer);
+            //  Debug.LogWarning("Collision! " + ArrowOwnwer);
             var damageable = other.gameObject.TryGetComponent(out IPlayerInteractor playerController);
 
             if (damageable)

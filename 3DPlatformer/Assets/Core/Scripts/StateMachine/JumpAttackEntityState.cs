@@ -76,9 +76,9 @@ namespace Core.Scripts.StatesMachine
                 if (_damageableAtState.Contains(damageable)) return;
                 if (entity.StateMachine.CurrentEntityState is ThrownEntityState)
                 {
+                    _damageableAtState.Enqueue(damageable);
                     _kickSound.Play(Random.Range(0.9f, 1.1f));
                     damageable.TakeDamage(15f, (_transform.forward + Vector3.up) * 5f);
-                    _damageableAtState.Enqueue(damageable);
                 }
             }
         }
@@ -96,15 +96,14 @@ namespace Core.Scripts.StatesMachine
             if (_entityLayerMask.value.Includes(collision.gameObject.layer) && collision.transform.TryGetComponent(out IDamageable damageable))
             {
                 if (_damageableAtState.Contains(damageable)) return;
+                _damageableAtState.Enqueue(damageable);
                 _kickSound.Play(Random.Range(0.9f, 1.1f));
                 damageable.TakeDamage(15f, (_transform.forward + Vector3.up) * 5f);
-                _damageableAtState.Enqueue(damageable);
             }
         }
 
         private void OnLand()
         {
-            //Debug.LogWarning("Land");
             if (!BaseEntity.InteractionSystem.IsGround.Under)
             {
                 StateMachine.SetInheritedState<FallEntityState>();

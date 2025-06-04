@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Core.Scripts.Effects.Interfaces;
+using Core.Scripts.Entity.Interfaces;
 using Core.Scripts.Entity.Managers.Interfaces;
 using Core.Scripts.Extensions;
 using Core.Scripts.Healthbars;
@@ -61,7 +62,7 @@ namespace Core.Scripts.Entity.Managers
                 _playerCamera.Camera.ForceCameraPosition(position, Quaternion.identity);
             }
 
-            _portalController.TeleportEntity(PlayerInstance, levelBase.PlayerSpawnPoint.position);
+            _portalController.TeleportEntity(PlayerInstance.GetComponent<IAuraCharger>(), levelBase.PlayerSpawnPoint.position);
 
             PlayerInstance.OnDead += Restart;
         }

@@ -30,6 +30,7 @@ namespace Core.Scripts.StatesMachine
             base.Enter();
 
             Animator.speed = 0.75f;
+            Debug.LogWarning("Fall!!!" + _entity.name);
             Animator.SetTrigger("Fall");
             Animator.SetBool("IsGround", false);
         }
